@@ -152,7 +152,16 @@
         @apply border-border;
     }
 
+    html,
+    body,
+    #app {
+        min-height: 100%;
+    }
+
     body {
-        @apply bg-background text-foreground;
+        @apply bg-slate-50 text-foreground;
+        background-image:
+            radial-gradient(circle at top, rgba(16, 185, 129, 0.12) 0, rgba(255, 255, 255, 0) 34%),
+            linear-gradient(180deg, #f7fbf8 0%, #ffffff 100%);
     }
 }

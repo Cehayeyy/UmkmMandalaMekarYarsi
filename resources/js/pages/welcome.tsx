@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 const navItems = [
     { label: 'Beranda', href: '#beranda' },
-    { label: 'UMKM', href: '#produk' },
+    { label: 'UMKM', href: '/umkm' },
     { label: 'Produk', href: '#kategori' },
     { label: 'Tentang Desa', href: '#tentang' },
     { label: 'Kontak', href: '#kontak' },
@@ -101,9 +101,9 @@ export default function Welcome() {
 
                             <a
                                 href="#kontak"
-                                className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-700"
+                                className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-700"
                             >
-                                Hubungi Kami <ArrowRight className="size-4" />
+                                Login <ArrowRight className="size-4" />
                             </a>
 
                             <button
@@ -142,17 +142,13 @@ export default function Welcome() {
                                 className="absolute inset-0 bg-cover bg-center"
                                 style={{
                                     backgroundImage:
-                                        'linear-gradient(90deg, rgba(3, 7, 18, 0.88) 0%, rgba(3, 7, 18, 0.58) 48%, rgba(3, 7, 18, 0.18) 100%), url(https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1600&q=80)',
+                                        'linear-gradient(90deg, rgba(3, 7, 18, 0.88) 0%, rgba(3, 7, 18, 0.58) 48%, rgba(3, 7, 18, 0.18) 100%), url(images/welcome-bg.jpg)',
                                 }}
                             />
                             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.3),transparent_35%),radial-gradient(circle_at_bottom_left,rgba(132,204,22,0.2),transparent_30%)]" />
 
                             <div className="relative grid min-h-[540px] items-end gap-10 px-6 py-8 sm:px-10 sm:py-10 lg:grid-cols-[1.1fr_0.9fr] lg:px-12 lg:py-12">
                                 <div className="max-w-2xl pb-4 pt-12 lg:py-16">
-                                    <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-emerald-50 backdrop-blur-md">
-                                        <span className="size-2 rounded-full bg-emerald-400" />
-                                        Portal UMKM Desa Mandalamekar
-                                    </div>
 
                                     <h1 className="max-w-xl text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
                                         UMKM
@@ -164,60 +160,26 @@ export default function Welcome() {
                                     </p>
 
                                     <div className="mt-8 flex flex-wrap gap-3">
-                                        <a
-                                            href="#produk"
-                                            className="inline-flex items-center gap-2 rounded-full bg-emerald-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/30 transition hover:bg-emerald-400"
-                                        >
-                                            Lihat Produk <ArrowRight className="size-4" />
-                                        </a>
-                                        <a
-                                            href="#tentang"
-                                            className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur-md transition hover:bg-white/15"
-                                        >
-                                            Lihat UMKM
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div className="flex h-full items-end justify-end pb-4 lg:pb-8">
-                                    <div className="w-full max-w-md rounded-[1.75rem] border border-white/15 bg-white/10 p-4 shadow-2xl backdrop-blur-xl sm:p-5">
-                                        <div className="grid gap-4 sm:grid-cols-2">
-                                            <div className="rounded-3xl bg-white/10 p-4">
-                                                <p className="text-sm text-emerald-100">Produk Terbaru</p>
-                                                <p className="mt-2 text-xl font-semibold">Keripik Singkong</p>
-                                                <p className="mt-1 text-sm text-slate-200">Camilan lokal favorit desa.</p>
-                                            </div>
-                                            <div className="rounded-3xl bg-emerald-500/20 p-4">
-                                                <p className="text-sm text-emerald-100">Kategori Populer</p>
-                                                <p className="mt-2 text-xl font-semibold">Makanan &amp; Minuman</p>
-                                                <p className="mt-1 text-sm text-slate-200">Produk olahan unggulan.</p>
-                                            </div>
-                                        </div>
-
-                                        <div className="mt-4 overflow-hidden rounded-[1.5rem] border border-white/10 bg-slate-950/40 p-4">
-                                            <div className="flex items-center justify-between">
-                                                <div>
-                                                    <p className="text-sm text-slate-300">Update Desa</p>
-                                                    <p className="mt-1 text-lg font-semibold">Pasar UMKM mingguan</p>
-                                                </div>
-                                                <div className="rounded-full bg-emerald-500/15 p-3 text-emerald-300">
-                                                    <Sprout className="size-5" />
-                                                </div>
-                                            </div>
-                                            <div className="mt-4 grid grid-cols-3 gap-3 text-center text-xs text-slate-300">
-                                                <div className="rounded-2xl bg-white/5 px-2 py-3">Promo</div>
-                                                <div className="rounded-2xl bg-white/5 px-2 py-3">Lokal</div>
-                                                <div className="rounded-2xl bg-white/5 px-2 py-3">Mitra</div>
-                                            </div>
-                                        </div>
-                                    </div>
+    <a
+        href="#produk"
+        className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/30 transition hover:bg-emerald-400"
+    >
+        Lihat Produk <ArrowRight className="size-4" />
+    </a>
+    <a
+        href="#tentang"
+        className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur-md transition hover:bg-white/15"
+    >
+        Lihat UMKM
+    </a>
+</div>
                                 </div>
                             </div>
                         </div>
                     </section>
 
-                    <section className="mx-auto -mt-10 max-w-7xl px-4 sm:px-6 lg:px-8">
-                        <div className="grid gap-4 rounded-[1.75rem] border border-white bg-white p-5 shadow-xl shadow-slate-200/60 sm:grid-cols-2 xl:grid-cols-4">
+  <section className="relative z-10 mx-auto -mt-10 max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div className="grid gap-4 rounded-[1.75rem] border border-white bg-white p-5 shadow-xl shadow-slate-200/60 sm:grid-cols-2 xl:grid-cols-4">
                             {stats.map((item) => (
                                 <div key={item.label} className="flex items-center gap-4 rounded-3xl px-2 py-2">
                                     <div className="flex size-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
@@ -332,7 +294,7 @@ export default function Welcome() {
                                         className="absolute inset-0 bg-cover bg-center"
                                         style={{
                                             backgroundImage:
-                                                'linear-gradient(180deg, rgba(6,95,70,0.05) 0%, rgba(6,95,70,0.15) 100%), url(https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1400&q=80)',
+                                                'linear-gradient(180deg, rgba(6,95,70,0.05) 0%, rgba(6,95,70,0.15) 100%), url(images/welcome-bg.jpg)',
                                         }}
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-emerald-950/50 via-transparent to-transparent" />
@@ -383,7 +345,7 @@ export default function Welcome() {
                     </div>
 
                     <div className="border-t border-slate-200 py-4 text-center text-sm text-slate-500">
-                        © 2026 UMKM Desa Mandalamekar. All rights reserved.
+                        © 2026 UMKM Desa Mandalamekar. Universitas Yarsi.
                     </div>
                 </footer>
             </div>
