@@ -11,6 +11,10 @@ Route::get('/umkm', function () {
     return Inertia::render('umkm/umkmPage');
 })->name('umkm.umkmPage');
 
+Route::get('/produk', function () {
+    return Inertia::render('produk');
+})->name('produk');
+
 Route::middleware(['auth'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');

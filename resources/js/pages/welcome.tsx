@@ -6,7 +6,7 @@ import { useState } from 'react';
 const navItems = [
     { label: 'Beranda', href: '#beranda' },
     { label: 'UMKM', href: '/umkm' },
-    { label: 'Produk', href: '#kategori' },
+    { label: 'Produk', href: '/produk' },
     { label: 'Tentang Desa', href: '#tentang' },
     { label: 'Kontak', href: '#kontak' },
 ];

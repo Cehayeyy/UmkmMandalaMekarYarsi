@@ -2,6 +2,8 @@ import { type SharedData } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
 import {
     ArrowRight,
+    Check,
+    ChevronDown,
     ChevronLeft,
     ChevronRight,
     Facebook,
@@ -28,7 +30,7 @@ import { useState } from 'react';
 const navItems = [
     { label: 'Beranda', href: '/' },
     { label: 'UMKM', href: '/umkm' },
-    { label: 'Produk', href: '/#kategori' },
+    { label: 'Produk', href: '/produk   ' },
     { label: 'Tentang Desa', href: '/#tentang' },
     { label: 'Kontak', href: '/#kontak' },
 ];
@@ -113,6 +115,8 @@ export default function UmkmIndex() {
     const { auth } = usePage<SharedData>().props;
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [activePage, setActivePage] = useState(1);
+    const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+    const [selectedCategory, setSelectedCategory] = useState(categoryFilters[0]);
 
     return (
         <>
@@ -168,7 +172,7 @@ export default function UmkmIndex() {
                                 href="/#kontak"
                                 className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-700"
                             >
-                                Hubungi Kami <ArrowRight className="size-4" />
+                                Login  <ArrowRight className="size-4" />
                             </a>
 
                             <button
@@ -277,12 +281,43 @@ export default function UmkmIndex() {
                                 </div>
 
                                 <div className="relative">
-                                    <MapPin className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
-                                    <select className="appearance-none rounded-full border border-slate-200 bg-white py-2.5 pl-10 pr-9 text-sm text-slate-700 shadow-sm outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100">
-                                        {categoryFilters.map((filter) => (
-                                            <option key={filter}>{filter}</option>
-                                        ))}
-                                    </select>
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsCategoryOpen((value) => !value)}
+                                        className="flex w-full min-w-[200px] items-center gap-2 rounded-full border border-slate-200 bg-white py-2.5 pl-4 pr-4 text-sm font-medium text-slate-700 shadow-sm outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100"
+                                    >
+                                        <MapPin className="size-4 shrink-0 text-emerald-600" />
+                                        <span className="flex-1 text-left">{selectedCategory}</span>
+                                        <ChevronDown className={`size-4 shrink-0 text-slate-400 transition-transform ${isCategoryOpen ? 'rotate-180' : ''}`} />
+                                    </button>
+
+                                    {isCategoryOpen ? (
+                                        <>
+                                            <div className="fixed inset-0 z-10" onClick={() => setIsCategoryOpen(false)} />
+                                            <div className="absolute right-0 z-20 mt-2 w-full min-w-[200px] overflow-hidden rounded-2xl border border-slate-100 bg-white py-2 shadow-xl shadow-slate-200/70">
+                                                {categoryFilters.map((filter) => {
+                                                    const isSelected = filter === selectedCategory;
+
+                                                    return (
+                                                        <button
+                                                            key={filter}
+                                                            type="button"
+                                                            onClick={() => {
+                                                                setSelectedCategory(filter);
+                                                                setIsCategoryOpen(false);
+                                                            }}
+                                                            className={`flex w-full items-center justify-between gap-2 px-4 py-2.5 text-left text-sm transition ${
+                                                                isSelected ? 'bg-emerald-50 font-semibold text-emerald-700' : 'text-slate-600 hover:bg-slate-50'
+                                                            }`}
+                                                        >
+                                                            {filter}
+                                                            {isSelected ? <Check className="size-4 text-emerald-600" /> : null}
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
+                                        </>
+                                    ) : null}
                                 </div>
                             </div>
                         </div>
@@ -383,7 +418,7 @@ export default function UmkmIndex() {
                             <p className="font-semibold text-white">Menu</p>
                             <ul className="mt-4 space-y-2 text-sm text-emerald-200/80">
                                 <li>
-                                    <Link href="/" className="hover:text-white">
+                                    <Link href="/welcome" className="hover:text-white">
                                         Beranda
                                     </Link>
                                 </li>
@@ -393,7 +428,7 @@ export default function UmkmIndex() {
                                     </Link>
                                 </li>
                                 <li>
-                                    <a href="/#kategori" className="hover:text-white">
+                                    <a href="/produk" className="hover:text-white">
                                         Produk
                                     </a>
                                 </li>
@@ -457,12 +492,11 @@ export default function UmkmIndex() {
                     </div>
 
                     <div className="border-t border-white/10 py-4 text-center text-sm text-emerald-200/70">
-                        © 2026 UMKM Desa Mandalamekar. All rights reserved.
+                        © 2026 UMKM Desa Mandalamekar. Universitas Yarsi.
                     </div>
                 </footer>
             </div>
         </>
     );
 }
-
 
