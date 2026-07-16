@@ -88,7 +88,7 @@ export default function ProdukPage() {
                         <Link href="/produk" className="text-sm font-semibold text-emerald-600">
                             Produk
                         </Link>
-                        <Link href="#tentang" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">
+                        <Link href="tentang" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">
                             Tentang Desa
                         </Link>
                         <Link href="#kontak" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">
@@ -108,35 +108,54 @@ export default function ProdukPage() {
                 </div>
             </header>
 
-            {/* HERO BANNER ATAS (DENGAN STYLE GRADIENT & SHADOW KHAS) */}
-            <div className="mx-auto max-w-7xl px-4 pt-6 sm:px-6 lg:px-8">
-                <div className="relative overflow-hidden rounded-[2rem] border border-white/60 bg-slate-900 px-6 py-12 text-white shadow-[0_20px_60px_rgba(15,23,42,0.15)] sm:px-10 sm:py-16">
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.3),transparent_35%),radial-gradient(circle_at_bottom_left,rgba(132,204,22,0.2),transparent_30%)]" />
-                    <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:16px_16px]" />
+          {/* HERO BANNER ATAS - EDISI PRODUK (BERBEDA DENGAN UMKM) */}
+<div className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 lg:px-8 lg:pt-10">
+    <div className="relative overflow-hidden rounded-[2rem] border border-white/60 bg-slate-900 text-white shadow-[0_30px_90px_rgba(15,23,42,0.22)]">
 
-                    <div className="relative flex flex-col md:flex-row md:items-end justify-between gap-6">
-                        <div>
-                            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-xs font-medium text-emerald-300 backdrop-blur-md">
-                                <span className="size-2 rounded-full bg-emerald-400" />
-                                Katalog Produk Desa
-                            </div>
-                            <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl">
-                                Produk <span className="text-emerald-400">UMKM</span>
-                            </h1>
-                            <p className="mt-3 max-w-xl text-sm leading-relaxed text-slate-300 sm:text-base">
-                                Temukan berbagai produk olahan, kerajinan tangan, dan komoditas unggulan terbaik dari para pelaku UMKM Desa Mandalamekar.
-                            </p>
-                        </div>
 
-                        <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-xs font-medium text-slate-300 backdrop-blur-md">
-                            <Link href="/welcome" className="hover:text-white transition">Beranda</Link>
-                            <ChevronRight className="size-3.5 text-slate-500" />
-                            <span className="text-emerald-400 font-semibold">Produk</span>
-                        </div>
-                    </div>
+        {/* Background Image - Memanggil file lokal Produk-bg.jpg & dijamin HD */}
+<div
+    className="absolute inset-0 bg-cover bg-center object-cover opacity-100"
+    style={{
+        backgroundImage: 'linear-gradient(90deg, rgba(3, 7, 18, 0.75) 0%, rgba(3, 7, 18, 0.45) 50%, rgba(3, 7, 18, 0.15) 100%), url("images/Produk-bg.jpg")',
+    }}
+/>
+
+        {/* Efek Gradasi Radial mengikuti gaya estetik Beranda */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.25),transparent_40%)]" />
+
+        {/* Konten Utama di dalam Banner */}
+        <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-6 px-6 py-10 sm:px-10 sm:py-12 lg:px-12 lg:py-14">
+            <div>
+                {/* Badge Kecil di Atas Judul */}
+                <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-xs font-medium text-emerald-300 backdrop-blur-md">
+                    <span className="flex size-2 rounded-full bg-emerald-400 relative">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    </span>
+                    Katalog Produk Desa
                 </div>
+
+                {/* Judul Utama */}
+                <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl">
+                    Produk <span className="text-emerald-400">UMKM</span>
+                </h1>
+
+                {/* Deskripsi Kalimat */}
+                <p className="mt-3 max-w-xl text-sm leading-relaxed text-slate-200 sm:text-base">
+                    Temukan berbagai produk olahan, kerajinan tangan, dan komoditas unggulan terbaik dari para pelaku UMKM Desa Mandalamekar.
+                </p>
             </div>
 
+            {/* Breadcrumb Navigasi Kanan (Aktif State di "Produk") */}
+            <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-slate-900/40 px-4 py-2 text-xs font-medium backdrop-blur-md shadow-inner">
+                <Link href="/" className="text-slate-300 hover:text-white transition">Beranda</Link>
+                <ChevronRight className="size-3.5 text-slate-500" />
+                <span className="text-emerald-400 font-semibold">Produk</span>
+            </div>
+        </div>
+
+    </div>
+</div>
             {/* KONTEN UTAMA */}
             <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
 

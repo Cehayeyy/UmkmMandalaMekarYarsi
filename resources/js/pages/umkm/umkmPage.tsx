@@ -31,7 +31,7 @@ const navItems = [
     { label: 'Beranda', href: '/' },
     { label: 'UMKM', href: '/umkm' },
     { label: 'Produk', href: '/produk   ' },
-    { label: 'Tentang Desa', href: '/#tentang' },
+    { label: 'Tentang Desa', href: '/tentang' },
     { label: 'Kontak', href: '/#kontak' },
 ];
 
@@ -214,35 +214,57 @@ export default function UmkmIndex() {
                 </header>
 
                 <main>
-                    {/* HERO / BANNER */}
-                    <section className="relative overflow-hidden bg-slate-900 text-white">
-                        <div
-                            className="absolute inset-0 bg-cover bg-center opacity-60"
-                            style={{
-                                backgroundImage:
-                                    'linear-gradient(180deg, rgba(6,20,15,0.55) 0%, rgba(6,20,15,0.75) 100%), url(https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1600&q=80)',
-                            }}
-                        />
+                  {/* HERO / BANNER */}
 
-                        <div className="relative mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-16">
-                            <div className="flex flex-wrap items-start justify-between gap-4">
-                                <div>
-                                    <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">UMKM Desa Mandalamekar</h1>
-                                    <p className="mt-3 max-w-xl text-sm leading-6 text-slate-200 sm:text-base">
-                                        Kenali para pelaku usaha lokal yang berkontribusi mengembangkan ekonomi desa.
-                                    </p>
-                                </div>
+            <section className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 lg:px-8 lg:pt-10">
+                <div className="relative overflow-hidden rounded-[2rem] border border-white/60 bg-slate-900 text-white shadow-[0_30px_90px_rgba(15,23,42,0.22)]">
 
-                                <div className="flex items-center gap-2 text-sm text-slate-300">
-                                    <Link href="/" className="text-emerald-400 hover:underline">
-                                        Beranda
-                                    </Link>
-                                    <span>/</span>
-                                    <span className="text-white">UMKM</span>
-                                </div>
-                            </div>
+                   {/* Background Image - Disamakan persis dengan gambar Beranda agar HD & Seragam */}
+<div
+    className="absolute inset-0 bg-cover bg-center object-cover opacity-100"
+    style={{
+        // Ganti "nama-gambar-beranda.jpg" sesuai dengan nama file gambar yang dipakai di Beranda kamu
+        backgroundImage: 'linear-gradient(90deg, rgba(3, 7, 18, 0.8) 0%, rgba(3, 7, 18, 0.52) 48%, rgba(3, 7, 18, 0.15) 100%), url("images/UMKM-bg.jpg")',
+    }}
+/>
+
+                    {/* Efek Radial Glow tambahan biar cerah dan estetik seperti halaman Beranda */}
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.2),transparent_40%)]" />
+
+                    {/* Konten di dalam Banner */}
+                    <div className="relative grid min-h-[220px] items-center gap-6 px-6 py-8 sm:px-10 sm:py-10 lg:grid-cols-[1.4fr_0.6fr] lg:px-12 lg:py-12">
+                        <div>
+                            {/* Judul Utama - Putih polos sesuai screenshot tulisan halaman UMKM */}
+                            <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+                                UMKM Desa Mandalamekar
+                            </h1>
+
+                            {/* Deskripsi - Kalimat pendek agar lebih rapi */}
+                            <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-200/90 sm:text-base">
+                               Kenali para pelaku usaha lokal yang berkontribusi mengembangkan ekonomi desa secara berkelanjutan.
+                            </p>
                         </div>
-                    </section>
+
+                        {/* Breadcrumb Navigasi di Sebelah Kanan - Warna Dibalik Sesuai Halaman Aktif */}
+                        <div className="flex lg:justify-end lg:items-center">
+                            <nav className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-slate-900/40 px-4 py-2 text-sm font-medium backdrop-blur-md shadow-inner">
+                                {/* Beranda menjadi warna putih redup/slate karena posisi tidak aktif */}
+                                <Link href="/" className="text-slate-300 hover:text-white transition">
+                                    Beranda
+                                </Link>
+
+                                <span className="text-slate-500 font-light">/</span>
+
+                                {/* UMKM menjadi warna hijau emerald karena merupakan halaman yang sedang aktif */}
+                                <span className="text-emerald-400 font-semibold tracking-wide">
+                                    UMKM
+                                </span>
+                            </nav>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
 
                     {/* STATS CARD (floating) */}
                     <section className="relative z-10 mx-auto -mt-10 max-w-7xl px-4 sm:px-6 lg:px-8">

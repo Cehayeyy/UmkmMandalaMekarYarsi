@@ -15,6 +15,10 @@ Route::get('/produk', function () {
     return Inertia::render('produk');
 })->name('produk');
 
+Route::get('/tentang', function () {
+    return Inertia::render('TentangDesa');
+})->name('tentang');
+
 Route::middleware(['auth'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');
