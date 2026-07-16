@@ -31,9 +31,33 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
 
+        $user = $request->user();
+        $loginType = $request->input('login_type', 'operator'); // Ambil info tab dari frontend
+
+        // 1. Cek Blokir Salah Pintu: Jika akun UMKM login di tab Operator
+        if ($loginType === 'operator' && $user->role === 'umkm') {
+            Auth::guard('web')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return back()->withErrors(['username' => 'Akun Anda adalah akun UMKM. Silakan pilih tab "Login UMKM"!']);
+        }
+
+        // 2. Cek Blokir Salah Pintu: Jika Operator/Admin login di tab UMKM
+        if ($loginType === 'umkm' && $user->role !== 'umkm') {
+            Auth::guard('web')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return back()->withErrors(['username' => 'Anda bukan pengelola UMKM. Silakan pilih tab "Login Operator"!']);
+        }
+
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        // 3. Pengalihan Dashboard Sesuai Peran
+        if ($user->role === 'umkm') {
+            return redirect()->intended(route('umkm.dashboard'));
+        }
+
+        return redirect()->intended(route('dashboard'));
     }
 
     /**

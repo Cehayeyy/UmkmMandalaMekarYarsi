@@ -30,7 +30,7 @@ const sidebarSections = [
         title: 'MANAJEMEN',
         items: [
             { label: 'Manajemen UMKM', icon: Sprout, hasSubmenu: true },
-            { label: 'Manajemen Akun UMKM', icon: Users, hasSubmenu: false },
+            { label: 'Manajemen Akun', icon: Users, href: route('admin.akun'), active: false },
             { label: 'Kategori Produk', icon: Tag, hasSubmenu: false },
             { label: 'Produk', icon: Package, hasSubmenu: false },
             { label: 'Pesanan / Inquiry', icon: MessageCircle, hasSubmenu: false },
@@ -138,23 +138,23 @@ export default function AdminDashboard() {
                             <div key={section.title} className="mb-5">
                                 <p className="px-3 text-xs font-semibold tracking-[0.15em] text-emerald-400/70">{section.title}</p>
                                 <div className="mt-2 space-y-1">
-                                    {section.items.map((item) => {
-                                        const Icon = item.icon;
+                                   {section.items.map((item) => {
+    const Icon = item.icon;
 
-                                        return (
-                                            <button
-                                                key={item.label}
-                                                type="button"
-                                                className="flex w-full items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-sm text-emerald-100/90 transition hover:bg-white/5"
-                                            >
-                                                <span className="flex items-center gap-3">
-                                                    <Icon className="size-4" />
-                                                    {item.label}
-                                                </span>
-                                                {item.hasSubmenu ? <ChevronRight className="size-4 text-emerald-400/60" /> : null}
-                                            </button>
-                                        );
-                                    })}
+    return (
+        <Link
+            key={item.label}
+            href={item.href || '#'}
+            className="flex w-full items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-sm text-emerald-100/90 transition hover:bg-white/5"
+        >
+            <span className="flex items-center gap-3">
+                <Icon className="size-4" />
+                {item.label}
+            </span>
+            {item.hasSubmenu ? <ChevronRight className="size-4 text-emerald-400/60" /> : null}
+        </Link> 
+    );
+})}
                                 </div>
                             </div>
                         ))}
