@@ -1,5 +1,5 @@
-import AppLogoIcon from '@/components/app-logo-icon';
 import { Link } from '@inertiajs/react';
+import { Sprout } from 'lucide-react';
 
 interface AuthLayoutProps {
     children: React.ReactNode;
@@ -10,20 +10,30 @@ interface AuthLayoutProps {
 
 export default function AuthSimpleLayout({ children, title, description }: AuthLayoutProps) {
     return (
-        <div className="bg-background flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
-            <div className="w-full max-w-sm">
-                <div className="flex flex-col gap-8">
+        <div className="flex min-h-screen flex-col items-center justify-center bg-[radial-gradient(circle_at_top,_rgba(16,185,129,0.15)_0,_rgba(255,255,255,0)_40%),linear-gradient(180deg,#f8fbf8_0%,#ffffff_100%)] p-6 md:p-10">
+            <div className="w-full max-w-md rounded-[2rem] border border-slate-200/60 bg-white/80 p-8 shadow-2xl shadow-slate-200/50 backdrop-blur-xl sm:p-10">
+                <div className="flex flex-col gap-6">
                     <div className="flex flex-col items-center gap-4">
-                        <Link href={route('home')} className="flex flex-col items-center gap-2 font-medium">
-                            <div className="mb-1 flex h-9 w-9 items-center justify-center rounded-md">
-                                <AppLogoIcon className="size-9 fill-current text-[var(--foreground)] dark:text-white" />
+                        <Link href="/" className="flex flex-col items-center gap-2 transition hover:scale-105">
+                            <div className="flex size-14 items-center justify-center rounded-2xl bg-emerald-600 text-white shadow-lg shadow-emerald-600/30">
+                                <Sprout className="size-8" />
                             </div>
-                            <span className="sr-only">{title}</span>
+                            <div className="mt-2 text-center">
+                                <p className="text-[10px] font-bold uppercase tracking-widest text-emerald-600">UMKM</p>
+                                <p className="text-lg font-extrabold tracking-tight text-slate-900 leading-none">Desa Mandalamekar</p>
+                            </div>
                         </Link>
 
-                        <div className="space-y-2 text-center">
-                            <h1 className="text-xl font-medium">{title}</h1>
-                            <p className="text-muted-foreground text-center text-sm">{description}</p>
+                        <div className="mt-2 space-y-1.5 text-center">
+                            {/* Teks diterjemahkan otomatis ke Bahasa Indonesia */}
+                            <h1 className="text-xl font-bold text-slate-900">
+                                {title === 'Log in to your account' ? 'Masuk ke Akun Anda' : title}
+                            </h1>
+                            <p className="text-sm text-slate-500">
+                                {description === 'Enter your email and password below to log in'
+                                    ? 'Masukkan alamat email dan kata sandi Anda untuk mengakses dashboard.'
+                                    : description}
+                            </p>
                         </div>
                     </div>
                     {children}

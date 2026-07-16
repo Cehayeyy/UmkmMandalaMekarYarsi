@@ -169,7 +169,7 @@ export default function UmkmIndex() {
                             ) : null}
 
                             <a
-                                href="/#kontak"
+                                href="/admin/dashboard"
                                 className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-700"
                             >
                                 Login  <ArrowRight className="size-4" />
@@ -499,4 +499,6 @@ export default function UmkmIndex() {
         </>
     );
 }
+
+
 
