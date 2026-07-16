@@ -62,7 +62,7 @@ export default function Kontak() {
                         <Link href="/produk" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">
                             Produk
                         </Link>
-                        <Link href="/tentang" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">
+                        <Link href="tentangdesa" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">
                             Tentang Desa
                         </Link>
                         {/* Menu Kontak Aktif */}
@@ -285,7 +285,7 @@ export default function Kontak() {
                             <li><Link href="/" className="hover:text-white transition">Beranda</Link></li>
                             <li><Link href="/umkm" className="hover:text-white transition">UMKM</Link></li>
                             <li><Link href="/produk" className="hover:text-white transition">Produk</Link></li>
-                            <li><Link href="/tentang" className="hover:text-white transition">Tentang Desa</Link></li>
+                            <li><Link href="tentangdesa" className="hover:text-white transition">Tentang Desa</Link></li>
                         </ul>
                     </div>
                     <div>
