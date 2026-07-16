@@ -15,14 +15,22 @@ Route::get('/produk', function () {
     return Inertia::render('produk');
 })->name('produk');
 
-Route::get('/tentang', function () {
+Route::get('/tentangdesa', function () {
     return Inertia::render('TentangDesa');
-})->name('tentang');
+})->name('tentangdesa');
+
+Route::get('/kontak', function () {
+    return Inertia::render('kontak');
+   })->name('kontak');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
+        return Inertia::render('admin/dashboard');
     })->name('dashboard');
+
+    Route::get('admin/dashboard', function () {
+        return redirect()->route('dashboard');
+    })->name('admin.dashboard');
 });
 
 require __DIR__.'/settings.php';

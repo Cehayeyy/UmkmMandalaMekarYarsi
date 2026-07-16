@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, Trees, HeartHandshake, Eye, Target, ChevronRight, Sprout, ArrowRight } from 'lucide-react';
+import { ShieldCheck, Trees, HeartHandshake, Eye, Target, ChevronRight, Sprout, ArrowRight, Landmark } from 'lucide-react';
 import { Link, Head } from '@inertiajs/react';
 
 export default function TentangDesa() {
@@ -33,7 +33,7 @@ export default function TentangDesa() {
                         <Link href="/tentang" className="text-sm font-semibold text-emerald-600">
                             Tentang Desa
                         </Link>
-                        <a href="#kontak" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">
+                        <a href="/kontak" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">
                             Kontak
                         </a>
                     </nav>
@@ -50,11 +50,11 @@ export default function TentangDesa() {
                 </div>
             </header>
 
-            {/* HERO BANNER ATAS - EDISI TENTANG DESA (MENGGUNAKAN GAMBAR BERANDA) */}
+            {/* HERO BANNER ATAS - EDISI TENTANG DESA */}
             <div className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 lg:px-8 lg:pt-10">
                 <div className="relative overflow-hidden rounded-[2rem] border border-white/60 bg-slate-900 text-white shadow-[0_30px_90px_rgba(15,23,42,0.22)]">
 
-                    {/* Background Image - Memanggil gambar pemandangan utama beranda agar jernih */}
+                    {/* Background Image Banner */}
                     <div
                         className="absolute inset-0 bg-cover bg-center object-cover opacity-100"
                         style={{
@@ -66,12 +66,7 @@ export default function TentangDesa() {
 
                     <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-6 px-6 py-10 sm:px-10 sm:py-12 lg:px-12 lg:py-14">
                         <div>
-                            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-xs font-medium text-emerald-300 backdrop-blur-md">
-                                <span className="flex size-2 rounded-full bg-emerald-400 relative">
-                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                </span>
-                                Profil Wilayah
-                            </div>
+
 
                             <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl">
                                 Tentang <span className="text-emerald-400">Desa</span>
@@ -81,53 +76,89 @@ export default function TentangDesa() {
                                 Mengenal lebih dekat sejarah, visi misi, serta komitmen pengembangan potensi ekonomi digital di Desa Mandalamekar.
                             </p>
                         </div>
-
-                        <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-slate-900/40 px-4 py-2 text-xs font-medium backdrop-blur-md shadow-inner">
-                            <Link href="/" className="text-slate-300 hover:text-white transition">Beranda</Link>
-                            <ChevronRight className="size-3.5 text-slate-500" />
-                            <span className="text-emerald-400 font-semibold">Tentang Desa</span>
-                        </div>
                     </div>
                 </div>
             </div>
 
+            {/* DATA SEKTOR KOMODITAS UNGGULAN DESA (PENGGANTI DATA PENDUDUK / LUAS WILAYAH) */}
+            <div className="mx-auto max-w-7xl px-4 mt-12 sm:px-6 lg:px-8">
+                <div className="grid gap-4 grid-cols-1 sm:grid-cols-3 bg-white border border-slate-100 rounded-3xl p-6 shadow-sm">
+
+                    {/* Sektor 1: Kuliner */}
+                    <div className="flex items-center gap-4 p-2 border-b sm:border-b-0 sm:border-r border-slate-100">
+                        <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
+                            <Sprout className="size-6" />
+                        </div>
+                        <div>
+                            <p className="text-sm font-medium text-slate-500">Kuliner Tradisional</p>
+                            <p className="text-base font-bold text-slate-900">Olahan Fermentasi</p>
+                        </div>
+                    </div>
+
+                    {/* Sektor 2: Kerajinan Bambu */}
+                    <div className="flex items-center gap-4 p-2 border-b sm:border-b-0 sm:border-r border-slate-100 sm:pl-6">
+                        <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
+                            <Trees className="size-6" />
+                        </div>
+                        <div>
+                            <p className="text-sm font-medium text-slate-500">Kerajinan Tangan</p>
+                            <p className="text-base font-bold text-slate-900">Anyaman Bambu Estetis</p>
+                        </div>
+                    </div>
+
+                    {/* Sektor 3: Pemberdayaan */}
+                    <div className="flex items-center gap-4 p-2 sm:pl-6">
+                        <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
+                            <Landmark className="size-6" />
+                        </div>
+                        <div>
+                            <p className="text-sm font-medium text-slate-500">Fokus Utama</p>
+                            <p className="text-base font-bold text-slate-900">Pemberdayaan UMKM</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
             {/* KONTEN UTAMA - PROFILE & VISI MISI */}
-            <section className="mx-auto max-w-7xl px-4 pt-16 sm:px-6 lg:px-8">
+            <section className="mx-auto max-w-7xl px-4 pt-16 pb-16 sm:px-6 lg:px-8">
                 <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
 
                     {/* SISI KIRI: Deskripsi Cerita Desa */}
                     <div className="flex flex-col justify-center">
+
+
                         <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
                             Membangun Kemandirian Ekonomi <span className="text-emerald-600">Lewat Potensi Lokal</span>
                         </h2>
 
                         <p className="mt-4 text-sm leading-relaxed text-slate-600 sm:text-base">
-                           Desa Mandalamekar merupakan kawasan agraris subur yang kaya akan komoditas unggulan serta kreativitas masyarakat yang tinggi. Melalui wadah Digital UMKM ini, kami berkomitmen untuk menaikkan kelas produk-produk lokal—mulai dari kuliner fermentasi tradisional, manisan terong ungu alami yang unik, hingga kerajinan anyaman bambu yang bernilai seni estetis.
+                           Desa Mandalamekar merupakan kawasan agraris subur yang kaya akan komoditas unggulan serta kreativitas masyarakat yang tinggi. Melalui wadah Digital UMKM ini, kami berkomitmen untuk menaikkan kelas produk-produk lokal mulai dari kuliner fermentasi tradisional, manisan terong ungu alami yang unik, hingga kerajinan anyaman bambu yang bernilai seni estetis.
                         </p>
 
                         <p className="mt-3 text-sm leading-relaxed text-slate-600 sm:text-base">
-                            Kami percaya bahwa transformasi digital yang inklusif dapat menjembatani kerja keras para petani dan pelaku UMKM desa langsung ke tangan konsumen yang lebih luas, tanpa menghilangkan nilai budaya dan kearifan lokal.
+                            Kami percaya bahwa transformasi digital yang inklusif mampu menjembatani kerja keras para petani dan pelaku UMKM desa secara langsung ke tangan konsumen yang lebih luas, tanpa sedikit pun mengikis nilai budaya dan kearifan lokal yang kami jaga.
                         </p>
 
-                        {/* Nilai / Prinsip Desa */}
+                        {/* Nilai / Prinsip Desa dengan Hover Effect */}
                         <div className="mt-8 grid gap-4 sm:grid-cols-2">
-                            <div className="flex gap-3 rounded-2xl border border-slate-100 bg-white p-4 shadow-sm">
+                            <div className="flex gap-3 rounded-2xl border border-slate-100 bg-white p-4 shadow-sm hover:-translate-y-1 hover:shadow-md transition duration-300">
                                 <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
                                     <ShieldCheck className="size-5" />
                                 </div>
                                 <div>
                                     <h3 className="font-semibold text-slate-900 text-sm">Produk Autentik</h3>
-                                    <p className="mt-0.5 text-xs text-slate-500"> Dijamin asli dan diproduksi langsung dengan sepenuh hati oleh warga lokal desa.</p>
+                                    <p className="mt-0.5 text-xs text-slate-500">Dijamin asli dan diproduksi langsung dengan sepenuh hati oleh warga lokal desa.</p>
                                 </div>
                             </div>
 
-                            <div className="flex gap-3 rounded-2xl border border-slate-100 bg-white p-4 shadow-sm">
+                            <div className="flex gap-3 rounded-2xl border border-slate-100 bg-white p-4 shadow-sm hover:-translate-y-1 hover:shadow-md transition duration-300">
                                 <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
                                     <HeartHandshake className="size-5" />
                                 </div>
                                 <div>
                                     <h3 className="font-semibold text-slate-900 text-sm">Ekonomi Adil</h3>
-                                    <p className="mt-0.5 text-xs text-slate-500"> Mendukung ekosistem kesejahteraan yang berkelanjutan bagi para pengrajin dan pelaku usaha desa.</p>
+                                    <p className="mt-0.5 text-xs text-slate-500">Mendukung ekosistem kesejahteraan yang berkelanjutan bagi para pengrajin dan pelaku usaha desa.</p>
                                 </div>
                             </div>
                         </div>
@@ -180,7 +211,7 @@ export default function TentangDesa() {
                                 <p className="text-xs text-emerald-700/90 mt-0.5">Silakan cek maps lokasi resmi di bagian menu kontak paling bawah.</p>
                             </div>
                             <a
-                                href="#kontak"
+                                href="kontak"
                                 className="inline-flex items-center justify-center rounded-full bg-emerald-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-emerald-700 whitespace-nowrap shadow-sm"
                             >
                                 Hubungi Kami

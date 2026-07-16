@@ -7,14 +7,14 @@ const navItems = [
     { label: 'Beranda', href: '#beranda' },
     { label: 'UMKM', href: '/umkm' },
     { label: 'Produk', href: '/produk' },
-    { label: 'Tentang Desa', href: 'tentang' },
-    { label: 'Kontak', href: '#kontak' },
+    { label: 'Tentang Desa', href: 'tentangdesa' },
+    { label: 'Kontak', href: 'kontak' },
 ];
 
 const stats = [
-    { value: '12+', label: 'UMKM Aktif' },
-    { value: '56+', label: 'Produk' },
-    { value: '6', label: 'Kategori' },
+    { value: '0', label: 'UMKM Aktif' },
+    { value: '0', label: 'Produk' },
+    { value: '0', label: 'Kategori' },
     { value: '100%', label: 'Produk Lokal' },
 ];
 
@@ -90,17 +90,10 @@ export default function Welcome() {
                         </nav>
 
                         <div className="flex items-center gap-3">
-                            {auth.user ? (
-                                <Link
-                                    href={route('dashboard')}
-                                    className="hidden rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-100 sm:inline-flex"
-                                >
-                                    Dashboard
-                                </Link>
-                            ) : null}
+
 
                             <a
-                                href="#kontak"
+                                href="/admin/dashboard"
                                 className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-700"
                             >
                                 Login <ArrowRight className="size-4" />
@@ -200,7 +193,7 @@ export default function Welcome() {
                                 <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-600">Produk Unggulan</p>
                                 <h2 className="mt-2 text-3xl font-bold tracking-tight">Pilihan terbaik dari pelaku UMKM desa</h2>
                             </div>
-                            <a href="#kontak" className="hidden text-sm font-semibold text-emerald-700 hover:text-emerald-800 sm:inline-flex">
+                            <a href="kontak" className="hidden text-sm font-semibold text-emerald-700 hover:text-emerald-800 sm:inline-flex">
                                 Lihat Semua
                             </a>
                         </div>
@@ -272,7 +265,7 @@ export default function Welcome() {
                                     </p>
 
                                     <div className="mt-8 flex flex-wrap gap-3">
-                                        <a href="#kontak" className="rounded-full bg-white px-5 py-3 text-sm font-semibold text-emerald-900 transition hover:bg-emerald-50">
+                                        <a href="kontak" className="rounded-full bg-white px-5 py-3 text-sm font-semibold text-emerald-900 transition hover:bg-emerald-50">
                                             Selengkapnya
                                         </a>
                                         <a href="#produk" className="rounded-full border border-white/20 bg-white/10 px-5 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/15">
