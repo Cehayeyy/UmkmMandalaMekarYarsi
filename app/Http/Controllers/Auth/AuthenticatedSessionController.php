@@ -30,33 +30,30 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
-
-        $user = $request->user();
-        $loginType = $request->input('login_type', 'operator'); // Ambil info tab dari frontend
-
-        // 1. Cek Blokir Salah Pintu: Jika akun UMKM login di tab Operator
-        if ($loginType === 'operator' && $user->role === 'umkm') {
-            Auth::guard('web')->logout();
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
-            return back()->withErrors(['username' => 'Akun Anda adalah akun UMKM. Silakan pilih tab "Login UMKM"!']);
-        }
-
-        // 2. Cek Blokir Salah Pintu: Jika Operator/Admin login di tab UMKM
-        if ($loginType === 'umkm' && $user->role !== 'umkm') {
-            Auth::guard('web')->logout();
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
-            return back()->withErrors(['username' => 'Anda bukan pengelola UMKM. Silakan pilih tab "Login Operator"!']);
-        }
-
         $request->session()->regenerate();
 
-        // 3. Pengalihan Dashboard Sesuai Peran
+        $user = $request->user();
+        $loginType = $request->input('login_type', 'operator');
+
+        // LOGIKA KEAMANAN:
+        // Jika User adalah UMKM, tapi mencoba login di tab Operator -> Tolak!
+        if ($user->role === 'umkm' && $loginType === 'operator') {
+            Auth::guard('web')->logout();
+            return back()->withErrors(['username' => 'Akun ini terdaftar sebagai UMKM, silakan gunakan tab "Login UMKM"!']);
+        }
+
+        // Jika User adalah Admin/Operator, tapi mencoba login di tab UMKM -> Tolak!
+        if ($user->role !== 'umkm' && $loginType === 'umkm') {
+            Auth::guard('web')->logout();
+            return back()->withErrors(['username' => 'Akun ini terdaftar sebagai Operator, silakan gunakan tab "Login Operator"!']);
+        }
+
+        // PENGALIHAN DASHBOARD (Yang ini wajib diperbaiki):
         if ($user->role === 'umkm') {
             return redirect()->intended(route('umkm.dashboard'));
         }
 
+        // Semua role selain umkm (admin/superadmin/operator) akan ke sini:
         return redirect()->intended(route('dashboard'));
     }
 
