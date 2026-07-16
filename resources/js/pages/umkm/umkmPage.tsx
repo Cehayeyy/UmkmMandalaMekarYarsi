@@ -79,7 +79,7 @@ import { type SharedData } from '@/types';
                                     <Link key={item.label} href={item.href} className="text-sm font-medium text-slate-600 hover:text-emerald-700">{item.label}</Link>
                                 ))}
                             </nav>
-                            <a href="/#kontak" className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700">
+                            <a href="/admin/dashboard" className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700">
                                 Login <ArrowRight className="size-4" />
                             </a>
                         </div>
