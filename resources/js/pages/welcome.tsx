@@ -12,9 +12,9 @@ const navItems = [
 ];
 
 const stats = [
-    { value: '12+', label: 'UMKM Aktif' },
-    { value: '56+', label: 'Produk' },
-    { value: '6', label: 'Kategori' },
+    { value: '0', label: 'UMKM Aktif' },
+    { value: '0', label: 'Produk' },
+    { value: '0', label: 'Kategori' },
     { value: '100%', label: 'Produk Lokal' },
 ];
 
