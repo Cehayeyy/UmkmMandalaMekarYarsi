@@ -1,4 +1,4 @@
-    import { type SharedData } from '@/types';
+import { type SharedData } from '@/types';
     import { Head, Link, usePage } from '@inertiajs/react';
     import {
         ArrowRight,
@@ -60,79 +60,8 @@
                     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700" rel="stylesheet" />
                 </Head>
 
-<<<<<<< HEAD
-                        <nav className="hidden items-center gap-8 lg:flex">
-                            {navItems.map((item) => {
-                                const isActive = item.label === 'UMKM';
-                                const className = `text-sm font-medium transition ${
-                                    isActive ? 'text-emerald-700' : 'text-slate-600 hover:text-emerald-700'
-                                }`;
-
-                                return item.href.startsWith('/#') ? (
-                                    <a key={item.label} href={item.href} className={className}>
-                                        {item.label}
-                                    </a>
-                                ) : (
-                                    <Link key={item.label} href={item.href} className={className}>
-                                        {item.label}
-                                    </Link>
-                                );
-                            })}
-                        </nav>
-
-                        <div className="flex items-center gap-3">
-                            {auth.user ? (
-                                <Link
-                                    href={route('dashboard')}
-                                    className="hidden rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-100 sm:inline-flex"
-                                >
-                                    Dashboard
-                                </Link>
-                            ) : null}
-
-                            <a
-                                href="/admin/dashboard"
-                                className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-700"
-                            >
-                                Login  <ArrowRight className="size-4" />
-                            </a>
-
-                            <button
-                                type="button"
-                                onClick={() => setIsMenuOpen((value) => !value)}
-                                className="inline-flex size-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-sm lg:hidden"
-                                aria-label="Buka menu"
-                            >
-                                {isMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
-                            </button>
-                        </div>
-                    </div>
-
-                    {isMenuOpen ? (
-                        <div className="border-t border-slate-200/70 bg-white px-4 py-4 lg:hidden">
-                            <nav className="mx-auto flex max-w-7xl flex-col gap-3">
-                                {navItems.map((item) =>
-                                    item.href.startsWith('/#') ? (
-                                        <a
-                                            key={item.label}
-                                            href={item.href}
-                                            className="rounded-2xl px-3 py-2 text-sm font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-700"
-                                        >
-                                            {item.label}
-                                        </a>
-                                    ) : (
-                                        <Link
-                                            key={item.label}
-                                            href={item.href}
-                                            className="rounded-2xl px-3 py-2 text-sm font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-700"
-                                        >
-                                            {item.label}
-                                        </Link>
-                                    ),
-                                )}
-=======
                 <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(16,185,129,0.16)_0,_rgba(255,255,255,0)_36%),linear-gradient(180deg,#f4faf6_0%,#f8fbf8_45%,#ffffff_100%)] text-slate-900">
-                    
+
                     {/* HEADER */}
                     <header className="sticky top-0 z-50 border-b border-white/70 bg-white/95 backdrop-blur-xl">
                         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
@@ -149,7 +78,6 @@
                                 {navItems.map((item) => (
                                     <Link key={item.label} href={item.href} className="text-sm font-medium text-slate-600 hover:text-emerald-700">{item.label}</Link>
                                 ))}
->>>>>>> 685c2dd6a6b38ac137851eb9e7dfbe82a42fb1e1
                             </nav>
                             <a href="/#kontak" className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700">
                                 Login <ArrowRight className="size-4" />
@@ -245,193 +173,9 @@
                                 </div>
                             </div>
                         </div>
-<<<<<<< HEAD
-
-                        {/* GRID CARDS */}
-                        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                            {umkmList.map((umkm) => {
-                                const Icon = umkm.icon;
-
-                                return (
-                                    <article
-                                        key={umkm.name}
-                                        className="group flex flex-col overflow-hidden rounded-[1.5rem] border border-slate-200 bg-white shadow-sm shadow-slate-200/60 transition hover:-translate-y-1 hover:shadow-lg"
-                                    >
-                                        <div className={`relative aspect-[4/3] bg-gradient-to-br ${umkm.tone}`}>
-                                            <div className="absolute inset-0 flex items-center justify-center text-white/70">
-                                                <Icon className="size-12" />
-                                            </div>
-                                        </div>
-
-                                        <div className="flex flex-1 flex-col p-5">
-                                            <span className="inline-flex w-fit rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
-                                                {umkm.category}
-                                            </span>
-
-                                            <h3 className="mt-3 text-base font-bold text-slate-900">{umkm.name}</h3>
-                                            <p className="mt-1 text-sm leading-5 text-slate-500">{umkm.description}</p>
-
-                                            <p className="mt-3 flex items-center gap-1.5 text-sm text-slate-500">
-                                                <MapPin className="size-4 text-emerald-600" />
-                                                {umkm.location}
-                                            </p>
-
-                                            <button
-                                                type="button"
-                                                className="mt-4 inline-flex items-center justify-center gap-2 rounded-full border border-emerald-200 px-4 py-2 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-50"
-                                            >
-                                                Lihat Produk <ArrowRight className="size-4" />
-                                            </button>
-                                        </div>
-                                    </article>
-                                );
-                            })}
-                        </div>
-
-                        {/* PAGINATION */}
-                        <div className="mt-10 flex items-center justify-center gap-2">
-                            <button
-                                type="button"
-                                onClick={() => setActivePage((page) => Math.max(1, page - 1))}
-                                className="flex size-9 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 transition hover:bg-slate-50"
-                                aria-label="Halaman sebelumnya"
-                            >
-                                <ChevronLeft className="size-4" />
-                            </button>
-
-                            {[1, 2, 3].map((page) => (
-                                <button
-                                    key={page}
-                                    type="button"
-                                    onClick={() => setActivePage(page)}
-                                    className={`flex size-9 items-center justify-center rounded-full text-sm font-semibold transition ${
-                                        activePage === page ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/25' : 'border border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
-                                    }`}
-                                >
-                                    {page}
-                                </button>
-                            ))}
-
-                            <button
-                                type="button"
-                                onClick={() => setActivePage((page) => Math.min(3, page + 1))}
-                                className="flex size-9 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 transition hover:bg-slate-50"
-                                aria-label="Halaman berikutnya"
-                            >
-                                <ChevronRight className="size-4" />
-                            </button>
-                        </div>
-                    </section>
-                </main>
-
-                {/* FOOTER */}
-                <footer className="bg-emerald-950 text-emerald-100">
-                    <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-4 lg:px-8">
-                        <div>
-                            <div className="flex items-center gap-3">
-                                <div className="flex size-10 items-center justify-center rounded-2xl bg-emerald-600 text-white">
-                                    <Sprout className="size-5" />
-                                </div>
-                                <p className="font-semibold text-white">UMKM Desa Mandalamekar</p>
-                            </div>
-                            <p className="mt-4 max-w-xs text-sm leading-6 text-emerald-200/80">
-                                Dukung produk lokal, majukan ekonomi desa.
-                            </p>
-                        </div>
-
-                        <div>
-                            <p className="font-semibold text-white">Menu</p>
-                            <ul className="mt-4 space-y-2 text-sm text-emerald-200/80">
-                                <li>
-                                    <Link href="/welcome" className="hover:text-white">
-                                        Beranda
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link href="/umkm" className="hover:text-white">
-                                        UMKM
-                                    </Link>
-                                </li>
-                                <li>
-                                    <a href="/produk" className="hover:text-white">
-                                        Produk
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="/#tentang" className="hover:text-white">
-                                        Tentang Desa
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="/#kontak" className="hover:text-white">
-                                        Kontak
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div>
-                            <p className="font-semibold text-white">Kontak</p>
-                            <ul className="mt-4 space-y-3 text-sm text-emerald-200/80">
-                                <li className="flex items-start gap-2">
-                                    <MapPin className="mt-0.5 size-4 shrink-0" />
-                                    <span>Desa Mandalamekar, Kecamatan Cimenyan, Kabupaten Bandung, Jawa Barat</span>
-                                </li>
-                                <li className="flex items-center gap-2">
-                                    <Phone className="size-4 shrink-0" />
-                                    <span>0812-3456-7890</span>
-                                </li>
-                                <li className="flex items-center gap-2">
-                                    <Mail className="size-4 shrink-0" />
-                                    <span>umkm.mandalamekar@gmail.com</span>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div>
-                            <p className="font-semibold text-white">Ikuti Kami</p>
-                            <div className="mt-4 flex gap-3">
-                                <a
-                                    href="#"
-                                    className="flex size-9 items-center justify-center rounded-full bg-white/10 transition hover:bg-white/20"
-                                    aria-label="Facebook"
-                                >
-                                    <Facebook className="size-4" />
-                                </a>
-                                <a
-                                    href="#"
-                                    className="flex size-9 items-center justify-center rounded-full bg-white/10 transition hover:bg-white/20"
-                                    aria-label="Instagram"
-                                >
-                                    <Instagram className="size-4" />
-                                </a>
-                                <a
-                                    href="#"
-                                    className="flex size-9 items-center justify-center rounded-full bg-white/10 transition hover:bg-white/20"
-                                    aria-label="WhatsApp"
-                                >
-                                    <MessageCircle className="size-4" />
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="border-t border-white/10 py-4 text-center text-sm text-emerald-200/70">
-                        © 2026 UMKM Desa Mandalamekar. Universitas Yarsi.
-                    </div>
-                </footer>
-            </div>
-        </>
-    );
-}
-
-
-
-=======
                         <div className="border-t border-white/10 py-4 text-center text-sm text-emerald-200/70">© 2026 UMKM Desa Mandalamekar. Universitas Yarsi.</div>
                     </footer>
                 </div>
             </>
         );
     }
->>>>>>> 685c2dd6a6b38ac137851eb9e7dfbe82a42fb1e1

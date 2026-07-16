@@ -1,8 +1,8 @@
 import { useState, useMemo } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import {
-    Search, Store, ChevronRight, ChevronDown, 
-    RotateCcw, MapPin, Sprout, ArrowRight, MessageCircle, 
+    Search, Store, ChevronRight, ChevronDown,
+    RotateCcw, MapPin, Sprout, ArrowRight, MessageCircle,
     Facebook, Instagram, Check
 } from 'lucide-react';
 
@@ -62,20 +62,7 @@ export default function ProdukPage() {
                         <Link href="#tentang" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Tentang Desa</Link>
                         <Link href="#kontak" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Kontak</Link>
                     </nav>
-<<<<<<< HEAD
-
-                    <div className="flex items-center gap-3">
-                        <Link
-                             href="/admin/dashboard"
-                            className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-700"
-                        >
-                            <span>Login</span>
-                            <ArrowRight className="size-4" />
-                        </Link>
-                    </div>
-=======
                     <button className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg transition hover:bg-emerald-700">Login <ArrowRight className="size-4" /></button>
->>>>>>> 685c2dd6a6b38ac137851eb9e7dfbe82a42fb1e1
                 </div>
             </header>
 
@@ -95,7 +82,7 @@ export default function ProdukPage() {
                             <div className="flex items-center gap-2 mb-4 text-emerald-700 text-xs font-bold bg-emerald-50 w-fit px-3 py-1 rounded-full"><Store className="size-3"/> Step 1: Pilih UMKM</div>
                             <p className="text-sm font-bold text-slate-900 mb-4">Filter Etalase Berdasarkan Toko UMKM</p>
                         </div>
-                        
+
                         {/* DROPDOWN PILIH UMKM */}
                         <div className="relative min-w-[260px]">
                             <select
@@ -205,7 +192,7 @@ export default function ProdukPage() {
                             </select>
                             <ChevronDown className="pointer-events-none absolute right-3.5 top-1/2 size-3.5 -translate-y-1/2 text-slate-400" />
                         </div>
-                        
+
                         <div className="flex gap-2 mt-4 pt-2">
                             <button onClick={handleReset} className="flex items-center gap-1 border rounded-xl px-4 py-2.5 text-xs font-bold text-slate-600 hover:bg-slate-50">
                                 <RotateCcw className="size-3.5" /> Reset
@@ -249,7 +236,7 @@ export default function ProdukPage() {
                         </p>
                     </div>
 
-                    <div className="grid gap-4 sm:grid-cols-2">
+       <div className="grid gap-4 sm:grid-cols-2">
                         <div className="rounded-[1.5rem] border border-slate-100 bg-slate-50 p-5 shadow-2xs">
                             <p className="text-sm font-bold text-slate-900">Kontak Resmi</p>
                             <p className="mt-2 text-xs leading-relaxed text-slate-500">Hubungi perangkat desa atau pengelola UMKM melalui kanal resmi.</p>
@@ -261,7 +248,7 @@ export default function ProdukPage() {
                         </div>
 
                         <div className="rounded-[1.5rem] border border-emerald-100 bg-emerald-50/70 p-5">
-                            <p className="text-sm font-bold text-emerald-900">Dukungan Lokal</p>
+                           <p className="text-sm font-bold text-emerald-900">Dukungan Lokal</p>
                             <p className="mt-2 text-xs leading-relaxed text-emerald-900/75">Dukung produk lokal, bagikan ke warga, dan ikut memajukan ekonomi desa bersama.</p>
                         </div>
                     </div>
