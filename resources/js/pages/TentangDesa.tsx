@@ -21,13 +21,21 @@ export default function TentangDesa() {
                     </Link>
 
                     <nav className="hidden items-center gap-8 md:flex">
-                        <Link href="/" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Beranda</Link>
-                        <Link href="/umkm" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">UMKM</Link>
-                        <Link href="/produk" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Produk</Link>
-                        {/* Ubah /tentang menjadi /tentangdesa */}
-                        <Link href="/tentangdesa" className="text-sm font-semibold text-emerald-600">Tentang Desa</Link>
-                        {/* Ubah tag <a> menjadi tag <Link> */}
-                        <Link href="/kontak" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Kontak</Link>
+                        <Link href="/" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">
+                            Beranda
+                        </Link>
+                        <Link href="/umkm" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">
+                            UMKM
+                        </Link>
+                        <Link href="/produk" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">
+                            Produk
+                        </Link>
+                        <Link href="/tentangdesa" className="text-sm font-semibold text-emerald-600">
+                            Tentang Desa
+                        </Link>
+                        <Link href="/kontak" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">
+                            Kontak
+                        </Link>
                     </nav>
 
                     <div className="flex items-center gap-3">

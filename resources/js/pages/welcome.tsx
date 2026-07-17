@@ -7,8 +7,8 @@ const navItems = [
     { label: 'Beranda', href: '/' }, // (Atau '#beranda' khusus untuk welcome.tsx)
     { label: 'UMKM', href: '/umkm' },
     { label: 'Produk', href: '/produk' },
-    { label: 'Tentang Desa', href: '/tentangdesa' }, // <--- TAMBAHKAN / DI SINI
-    { label: 'Kontak', href: '/kontak' },          // <--- TAMBAHKAN / DI SINI
+    { label: 'Tentang Desa', href: '/tentangdesa' },
+    { label: 'Kontak', href: '/kontak' },
 ];
 
 const stats = [

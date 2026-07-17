@@ -16,7 +16,6 @@ Route::get('/produk', function () {
     return Inertia::render('produk');
 })->name('produk');
 
-// --- RUTE BARU UNTUK TENTANG DESA & KONTAK ---
 Route::get('/tentangdesa', function () {
     return Inertia::render('TentangDesa');
 })->name('tentangdesa');
@@ -24,12 +23,14 @@ Route::get('/tentangdesa', function () {
 Route::get('/kontak', function () {
     return Inertia::render('kontak');
 })->name('kontak');
-// ----------------------------------------------
 
 // --- GRUP RUTE ADMIN & OPERATOR ---
 Route::middleware(['auth'])->group(function () {
     Route::get('dashboard', function () {
-        if (auth()->user()->role === 'umkm') return redirect()->route('umkm.dashboard');
+        if (auth()->user()->role === 'umkm') {
+            return redirect()->route('umkm.dashboard');
+        }
+
         return Inertia::render('admin/dashboard');
     })->name('dashboard');
 
@@ -48,7 +49,10 @@ Route::middleware(['auth'])->group(function () {
 // --- GRUP RUTE KHUSUS DASHBOARD UMKM ---
 Route::middleware(['auth'])->group(function () {
     Route::get('umkm/dashboard', function () {
-        if (auth()->user()->role !== 'umkm') return redirect()->route('dashboard');
+        if (auth()->user()->role !== 'umkm') {
+            return redirect()->route('dashboard');
+        }
+
         return Inertia::render('umkm/dashboard'); // File dashboard baru untuk UMKM
     })->name('umkm.dashboard');
 });
