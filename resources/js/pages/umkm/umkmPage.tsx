@@ -159,6 +159,29 @@ import { type SharedData } from '@/types';
                             )}
                         </section>
                     </main>
+                    
+                    {/* SECTION DAFTAR UMKM (DITAMBAHKAN DI ATAS FOOTER) */}
+                    <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+                        <div className="flex flex-col md:flex-row items-center justify-between gap-6 rounded-[2rem] bg-emerald-900 p-8 text-white shadow-xl">
+                            <div className="flex items-center gap-4">
+                                <div className="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-emerald-800">
+                                    <Store className="size-8 text-emerald-400" />
+                                </div>
+                                <div>
+                                    <h3 className="text-xl font-bold">Punya produk unggulan di desa?</h3>
+                                    <p className="text-sm text-emerald-100/80 mt-1 max-w-md">
+                                        Daftarkan produk dan usaha UMKM Anda sekarang pada portal resmi desa untuk memperluas jangkauan pasar hingga ke daerah.
+                                    </p>
+                                </div>
+                            </div>
+                            <Link 
+                                href="/register" // Sesuaikan dengan route pendaftaran Anda
+                                className="shrink-0 rounded-full bg-white px-6 py-3 text-sm font-bold text-emerald-900 shadow-lg transition hover:bg-emerald-50"
+                            >
+                                Daftarkan UMKM Anda
+                            </Link>
+                        </div>
+                    </section>
 
                     {/* FOOTER */}
                     <footer className="bg-emerald-950 text-emerald-100">
