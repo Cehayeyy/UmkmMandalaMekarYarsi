@@ -152,7 +152,7 @@ export default function AdminDashboard() {
                 {item.label}
             </span>
             {item.hasSubmenu ? <ChevronRight className="size-4 text-emerald-400/60" /> : null}
-        </Link> 
+        </Link>
     );
 })}
                                 </div>
