@@ -16,6 +16,16 @@ Route::get('/produk', function () {
     return Inertia::render('produk');
 })->name('produk');
 
+// --- RUTE BARU UNTUK TENTANG DESA & KONTAK ---
+Route::get('/tentangdesa', function () {
+    return Inertia::render('TentangDesa');
+})->name('tentangdesa');
+
+Route::get('/kontak', function () {
+    return Inertia::render('kontak');
+})->name('kontak');
+// ----------------------------------------------
+
 // --- GRUP RUTE ADMIN & OPERATOR ---
 Route::middleware(['auth'])->group(function () {
     Route::get('dashboard', function () {

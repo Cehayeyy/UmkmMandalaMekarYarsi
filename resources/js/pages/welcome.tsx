@@ -4,11 +4,11 @@ import { ArrowRight, Facebook, Instagram, Leaf, Menu, MessageCircle, Sprout, Sto
 import { useState } from 'react';
 
 const navItems = [
-    { label: 'Beranda', href: '#beranda' },
+    { label: 'Beranda', href: '/' }, // (Atau '#beranda' khusus untuk welcome.tsx)
     { label: 'UMKM', href: '/umkm' },
     { label: 'Produk', href: '/produk' },
-    { label: 'Tentang Desa', href: 'tentangdesa' },
-    { label: 'Kontak', href: 'kontak' },
+    { label: 'Tentang Desa', href: '/tentangdesa' }, // <--- TAMBAHKAN / DI SINI
+    { label: 'Kontak', href: '/kontak' },          // <--- TAMBAHKAN / DI SINI
 ];
 
 const stats = [
@@ -193,7 +193,7 @@ export default function Welcome() {
                                 <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-600">Produk Unggulan</p>
                                 <h2 className="mt-2 text-3xl font-bold tracking-tight">Pilihan terbaik dari pelaku UMKM desa</h2>
                             </div>
-                            <a href="kontak" className="hidden text-sm font-semibold text-emerald-700 hover:text-emerald-800 sm:inline-flex">
+                            <a href="/kontak" className="hidden text-sm font-semibold text-emerald-700 hover:text-emerald-800 sm:inline-flex">
                                 Lihat Semua
                             </a>
                         </div>
@@ -265,7 +265,7 @@ export default function Welcome() {
                                     </p>
 
                                     <div className="mt-8 flex flex-wrap gap-3">
-                                        <a href="kontak" className="rounded-full bg-white px-5 py-3 text-sm font-semibold text-emerald-900 transition hover:bg-emerald-50">
+                                        <a href="/kontak" className="rounded-full bg-white px-5 py-3 text-sm font-semibold text-emerald-900 transition hover:bg-emerald-50">
                                             Selengkapnya
                                         </a>
                                         <a href="#produk" className="rounded-full border border-white/20 bg-white/10 px-5 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/15">

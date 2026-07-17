@@ -53,22 +53,12 @@ export default function Kontak() {
                     </Link>
 
                     <nav className="hidden items-center gap-8 md:flex">
-                        <Link href="/" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">
-                            Beranda
-                        </Link>
-                        <Link href="/umkm" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">
-                            UMKM
-                        </Link>
-                        <Link href="/produk" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">
-                            Produk
-                        </Link>
-                        <Link href="tentangdesa" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">
-                            Tentang Desa
-                        </Link>
-                        {/* Menu Kontak Aktif */}
-                        <Link href="/kontak" className="text-sm font-semibold text-emerald-600">
-                            Kontak
-                        </Link>
+                        <Link href="/" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Beranda</Link>
+                        <Link href="/umkm" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">UMKM</Link>
+                        <Link href="/produk" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Produk</Link>
+                        {/* Tambahkan garis miring di bawah ini */}
+                        <Link href="/tentangdesa" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Tentang Desa</Link>
+                        <Link href="/kontak" className="text-sm font-semibold text-emerald-600">Kontak</Link>
                     </nav>
 
                     <div className="flex items-center gap-3">
@@ -285,7 +275,7 @@ export default function Kontak() {
                             <li><Link href="/" className="hover:text-white transition">Beranda</Link></li>
                             <li><Link href="/umkm" className="hover:text-white transition">UMKM</Link></li>
                             <li><Link href="/produk" className="hover:text-white transition">Produk</Link></li>
-                            <li><Link href="tentangdesa" className="hover:text-white transition">Tentang Desa</Link></li>
+                            <li><Link href="/tentangdesa" className="hover:text-white transition">Tentang Desa</Link></li>
                         </ul>
                     </div>
                     <div>

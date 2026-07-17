@@ -59,8 +59,9 @@ export default function ProdukPage() {
                         <Link href="/" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Beranda</Link>
                         <Link href="/umkm" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">UMKM</Link>
                         <Link href="/produk" className="text-sm font-semibold text-emerald-600">Produk</Link>
-                        <Link href="tentangdesa" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Tentang Desa</Link>
-                        <Link href="kontak" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Kontak</Link>
+                        {/* Tambahkan garis miring di bawah ini */}
+                        <Link href="/tentangdesa" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Tentang Desa</Link>
+                        <Link href="/kontak" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Kontak</Link>
                     </nav>
                     <button className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg transition hover:bg-emerald-700">Login <ArrowRight className="size-4" /></button>
                 </div>

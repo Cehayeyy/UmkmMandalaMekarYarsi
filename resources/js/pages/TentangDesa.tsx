@@ -21,21 +21,13 @@ export default function TentangDesa() {
                     </Link>
 
                     <nav className="hidden items-center gap-8 md:flex">
-                        <Link href="/" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">
-                            Beranda
-                        </Link>
-                        <Link href="/umkm" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">
-                            UMKM
-                        </Link>
-                        <Link href="/produk" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">
-                            Produk
-                        </Link>
-                        <Link href="/tentang" className="text-sm font-semibold text-emerald-600">
-                            Tentang Desa
-                        </Link>
-                        <a href="/kontak" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">
-                            Kontak
-                        </a>
+                        <Link href="/" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Beranda</Link>
+                        <Link href="/umkm" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">UMKM</Link>
+                        <Link href="/produk" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Produk</Link>
+                        {/* Ubah /tentang menjadi /tentangdesa */}
+                        <Link href="/tentangdesa" className="text-sm font-semibold text-emerald-600">Tentang Desa</Link>
+                        {/* Ubah tag <a> menjadi tag <Link> */}
+                        <Link href="/kontak" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Kontak</Link>
                     </nav>
 
                     <div className="flex items-center gap-3">
@@ -211,7 +203,7 @@ export default function TentangDesa() {
                                 <p className="text-xs text-emerald-700/90 mt-0.5">Silakan cek maps lokasi resmi di bagian menu kontak paling bawah.</p>
                             </div>
                             <a
-                                href="kontak"
+                                href="/kontak"
                                 className="inline-flex items-center justify-center rounded-full bg-emerald-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-emerald-700 whitespace-nowrap shadow-sm"
                             >
                                 Hubungi Kami

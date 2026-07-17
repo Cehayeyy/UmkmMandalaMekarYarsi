@@ -30,7 +30,7 @@ import { type SharedData } from '@/types';
         { label: 'UMKM', href: '/umkm' },
         { label: 'Produk', href: '/produk' },
         { label: 'Tentang Desa', href: '/tentangdesa' },
-        { label: 'Kontak', href: '/#kontak' },
+        { label: 'Kontak', href: '/kontak' },
     ];
 
     const stats = [
@@ -79,9 +79,9 @@ import { type SharedData } from '@/types';
                                     <Link key={item.label} href={item.href} className="text-sm font-medium text-slate-600 hover:text-emerald-700">{item.label}</Link>
                                 ))}
                             </nav>
-                            <a href="/#kontak" className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700">
-                                Login <ArrowRight className="size-4" />
-                            </a>
+                            <Link href="/login" className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700">
+                                    Login <ArrowRight className="size-4" />
+                            </Link>
                         </div>
                     </header>
 
