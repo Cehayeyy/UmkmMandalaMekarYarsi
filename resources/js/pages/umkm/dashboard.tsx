@@ -27,12 +27,12 @@ export default function UmkmDashboard() {
                         <Link href={route('umkm.dashboard')} className="flex w-full items-center gap-3 rounded-xl bg-emerald-600 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-emerald-900/40">
                             <LayoutDashboard className="size-4" /> Dashboard Toko
                         </Link>
-                        <a href="#" className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-emerald-100/80 hover:bg-white/5 transition">
+                        <Link href={route('umkm.produk.index')} className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-emerald-100/80 hover:bg-white/5 transition">
                             <Package className="size-4" /> Produk Saya
-                        </a>
-                        <a href="#" className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-emerald-100/80 hover:bg-white/5 transition">
+                        </Link>
+                        <Link href={route('umkm.profil.edit')} className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-emerald-100/80 hover:bg-white/5 transition">
                             <Tag className="size-4" /> Profil Toko
-                        </a>
+                        </Link>
                     </nav>
 
                     <div className="border-t border-white/10 p-4">
