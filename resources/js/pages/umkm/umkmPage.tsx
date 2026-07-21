@@ -76,13 +76,29 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
                                 <p className="text-lg font-bold tracking-tight">Desa Mandalamekar</p>
                             </div>
                         </Link>
+
+                        {/* 🛠️ PERBAIKAN: Menu UMKM diberi warna hijau jika href === '/umkm' */}
                         <nav className="hidden items-center gap-8 lg:flex">
-                            {navItems.map((item) => (
-                                <Link key={item.label} href={item.href} className="text-sm font-medium text-slate-600 hover:text-emerald-700">{item.label}</Link>
-                            ))}
+                            {navItems.map((item) => {
+                                const isActive = item.href === '/umkm';
+                                return (
+                                    <Link
+                                        key={item.label}
+                                        href={item.href}
+                                        className={`text-sm transition ${
+                                            isActive
+                                                ? 'font-semibold text-emerald-600'
+                                                : 'font-medium text-slate-600 hover:text-emerald-700'
+                                        }`}
+                                    >
+                                        {item.label}
+                                    </Link>
+                                );
+                            })}
                         </nav>
+
                         <Link href="/login" className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700">
-                                Login <ArrowRight className="size-4" />
+                            Login <ArrowRight className="size-4" />
                         </Link>
                     </div>
                 </header>
@@ -163,7 +179,7 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
                         )}
                     </section>
                 </main>
-                
+
                 {/* SECTION DAFTAR UMKM (DITAMBAHKAN DI ATAS FOOTER) */}
                 <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
                     <div className="flex flex-col md:flex-row items-center justify-between gap-6 rounded-[2rem] bg-emerald-900 p-8 text-white shadow-xl">
@@ -178,8 +194,8 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
                                 </p>
                             </div>
                         </div>
-                        <Link 
-                            href="/register" // Sesuaikan dengan route pendaftaran Anda
+                        <Link
+                            href="/register"
                             className="shrink-0 rounded-full bg-white px-6 py-3 text-sm font-bold text-emerald-900 shadow-lg transition hover:bg-emerald-50"
                         >
                             Daftarkan UMKM Anda

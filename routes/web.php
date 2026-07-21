@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\AkunController;
-use App\Http\Controllers\ProdukController; // <--- 1. Tambahkan ini
-use App\Models\User; 
+use App\Http\Controllers\ProdukController;
+use App\Http\Controllers\UmkmController;
+use App\Models\Product;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -41,7 +43,6 @@ Route::middleware(['auth'])->group(function () {
         return Inertia::render('admin/dashboard');
     })->name('dashboard');
 
-    // PERBAIKAN: Menggunakan rute group untuk fungsi pengecekan Admin
     Route::group([], function () {
         Route::get('admin/dashboard', function () {
             if (auth()->user()->role === 'umkm') {
@@ -50,7 +51,7 @@ Route::middleware(['auth'])->group(function () {
             return redirect()->route('dashboard');
         })->name('admin.dashboard');
 
-        // CRUD Manajemen Akun (Ditambahkan pengecekan manual agar aman dari URL bypass)
+        // CRUD Manajemen Akun
         Route::get('admin/manajemen-akun', function () {
             if (auth()->user()->role === 'umkm') return redirect()->route('umkm.dashboard');
             return app(AkunController::class)->index();
@@ -63,6 +64,11 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
+// Rute Khusus Kategori Produk
+Route::get('admin/kategori-produk', function () {
+    return Inertia::render('admin/KategoriProduk');
+})->name('admin.kategori');
+
 // --- GRUP RUTE KHUSUS DASHBOARD UMKM ---
 Route::middleware(['auth'])->group(function () {
     Route::get('umkm/dashboard', function () {
@@ -70,30 +76,25 @@ Route::middleware(['auth'])->group(function () {
             return redirect()->route('dashboard');
         }
 
-        return Inertia::render('umkm/dashboard'); 
+        $produkList = Product::where('user_id', auth()->id())->latest()->get();
+
+        return Inertia::render('umkm/dashboard', [
+            'produkList' => $produkList,
+        ]);
     })->name('umkm.dashboard');
 
     // RUTE EDIT PROFIL UMKM
-    Route::get('umkm/profil', function () {
-        if (auth()->user()->role !== 'umkm') return redirect()->route('dashboard');
-        return app(\App\Http\Controllers\UmkmController::class)->edit(request());
-    })->name('umkm.profil.edit');
+    Route::get('umkm/profil', [UmkmController::class, 'edit'])->name('umkm.profil.edit');
+    Route::put('umkm/profil', [UmkmController::class, 'update'])->name('umkm.profil.update');
 
-    Route::put('umkm/profil', function () {
-        if (auth()->user()->role !== 'umkm') return redirect()->route('dashboard');
-        return app(\App\Http\Controllers\UmkmController::class)->update(request());
-    })->name('umkm.profil.update');
+    // --- RUTE PRODUK UMKM (STIKER RESMI CONTROLLER) ---
+    Route::get('umkm/produk', [ProdukController::class, 'index'])->name('umkm.produk.index');
+    Route::get('umkm/produk/daftar', [ProdukController::class, 'daftar'])->name('umkm.produk.daftar');
+    Route::post('umkm/produk', [ProdukController::class, 'store'])->name('umkm.produk.store');
 
-    // --- RUTE PRODUK UMKM ---
-    Route::get('umkm/produk', function () {
-        if (auth()->user()->role !== 'umkm') return redirect()->route('dashboard');
-        return app(ProdukController::class)->index(request());
-    })->name('umkm.produk.index');
-
-    Route::post('umkm/produk', function () {
-        if (auth()->user()->role !== 'umkm') return redirect()->route('dashboard');
-        return app(ProdukController::class)->store(request());
-    })->name('umkm.produk.store');
+    // 🛠️ PERBAIKAN RUTE UPDATE & DESTROY PRODUK
+    Route::put('umkm/produk/{product}', [ProdukController::class, 'update'])->name('umkm.produk.update');
+    Route::delete('umkm/produk/{product}', [ProdukController::class, 'destroy'])->name('umkm.produk.destroy');
 });
 
 require __DIR__.'/settings.php';

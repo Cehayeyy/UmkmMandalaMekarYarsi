@@ -52,57 +52,68 @@ export default function ProdukPage() {
             <header className="sticky top-0 z-50 border-b border-white/80 bg-white/80 backdrop-blur-xl transition-all">
                 <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
                     <Link href="/" className="flex items-center gap-3">
-                        <div className="flex size-11 items-center justify-center rounded-2xl bg-emerald-600 text-white shadow-lg shadow-emerald-600/25"><Sprout className="size-6" /></div>
-                        <div><p className="text-xs font-bold uppercase tracking-wider text-emerald-600">UMKM</p><p className="text-base font-extrabold text-slate-900 leading-none">Desa Mandalamekar</p></div>
+                        <div className="flex size-11 items-center justify-center rounded-2xl bg-emerald-600 text-white shadow-lg shadow-emerald-600/25">
+                            <Sprout className="size-6" />
+                        </div>
+                        <div>
+                            <p className="text-xs font-bold uppercase tracking-wider text-emerald-600">UMKM</p>
+                            <p className="text-base font-extrabold text-slate-900 leading-none">Desa Mandalamekar</p>
+                        </div>
                     </Link>
                     <nav className="hidden items-center gap-8 md:flex">
                         <Link href="/" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Beranda</Link>
                         <Link href="/umkm" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">UMKM</Link>
                         <Link href="/produk" className="text-sm font-semibold text-emerald-600">Produk</Link>
-                        {/* Tambahkan garis miring di bawah ini */}
                         <Link href="/tentangdesa" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Tentang Desa</Link>
                         <Link href="/kontak" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Kontak</Link>
                     </nav>
-                    <button className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg transition hover:bg-emerald-700">Login <ArrowRight className="size-4" /></button>
+
+                    {/* 🛠️ PERBAIKAN: Tombol Login menggunakan Link agar mengarah ke route('login') */}
+                    <Link
+                        href={route('login')}
+                        className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg transition hover:bg-emerald-700"
+                    >
+                        Login <ArrowRight className="size-4" />
+                    </Link>
                 </div>
             </header>
 
-         <main className="mx-auto max-w-7xl px-4 py-8">
-    {/* HERO BANNER - SUDAH DITAMBAHKAN BACKGROUND GAMBAR LAPISAN GRADASI */}
-    <div className="relative overflow-hidden rounded-[2rem] bg-[#0a1426] text-white mb-8 border border-white/10">
+            <main className="mx-auto max-w-7xl px-4 py-8">
+                {/* HERO BANNER - SUDAH DITAMBAHKAN BACKGROUND GAMBAR LAPISAN GRADASI */}
+                <div className="relative overflow-hidden rounded-[2rem] bg-[#0a1426] text-white mb-8 border border-white/10">
 
-        {/* 🛠️ BARIS BARU: Ini elemen untuk memanggil file gambarnya */}
-        <div
-            className="absolute inset-0 bg-cover bg-center object-cover opacity-100 pointer-events-none"
-            style={{
-                backgroundImage: 'linear-gradient(90deg, rgba(10, 20, 38, 0.85) 0%, rgba(10, 20, 38, 0.55) 50%, rgba(10, 20, 38, 0.2) 100%), url("images/Produk-bg.jpg")',
-            }}
-        />
+                    {/* Elemen Gambar Latar Belakang */}
+                    <div
+                        className="absolute inset-0 bg-cover bg-center object-cover opacity-100 pointer-events-none"
+                        style={{
+                            backgroundImage: 'linear-gradient(90deg, rgba(10, 20, 38, 0.85) 0%, rgba(10, 20, 38, 0.55) 50%, rgba(10, 20, 38, 0.2) 100%), url("images/Produk-bg.jpg")',
+                        }}
+                    />
 
-        {/* Konten teks di dalamnya ditambahkan 'relative z-10' agar tidak tertimpa gambar */}
-        <div className="relative z-10 px-10 py-12">
-            <div className="flex items-center gap-2 mb-4">
-                <span className="size-2 rounded-full bg-emerald-400 relative">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                </span>
-                <span className="text-xs text-emerald-400 font-medium">Katalog UMKM Desa</span>
-            </div>
+                    {/* Konten Teks Hero */}
+                    <div className="relative z-10 px-10 py-12">
+                        <div className="flex items-center gap-2 mb-4">
+                            <span className="size-2 rounded-full bg-emerald-400 relative">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            </span>
+                            <span className="text-xs text-emerald-400 font-medium">Katalog UMKM Desa</span>
+                        </div>
 
-            <h1 className="text-4xl font-extrabold mb-3">
-                Produk <span className="text-emerald-400">Desa Mandalamekar</span>
-            </h1>
+                        <h1 className="text-4xl font-extrabold mb-3">
+                            Produk <span className="text-emerald-400">Desa Mandalamekar</span>
+                        </h1>
 
-            <p className="text-sm text-slate-300 max-w-lg mb-6">
-                Temukan berbagai produk olahan, kerajinan tangan, dan komoditas unggulan terbaik dari para pelaku UMKM Desa Mandalamekar.
-            </p>
+                        <p className="text-sm text-slate-300 max-w-lg mb-6">
+                            Temukan berbagai produk olahan, kerajinan tangan, dan komoditas unggulan terbaik dari para pelaku UMKM Desa Mandalamekar.
+                        </p>
 
-            <div className="absolute bottom-6 right-8 flex items-center gap-2 text-xs text-slate-400">
-                <Link href="/" className="hover:text-white transition">Beranda</Link>
-                <ChevronRight className="size-3" />
-                <span className="text-emerald-400 font-medium">UMKM</span>
-            </div>
-        </div>
-    </div>
+                        <div className="absolute bottom-6 right-8 flex items-center gap-2 text-xs text-slate-400">
+                            <Link href="/" className="hover:text-white transition">Beranda</Link>
+                            <ChevronRight className="size-3" />
+                            <span className="text-emerald-400 font-medium">UMKM</span>
+                        </div>
+                    </div>
+                </div>
 
                 {/* FILTER ETALASE */}
                 <div className="mb-6 rounded-[1.75rem] border bg-white p-6 shadow-xl">
@@ -249,46 +260,47 @@ export default function ProdukPage() {
                 </div>
             </main>
 
-            {/* FOOTER MODERN & CLEAN (SERASI DENGAN WELCOME & UMKM) */}
-            <footer id="kontak" className="mt-20 border-t border-slate-200 bg-white">
-                <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 lg:grid-cols-[1.3fr_1fr] lg:px-8">
-                    <div>
-                        <div className="flex items-center gap-3">
-                            <div className="flex size-10 items-center justify-center rounded-2xl bg-emerald-600 text-white">
-                                <Sprout className="size-5" />
-                            </div>
-                            <div>
-                             <p className="font-bold text-slate-900">UMKM Desa Mandalamekar</p>
-                                <p className="text-xs font-medium text-slate-500">Portal produk lokal desa</p>
-                            </div>
-                        </div>
-                        <p className="mt-4 max-w-xl text-sm leading-relaxed text-slate-500">
-                            Situs ini dibuat untuk memperkenalkan produk unggulan, membantu promosi, dan memperluas jangkauan pasar UMKM
-                            Desa Mandalamekar secara digital.
-                        </p>
-                    </div>
+            {/* FOOTER MODERN & CLEAN */}
+            <footer id="kontak" className="mt-20 border-t border-slate-200 bg-white">
+                <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 lg:grid-cols-[1.3fr_1fr] lg:px-8">
+                    <div>
+                        <div className="flex items-center gap-3">
+                            <div className="flex size-10 items-center justify-center rounded-2xl bg-emerald-600 text-white">
+                                <Sprout className="size-5" />
+                            </div>
+                            <div>
+                                <p className="font-bold text-slate-900">UMKM Desa Mandalamekar</p>
+                                <p className="text-xs font-medium text-slate-500">Portal produk lokal desa</p>
+                            </div>
+                        </div>
+                        <p className="mt-4 max-w-xl text-sm leading-relaxed text-slate-500">
+                            Situs ini dibuat untuk memperkenalkan produk unggulan, membantu promosi, dan memperluas jangkauan pasar UMKM
+                            Desa Mandalamekar secara digital.
+                        </p>
+                    </div>
 
-                    <div className="grid gap-4 sm:grid-cols-2">
-                        <div className="rounded-[1.5rem] border border-slate-100 bg-slate-50 p-5 shadow-2xs">
-                            <p className="text-sm font-bold text-slate-900">Kontak Resmi</p>
-                            <p className="mt-2 text-xs leading-relaxed text-slate-500">Hubungi perangkat desa atau pengelola UMKM melalui kanal resmi.</p>
-                            <div className="mt-4 flex gap-3 text-emerald-600">
-                                <a href="#" className="rounded-lg bg-white p-2 shadow-2xs hover:text-emerald-700 transition"><Facebook className="size-4" /></a>
-                                <a href="#" className="rounded-lg bg-white p-2 shadow-2xs hover:text-emerald-700 transition"><Instagram className="size-4" /></a>
-                                <a href="#" className="rounded-lg bg-white p-2 shadow-2xs hover:text-emerald-700 transition"><MessageCircle className="size-4" /></a>
-                            </div>
-                        </div>
+                    <div className="grid gap-4 sm:grid-cols-2">
+                        <div className="rounded-[1.5rem] border border-slate-100 bg-slate-50 p-5 shadow-2xs">
+                            <p className="text-sm font-bold text-slate-900">Kontak Resmi</p>
+                            <p className="mt-2 text-xs leading-relaxed text-slate-500">Hubungi perangkat desa atau pengelola UMKM melalui kanal resmi.</p>
+                            <div className="mt-4 flex gap-3 text-emerald-600">
+                                <a href="#" className="rounded-lg bg-white p-2 shadow-2xs hover:text-emerald-700 transition"><Facebook className="size-4" /></a>
+                                <a href="#" className="rounded-lg bg-white p-2 shadow-2xs hover:text-emerald-700 transition"><Instagram className="size-4" /></a>
+                                <a href="#" className="rounded-lg bg-white p-2 shadow-2xs hover:text-emerald-700 transition"><MessageCircle className="size-4" /></a>
+                            </div>
+                        </div>
 
-                        <div className="rounded-[1.5rem] border border-emerald-100 bg-emerald-50/70 p-5">
-                            <p className="text-sm font-bold text-emerald-900">Dukungan Lokal</p>
-                            <p className="mt-2 text-xs leading-relaxed text-emerald-900/75">Dukung produk lokal, bagikan ke warga, dan ikut memajukan ekonomi desa bersama.</p>
-                        </div>
-                    </div>
-                </div>
+                        <div className="rounded-[1.5rem] border border-emerald-100 bg-emerald-50/70 p-5">
+                            <p className="text-sm font-bold text-emerald-900">Dukungan Lokal</p>
+                            <p className="mt-2 text-xs leading-relaxed text-emerald-900/75">Dukung produk lokal, bagikan ke warga, dan ikut memajukan ekonomi desa bersama.</p>
+                        </div>
+                    </div>
+                </div>
 
-                <div className="border-t border-slate-200/80 py-6 text-center text-xs font-medium text-slate-500">
-                    © 2026 UMKM Desa Mandalamekar. Universitas Yarsi.               </div>
-            </footer>
-        </div>
-);
+                <div className="border-t border-slate-200/80 py-6 text-center text-xs font-medium text-slate-500">
+                    © 2026 UMKM Desa Mandalamekar. Universitas Yarsi.
+                </div>
+            </footer>
+        </div>
+    );
 }

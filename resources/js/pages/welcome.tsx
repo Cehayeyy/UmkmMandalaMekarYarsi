@@ -4,7 +4,7 @@ import { ArrowRight, Facebook, Instagram, Leaf, Menu, MessageCircle, Sprout, Sto
 import { useState } from 'react';
 
 const navItems = [
-    { label: 'Beranda', href: '/' }, // (Atau '#beranda' khusus untuk welcome.tsx)
+    { label: 'Beranda', href: '/' },
     { label: 'UMKM', href: '/umkm' },
     { label: 'Produk', href: '/produk' },
     { label: 'Tentang Desa', href: '/tentangdesa' },
@@ -71,7 +71,7 @@ export default function Welcome() {
             <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(16,185,129,0.16)_0,_rgba(255,255,255,0)_36%),linear-gradient(180deg,#f4faf6_0%,#f8fbf8_45%,#ffffff_100%)] text-slate-900">
                 <header className="sticky top-0 z-30 border-b border-white/70 bg-white/80 backdrop-blur-xl">
                     <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-                        <a href="#beranda" className="flex items-center gap-3">
+                        <Link href="/" className="flex items-center gap-3">
                             <div className="flex size-11 items-center justify-center rounded-2xl bg-emerald-600 text-white shadow-lg shadow-emerald-600/25">
                                 <Sprout className="size-6" />
                             </div>
@@ -79,25 +79,36 @@ export default function Welcome() {
                                 <p className="text-sm font-semibold text-emerald-700">UMKM</p>
                                 <p className="text-lg font-bold tracking-tight">Desa Mandalamekar</p>
                             </div>
-                        </a>
+                        </Link>
 
+                        {/* 🛠️ NAVIGASI HEADER: Menu Beranda (href === '/') otomatis diberi warna hijau */}
                         <nav className="hidden items-center gap-8 lg:flex">
-                            {navItems.map((item) => (
-                                <a key={item.label} href={item.href} className="text-sm font-medium text-slate-600 transition hover:text-emerald-700">
-                                    {item.label}
-                                </a>
-                            ))}
+                            {navItems.map((item) => {
+                                const isActive = item.href === '/';
+                                return (
+                                    <Link
+                                        key={item.label}
+                                        href={item.href}
+                                        className={`text-sm transition ${
+                                            isActive
+                                                ? 'font-semibold text-emerald-600'
+                                                : 'font-medium text-slate-600 hover:text-emerald-700'
+                                        }`}
+                                    >
+                                        {item.label}
+                                    </Link>
+                                );
+                            })}
                         </nav>
 
                         <div className="flex items-center gap-3">
-
-
-                            <a
-                                href="/admin/dashboard"
+                            {/* 🛠️ TOMBOL LOGIN BERFUNGSI MENGGUNAKAN LINK */}
+                            <Link
+                                href={route('login')}
                                 className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-700"
                             >
                                 Login <ArrowRight className="size-4" />
-                            </a>
+                            </Link>
 
                             <button
                                 type="button"
@@ -114,9 +125,17 @@ export default function Welcome() {
                         <div className="border-t border-slate-200/70 bg-white px-4 py-4 lg:hidden">
                             <nav className="mx-auto flex max-w-7xl flex-col gap-3">
                                 {navItems.map((item) => (
-                                    <a key={item.label} href={item.href} className="rounded-2xl px-3 py-2 text-sm font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-700">
+                                    <Link
+                                        key={item.label}
+                                        href={item.href}
+                                        className={`rounded-2xl px-3 py-2 text-sm transition ${
+                                            item.href === '/'
+                                                ? 'font-semibold bg-emerald-50 text-emerald-700'
+                                                : 'font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-700'
+                                        }`}
+                                    >
                                         {item.label}
-                                    </a>
+                                    </Link>
                                 ))}
                                 {auth.user ? (
                                     <Link href={route('dashboard')} className="rounded-2xl px-3 py-2 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">
@@ -142,7 +161,6 @@ export default function Welcome() {
 
                             <div className="relative grid min-h-[540px] items-end gap-10 px-6 py-8 sm:px-10 sm:py-10 lg:grid-cols-[1.1fr_0.9fr] lg:px-12 lg:py-12">
                                 <div className="max-w-2xl pb-4 pt-12 lg:py-16">
-
                                     <h1 className="max-w-xl text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
                                         UMKM
                                         <span className="block text-emerald-300">Desa Mandalamekar</span>
@@ -153,26 +171,26 @@ export default function Welcome() {
                                     </p>
 
                                     <div className="mt-8 flex flex-wrap gap-3">
-    <a
-        href="#produk"
-        className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/30 transition hover:bg-emerald-400"
-    >
-        Lihat Produk <ArrowRight className="size-4" />
-    </a>
-    <a
-        href="#tentang"
-        className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur-md transition hover:bg-white/15"
-    >
-        Lihat UMKM
-    </a>
-</div>
+                                        <a
+                                            href="/produk"
+                                            className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/30 transition hover:bg-emerald-400"
+                                        >
+                                            Lihat Produk <ArrowRight className="size-4" />
+                                        </a>
+                                        <a
+                                            href="/umkm"
+                                            className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur-md transition hover:bg-white/15"
+                                        >
+                                            Lihat UMKM
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </section>
 
-  <section className="relative z-10 mx-auto -mt-10 max-w-7xl px-4 sm:px-6 lg:px-8">
-    <div className="grid gap-4 rounded-[1.75rem] border border-white bg-white p-5 shadow-xl shadow-slate-200/60 sm:grid-cols-2 xl:grid-cols-4">
+                    <section className="relative z-10 mx-auto -mt-10 max-w-7xl px-4 sm:px-6 lg:px-8">
+                        <div className="grid gap-4 rounded-[1.75rem] border border-white bg-white p-5 shadow-xl shadow-slate-200/60 sm:grid-cols-2 xl:grid-cols-4">
                             {stats.map((item) => (
                                 <div key={item.label} className="flex items-center gap-4 rounded-3xl px-2 py-2">
                                     <div className="flex size-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
@@ -193,7 +211,7 @@ export default function Welcome() {
                                 <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-600">Produk Unggulan</p>
                                 <h2 className="mt-2 text-3xl font-bold tracking-tight">Pilihan terbaik dari pelaku UMKM desa</h2>
                             </div>
-                            <a href="/kontak" className="hidden text-sm font-semibold text-emerald-700 hover:text-emerald-800 sm:inline-flex">
+                            <a href="/produk" className="hidden text-sm font-semibold text-emerald-700 hover:text-emerald-800 sm:inline-flex">
                                 Lihat Semua
                             </a>
                         </div>
@@ -265,20 +283,12 @@ export default function Welcome() {
                                     </p>
 
                                     <div className="mt-8 flex flex-wrap gap-3">
-                                        <a href="/kontak" className="rounded-full bg-white px-5 py-3 text-sm font-semibold text-emerald-900 transition hover:bg-emerald-50">
+                                        <a href="/tentangdesa" className="rounded-full bg-white px-5 py-3 text-sm font-semibold text-emerald-900 transition hover:bg-emerald-50">
                                             Selengkapnya
                                         </a>
-                                        <a href="#produk" className="rounded-full border border-white/20 bg-white/10 px-5 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/15">
+                                        <a href="/produk" className="rounded-full border border-white/20 bg-white/10 px-5 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/15">
                                             Lihat Produk
                                         </a>
-                                    </div>
-
-                                    <div className="mt-8 flex flex-wrap items-center gap-6 text-sm text-emerald-100">
-                                        <span>Beranda</span>
-                                        <span>UMKM</span>
-                                        <span>Produk</span>
-                                        <span>Tentang Desa</span>
-                                        <span>Kontak</span>
                                     </div>
                                 </div>
 
