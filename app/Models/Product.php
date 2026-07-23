@@ -2,23 +2,26 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    // Kolom-kolom yang diizinkan untuk diisi secara massal (Mass Assignment)
-    protected $fillable = [
-        'user_id', 
-        'nama_produk', 
-        'deskripsi', 
-        'harga', 
-        'kategori', 
-        'foto'
-    ];
+    use HasFactory;
 
-    // Relasi: 1 Produk dimiliki oleh 1 User (UMKM)
+    // Mengizinkan semua kolom diisi (atau sesuaikan dengan $fillable milikmu)
+    protected $guarded = ['id'];
+
+    /**
+     * Relasi ke pemilik produk (User / UMKM)
+     */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+    
+    public function category()
+{
+    return $this->belongsTo(Category::class);
+}
 }

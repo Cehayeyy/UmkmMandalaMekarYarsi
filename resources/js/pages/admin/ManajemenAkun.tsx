@@ -11,11 +11,10 @@ const sidebarSections = [
     {
         title: 'MANAJEMEN',
         items: [
-            { label: 'Manajemen UMKM', icon: Store, href: '#', active: false },
-            { label: 'Manajemen Akun', icon: Users, href: route('admin.akun'), active: true },
-            { label: 'Kategori Produk', icon: Tag, href: '#', active: false },
-            { label: 'Produk', icon: Package, href: '#', active: false },
-            { label: 'Pesanan / Inquiry', icon: MessageCircle, href: '#', active: false },
+           { label: 'Manajemen UMKM', icon: Store, hasSubmenu: false, href: '/admin/manajemen-umkm', active: false },
+            { label: 'Manajemen Akun', icon: Users, hasSubmenu: false, href: '/admin/manajemen-akun', active: false },
+            { label: 'Kategori Produk', icon: Tag, hasSubmenu: false, href: '/admin/kategori-produk', active: false },
+            { label: 'Produk', icon: Package, hasSubmenu: false, href: '/admin/produk', active: false },
         ],
     },
     {
