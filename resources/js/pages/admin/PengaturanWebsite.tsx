@@ -6,15 +6,11 @@ import {
     CheckCircle2,
     ChevronDown,
     ChevronRight,
-    CreditCard,
     Globe,
     LayoutDashboard,
-    Lock,
     LogOut,
-    Mail,
-    MapPin,
     Package,
-    Phone,
+    PhoneCall,
     Save,
     Settings,
     Shield,
@@ -25,7 +21,6 @@ import {
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
-// Sidebar menggunakan Absolute Path agar anti-stuck & bebas error
 const sidebarSections = [
     {
         title: 'MANAJEMEN',
@@ -47,38 +42,28 @@ const sidebarSections = [
 interface SettingsData {
     app_name?: string;
     app_description?: string;
-    contact_email?: string;
-    contact_phone?: string;
-    address?: string;
     enable_register_umkm?: boolean;
-    enable_auto_verify?: boolean;
     maintenance_mode?: boolean;
-    payment_gateway?: string;
-    currency?: string;
+    contact_phone?: string;
     last_updated?: string;
 }
 
 export default function PengaturanWebsite({ settings = {} }: { settings?: SettingsData }) {
     const { auth } = usePage<SharedData>().props;
     const [isProfileOpen, setIsProfileOpen] = useState(false);
-    const [activeTab, setActiveTab] = useState('general');
     const [isSaving, setIsSaving] = useState(false);
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
-    // State form interaktif yang diinisialisasi dari data backend
+    // STATE FORM RINGKAS (Hanya Fitur Penting)
     const [formData, setFormData] = useState({
         app_name: settings.app_name || 'UMKM Desa Mandalamekar',
-        app_description: settings.app_description || 'Platform digitalisasi UMKM Desa.',
-        contact_email: settings.contact_email || 'admin@mandalamekaryarsi.app',
-        contact_phone: settings.contact_phone || '+62 812-3456-7890',
-        address: settings.address || 'Balai Desa Mandalamekar',
+        app_description: settings.app_description || 'Platform digitalisasi dan pemasaran produk UMKM unggulan Desa Mandalamekar.',
         enable_register_umkm: settings.enable_register_umkm ?? true,
-        enable_auto_verify: settings.enable_auto_verify ?? false,
         maintenance_mode: settings.maintenance_mode ?? false,
-        payment_gateway: settings.payment_gateway || 'midtrans',
+        contact_phone: settings.contact_phone || '+62 812-3456-7890',
     });
 
-    // FITUR REAL-TIME AUTO-POLLING: Sinkronisasi status pengaturan setiap 15 detik
+    // FITUR REAL-TIME AUTO-POLLING (15 Detik)
     useEffect(() => {
         const interval = setInterval(() => {
             router.reload({ only: ['settings'] });
@@ -86,10 +71,12 @@ export default function PengaturanWebsite({ settings = {} }: { settings?: Settin
         return () => clearInterval(interval);
     }, []);
 
-    // Simulasi penyimpanan pengaturan real-time
+    // Handle Simpan
     const handleSave = (e: React.FormEvent) => {
         e.preventDefault();
         setIsSaving(true);
+
+        // Simulasi pengiriman data secara real-time ke backend
         setTimeout(() => {
             setIsSaving(false);
             setShowSuccessMessage(true);
@@ -172,9 +159,9 @@ export default function PengaturanWebsite({ settings = {} }: { settings?: Settin
                     <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 px-8 py-5 backdrop-blur-xl">
                         <div className="flex items-center justify-between gap-4">
                             <div>
-                                <h1 className="text-xl font-bold tracking-tight text-slate-900">Konfigurasi & Pengaturan Sistem</h1>
+                                <h1 className="text-xl font-bold tracking-tight text-slate-900">Pengaturan Sistem Website</h1>
                                 <div className="mt-1 flex items-center gap-2 text-sm font-medium text-slate-500">
-                                    Atur identitas web, keamanan, dan integrasi fitur desa secara sentral.
+                                    Kontrol identitas dan status operasional website desa.
                                     <span className="flex items-center gap-1.5 text-xs text-emerald-700 font-semibold animate-pulse bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200/60">
                                         <span className="size-1.5 rounded-full bg-emerald-500"></span> Live Sync
                                     </span>
@@ -222,272 +209,129 @@ export default function PengaturanWebsite({ settings = {} }: { settings?: Settin
                         </div>
                     </header>
 
-                    <main className="p-8 space-y-6 max-w-6xl">
+                    <main className="p-8 space-y-6 max-w-4xl">
                         {/* NOTIFIKASI BERHASIL DISIMPAN */}
                         {showSuccessMessage && (
                             <div className="flex items-center gap-3 rounded-2xl bg-emerald-600 p-4 text-white shadow-lg shadow-emerald-600/20 transition-all animate-fade-in">
                                 <CheckCircle2 className="size-6 shrink-0" />
                                 <div className="flex-1">
-                                    <p className="font-bold text-sm">Pengaturan Berhasil Diperbarui!</p>
-                                    <p className="text-xs text-emerald-100">Semua perubahan pada website telah diterapkan secara real-time.</p>
+                                    <p className="font-bold text-sm">Pengaturan Berhasil Disimpan!</p>
+                                    <p className="text-xs text-emerald-100">Status operasional website desa telah diperbarui secara langsung.</p>
                                 </div>
                             </div>
                         )}
 
-                        {/* TABS NAVIGASI */}
-                        <div className="flex flex-wrap gap-2 border-b border-slate-200 pb-4">
-                            <button
-                                type="button"
-                                onClick={() => setActiveTab('general')}
-                                className={`flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition ${
-                                    activeTab === 'general'
-                                        ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20'
-                                        : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
-                                }`}
-                            >
-                                <Globe className="size-4" /> Informasi Umum
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => setActiveTab('features')}
-                                className={`flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition ${
-                                    activeTab === 'features'
-                                        ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20'
-                                        : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
-                                }`}
-                            >
-                                <Sliders className="size-4" /> Fitur & Keamanan
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => setActiveTab('payment')}
-                                className={`flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition ${
-                                    activeTab === 'payment'
-                                        ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20'
-                                        : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
-                                }`}
-                            >
-                                <CreditCard className="size-4" /> Transaksi & Pembayaran
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => setActiveTab('contact')}
-                                className={`flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition ${
-                                    activeTab === 'contact'
-                                        ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20'
-                                        : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
-                                }`}
-                            >
-                                <Mail className="size-4" /> Kontak Desa
-                            </button>
-                        </div>
-
-                        {/* FORM KONTEN PENGATURAN */}
                         <form onSubmit={handleSave} className="space-y-6">
-                            {/* TAB 1: INFORMASI UMUM */}
-                            {activeTab === 'general' && (
-                                <div className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/60 space-y-6 animate-fade-in">
-                                    <div className="border-b border-slate-100 pb-4">
-                                        <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                                            <Globe className="size-5 text-emerald-600" /> Identitas & SEO Website
-                                        </h2>
-                                        <p className="text-xs text-slate-500 mt-1">Nama dan deskripsi ini akan muncul di halaman depan dan mesin pencari (Google).</p>
-                                    </div>
+                            {/* BAGIAN 1: IDENTITAS WEBSITE */}
+                            <div className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/60 space-y-5">
+                                <div className="border-b border-slate-100 pb-3">
+                                    <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                                        <Globe className="size-5 text-emerald-600" /> Identitas Website
+                                    </h2>
+                                    <p className="text-xs text-slate-500 mt-0.5">Nama dan deskripsi ini akan muncul pada halaman depan aplikasi desa.</p>
+                                </div>
 
-                                    <div className="grid gap-6 sm:grid-cols-2">
-                                        <div>
-                                            <label className="block text-xs font-bold text-slate-700 uppercase mb-2">Nama Website / Aplikasi</label>
-                                            <input
-                                                type="text"
-                                                value={formData.app_name}
-                                                onChange={(e) => setFormData({ ...formData, app_name: e.target.value })}
-                                                className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm text-slate-900 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block text-xs font-bold text-slate-700 uppercase mb-2">Mata Uang Sistem</label>
-                                            <input
-                                                type="text"
-                                                disabled
-                                                value="IDR - Rupiah Indonesia (Rp)"
-                                                className="w-full rounded-xl border border-slate-200 bg-slate-100 px-4 py-2.5 text-sm text-slate-500 cursor-not-allowed"
-                                            />
-                                        </div>
+                                <div className="space-y-4">
+                                    <div>
+                                        <label className="block text-xs font-bold text-slate-700 uppercase mb-2">Nama Website / Aplikasi</label>
+                                        <input
+                                            type="text"
+                                            value={formData.app_name}
+                                            onChange={(e) => setFormData({ ...formData, app_name: e.target.value })}
+                                            className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm text-slate-900 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 font-semibold"
+                                        />
                                     </div>
 
                                     <div>
-                                        <label className="block text-xs font-bold text-slate-700 uppercase mb-2">Deskripsi Website (SEO Meta Description)</label>
+                                        <label className="block text-xs font-bold text-slate-700 uppercase mb-2">Deskripsi Singkat Aplikasi</label>
                                         <textarea
-                                            rows={3}
+                                            rows={2}
                                             value={formData.app_description}
                                             onChange={(e) => setFormData({ ...formData, app_description: e.target.value })}
                                             className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm text-slate-900 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
                                         />
                                     </div>
                                 </div>
-                            )}
+                            </div>
 
-                            {/* TAB 2: FITUR & KEAMANAN */}
-                            {activeTab === 'features' && (
-                                <div className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/60 space-y-6 animate-fade-in">
-                                    <div className="border-b border-slate-100 pb-4">
-                                        <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                                            <Sliders className="size-5 text-emerald-600" /> Kontrol Fitur Real-Time
-                                        </h2>
-                                        <p className="text-xs text-slate-500 mt-1">Aktifkan atau matikan fitur penting sistem tanpa perlu merestart server.</p>
-                                    </div>
-
-                                    <div className="space-y-4">
-                                        {/* Toggle 1 */}
-                                        <div className="flex items-center justify-between p-4 rounded-2xl border border-slate-100 bg-slate-50/50">
-                                            <div>
-                                                <p className="font-bold text-sm text-slate-900">Buka Pendaftaran Akun UMKM Baru</p>
-                                                <p className="text-xs text-slate-500">Jika dimatikan, warga tidak bisa mendaftar akun UMKM secara mandiri di halaman register.</p>
-                                            </div>
-                                            <label className="relative inline-flex items-center cursor-pointer">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={formData.enable_register_umkm}
-                                                    onChange={(e) => setFormData({ ...formData, enable_register_umkm: e.target.checked })}
-                                                    className="sr-only peer"
-                                                />
-                                                <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
-                                            </label>
-                                        </div>
-
-                                        {/* Toggle 2 */}
-                                        <div className="flex items-center justify-between p-4 rounded-2xl border border-slate-100 bg-slate-50/50">
-                                            <div>
-                                                <p className="font-bold text-sm text-slate-900">Verifikasi Otomatis Produk Baru</p>
-                                                <p className="text-xs text-slate-500">Jika aktif, produk yang diupload UMKM langsung tampil di katalog publik tanpa perlu persetujuan admin.</p>
-                                            </div>
-                                            <label className="relative inline-flex items-center cursor-pointer">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={formData.enable_auto_verify}
-                                                    onChange={(e) => setFormData({ ...formData, enable_auto_verify: e.target.checked })}
-                                                    className="sr-only peer"
-                                                />
-                                                <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
-                                            </label>
-                                        </div>
-
-                                        {/* Toggle 3 - Maintenance Mode */}
-                                        <div className="flex items-center justify-between p-4 rounded-2xl border border-amber-200 bg-amber-50/50">
-                                            <div className="flex items-start gap-3">
-                                                <AlertTriangle className="size-5 text-amber-600 shrink-0 mt-0.5" />
-                                                <div>
-                                                    <p className="font-bold text-sm text-amber-900">Mode Pemeliharaan (Maintenance Mode)</p>
-                                                    <p className="text-xs text-amber-700">Tutup website sementara untuk pengunjung publik saat sedang pembaruan sistem.</p>
-                                                </div>
-                                            </div>
-                                            <label className="relative inline-flex items-center cursor-pointer">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={formData.maintenance_mode}
-                                                    onChange={(e) => setFormData({ ...formData, maintenance_mode: e.target.checked })}
-                                                    className="sr-only peer"
-                                                />
-                                                <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-600"></div>
-                                            </label>
-                                        </div>
-                                    </div>
+                            {/* BAGIAN 2: KONTROL OPERATIONAL (SANGAT PENTING) */}
+                            <div className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/60 space-y-5">
+                                <div className="border-b border-slate-100 pb-3">
+                                    <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                                        <Sliders className="size-5 text-emerald-600" /> Kontrol Fitur & Status Akses
+                                    </h2>
+                                    <p className="text-xs text-slate-500 mt-0.5">Atur apakah website bisa diakses warga atau sedang dalam perbaikan.</p>
                                 </div>
-                            )}
 
-                            {/* TAB 3: TRANSAKSI & PEMBAYARAN */}
-                            {activeTab === 'payment' && (
-                                <div className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/60 space-y-6 animate-fade-in">
-                                    <div className="border-b border-slate-100 pb-4">
-                                        <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                                            <CreditCard className="size-5 text-emerald-600" /> Gateway Pembayaran & Transaksi
-                                        </h2>
-                                        <p className="text-xs text-slate-500 mt-1">Pilih metode pemrosesan transaksi belanja produk UMKM dari pembeli.</p>
-                                    </div>
-
-                                    <div className="grid gap-4 sm:grid-cols-3">
-                                        <div
-                                            onClick={() => setFormData({ ...formData, payment_gateway: 'midtrans' })}
-                                            className={`cursor-pointer rounded-2xl border p-4 transition ${
-                                                formData.payment_gateway === 'midtrans'
-                                                    ? 'border-emerald-600 bg-emerald-50/50 ring-2 ring-emerald-600/20'
-                                                    : 'border-slate-200 bg-white hover:border-slate-300'
-                                            }`}
-                                        >
-                                            <p className="font-bold text-sm text-slate-900">Midtrans Gateway</p>
-                                            <p className="text-xs text-slate-500 mt-1">QRIS, Transfer Bank (BCA, BRI, Mandiri), GoPay, dan ShopeePay.</p>
-                                            <span className="mt-3 inline-block text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">Rekomendasi</span>
-                                        </div>
-
-                                        <div
-                                            onClick={() => setFormData({ ...formData, payment_gateway: 'xendit' })}
-                                            className={`cursor-pointer rounded-2xl border p-4 transition ${
-                                                formData.payment_gateway === 'xendit'
-                                                    ? 'border-emerald-600 bg-emerald-50/50 ring-2 ring-emerald-600/20'
-                                                    : 'border-slate-200 bg-white hover:border-slate-300'
-                                            }`}
-                                        >
-                                            <p className="font-bold text-sm text-slate-900">Xendit Payments</p>
-                                            <p className="text-xs text-slate-500 mt-1">Virtual Account otomatis dan pembayaran minimarket (Alfamart / Indomaret).</p>
-                                        </div>
-
-                                        <div
-                                            onClick={() => setFormData({ ...formData, payment_gateway: 'manual' })}
-                                            className={`cursor-pointer rounded-2xl border p-4 transition ${
-                                                formData.payment_gateway === 'manual'
-                                                    ? 'border-emerald-600 bg-emerald-50/50 ring-2 ring-emerald-600/20'
-                                                    : 'border-slate-200 bg-white hover:border-slate-300'
-                                            }`}
-                                        >
-                                            <p className="font-bold text-sm text-slate-900">WhatsApp & COD Manual</p>
-                                            <p className="text-xs text-slate-500 mt-1">Pesanan langsung diarahkan ke chat WhatsApp masing-masing penjual UMKM.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* TAB 4: KONTAK DESA */}
-                            {activeTab === 'contact' && (
-                                <div className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/60 space-y-6 animate-fade-in">
-                                    <div className="border-b border-slate-100 pb-4">
-                                        <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                                            <Mail className="size-5 text-emerald-600" /> Informasi Kontak & Alamat Desa
-                                        </h2>
-                                        <p className="text-xs text-slate-500 mt-1">Data ini akan ditampilkan di halaman "Kontak" dan *Footer* web desa.</p>
-                                    </div>
-
-                                    <div className="grid gap-6 sm:grid-cols-2">
+                                <div className="space-y-4">
+                                    {/* SAKLAR 1: PENDAFTARAN UMKM */}
+                                    <div className="flex items-center justify-between p-4 rounded-2xl border border-slate-200/80 bg-slate-50/50">
                                         <div>
-                                            <label className="block text-xs font-bold text-slate-700 uppercase mb-2">Email Resmi Desa / Admin</label>
-                                            <input
-                                                type="email"
-                                                value={formData.contact_email}
-                                                onChange={(e) => setFormData({ ...formData, contact_email: e.target.value })}
-                                                className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm text-slate-900 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
-                                            />
+                                            <p className="font-bold text-sm text-slate-900">Buka Pendaftaran Akun UMKM Baru</p>
+                                            <p className="text-xs text-slate-500 mt-0.5">Jika aktif, pelaku UMKM baru dapat mendaftar akun secara mandiri.</p>
                                         </div>
-                                        <div>
-                                            <label className="block text-xs font-bold text-slate-700 uppercase mb-2">Nomor Telepon / WhatsApp Desa</label>
+                                        <label className="relative inline-flex items-center cursor-pointer">
                                             <input
-                                                type="text"
-                                                value={formData.contact_phone}
-                                                onChange={(e) => setFormData({ ...formData, contact_phone: e.target.value })}
-                                                className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm text-slate-900 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                                                type="checkbox"
+                                                checked={formData.enable_register_umkm}
+                                                onChange={(e) => setFormData({ ...formData, enable_register_umkm: e.target.checked })}
+                                                className="sr-only peer"
                                             />
-                                        </div>
+                                            <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
+                                        </label>
                                     </div>
 
-                                    <div>
-                                        <label className="block text-xs font-bold text-slate-700 uppercase mb-2">Alamat Lengkap Balai Desa</label>
-                                        <textarea
-                                            rows={2}
-                                            value={formData.address}
-                                            onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                                            className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm text-slate-900 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
-                                        />
+                                    {/* SAKLAR 2: MAINTENANCE MODE (KUNCI UTAMA) */}
+                                    <div className={`flex items-center justify-between p-4 rounded-2xl border transition-all ${
+                                        formData.maintenance_mode
+                                            ? 'border-red-300 bg-red-50/70 shadow-sm shadow-red-500/10'
+                                            : 'border-slate-200/80 bg-slate-50/50'
+                                    }`}>
+                                        <div className="flex items-start gap-3.5">
+                                            <AlertTriangle className={`size-5 shrink-0 mt-0.5 ${formData.maintenance_mode ? 'text-red-600 animate-bounce' : 'text-slate-400'}`} />
+                                            <div>
+                                                <p className={`font-bold text-sm ${formData.maintenance_mode ? 'text-red-900' : 'text-slate-900'}`}>
+                                                    Mode Pemeliharaan (Maintenance Mode)
+                                                </p>
+                                                <p className={`text-xs mt-0.5 ${formData.maintenance_mode ? 'text-red-700 font-medium' : 'text-slate-500'}`}>
+                                                    {formData.maintenance_mode
+                                                        ? '⚠️ PERHATIAN: Website saat ini DITUTUP untuk publik dan hanya admin yang bisa mengakses!'
+                                                        : 'Jika diaktifkan, website akan ditutup sementara untuk perbaikan sistem.'}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <label className="relative inline-flex items-center cursor-pointer">
+                                            <input
+                                                type="checkbox"
+                                                checked={formData.maintenance_mode}
+                                                onChange={(e) => setFormData({ ...formData, maintenance_mode: e.target.checked })}
+                                                className="sr-only peer"
+                                            />
+                                            <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"></div>
+                                        </label>
                                     </div>
                                 </div>
-                            )}
+                            </div>
+
+                            {/* BAGIAN 3: KONTAK DARURAT / BANTUAN */}
+                            <div className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/60 space-y-4">
+                                <div className="border-b border-slate-100 pb-3">
+                                    <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                                        <PhoneCall className="size-5 text-emerald-600" /> WhatsApp Bantuan / Admin Desa
+                                    </h2>
+                                    <p className="text-xs text-slate-500 mt-0.5">Nomor ini digunakan jika warga atau UMKM mengalami kendala login.</p>
+                                </div>
+
+                                <div>
+                                    <input
+                                        type="text"
+                                        placeholder="contoh: +62 812-3456-7890"
+                                        value={formData.contact_phone}
+                                        onChange={(e) => setFormData({ ...formData, contact_phone: e.target.value })}
+                                        className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm text-slate-900 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 font-medium"
+                                    />
+                                </div>
+                            </div>
 
                             {/* TOMBOL SIMPAN PENGATURAN */}
                             <div className="flex items-center justify-between pt-2">
@@ -501,7 +345,7 @@ export default function PengaturanWebsite({ settings = {} }: { settings?: Settin
                                     className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-emerald-600/30 transition hover:bg-emerald-700 disabled:opacity-50"
                                 >
                                     <Save className={`size-4 ${isSaving ? 'animate-spin' : ''}`} />
-                                    {isSaving ? 'Menyimpan & Menyinkronkan...' : 'Simpan Perubahan'}
+                                    {isSaving ? 'Menyimpan...' : 'Simpan Perubahan'}
                                 </button>
                             </div>
                         </form>

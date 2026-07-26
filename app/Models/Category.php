@@ -2,20 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Category extends Model
 {
-    use HasFactory;
+    protected $guarded = [];
 
-    protected $guarded = ['id'];
-
-    /**
-     * Relasi: 1 Kategori bisa memiliki banyak Produk
-     */
-    public function products()
+    public function products(): HasMany
     {
-        return $this->hasMany(Product::class);
+        // Replace 'kategori_id' with whatever column name connects products to categories in your database
+        return $this->hasMany(Product::class, 'kategori_id');
     }
 }

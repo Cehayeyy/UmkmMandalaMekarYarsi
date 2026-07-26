@@ -141,13 +141,25 @@ Route::middleware(['auth'])->group(function () {
     Route::get('admin/kategori-produk', function () {
         if (auth()->user()->role === 'umkm') return redirect()->route('umkm.dashboard');
 
-        $categories = class_exists(\App\Models\Category::class)
-            ? \App\Models\Category::withCount('products')->latest()->get()->map(function ($c) {
+        $categories = (class_exists(\App\Models\Category::class) && \Illuminate\Support\Facades\Schema::hasTable('categories'))
+            ? \App\Models\Category::latest()->get()->map(function ($c) {
+                $hasForeignKey = \Illuminate\Support\Facades\Schema::hasColumn('products', 'category_id')
+                              || \Illuminate\Support\Facades\Schema::hasColumn('products', 'kategori_id');
+
+                $count = 0;
+                if ($hasForeignKey && method_exists($c, 'products')) {
+                    try {
+                        $count = $c->products()->count();
+                    } catch (\Exception $e) {
+                        $count = 0; // Fallback to 0 if relationship query fails
+                    }
+                }
+
                 return [
                     'id' => $c->id,
                     'name' => $c->name,
                     'slug' => $c->slug ?? str()->slug($c->name),
-                    'total_products' => $c->products_count ?? 0,
+                    'total_products' => $count,
                     'created_at' => $c->created_at ? $c->created_at->translatedFormat('d M Y') : '-',
                 ];
             })
@@ -166,20 +178,31 @@ Route::middleware(['auth'])->group(function () {
     Route::get('admin/produk', function () {
         if (auth()->user()->role === 'umkm') return redirect()->route('umkm.dashboard');
 
+        // Menggunakan paginate(12) agar web tetap ringan saat produk sudah ribuan
         $products = class_exists(\App\Models\Product::class)
-            ? \App\Models\Product::with(['user'])->latest()->get()->map(function ($p) {
-                return [
-                    'id' => $p->id,
-                    'name' => $p->name,
-                    'price' => $p->price ?? 0,
-                    'stock' => $p->stock ?? 0,
-                    'status' => $p->status ?? 'Aktif',
-                    'umkm_name' => $p->user ? ($p->user->name ?? $p->user->username) : 'UMKM Desa',
-                    'category_name' => $p->category ?? 'UMKM Desa',
-                    'created_at' => $p->created_at ? $p->created_at->translatedFormat('d M Y') : '-',
-                ];
-            })
-            : [];
+            ? \App\Models\Product::with(['user'])
+                ->latest()
+                ->paginate(12)
+                ->withQueryString() // Wajib agar filter/search tidak hilang saat klik nomor halaman
+                ->through(function ($p) {
+                    return [
+                        'id' => $p->id,
+                        'name' => $p->name ?? $p->nama_produk ?? $p->nama ?? 'Tanpa Nama',
+                        'price' => (int) ($p->price ?? $p->harga ?? 0),
+                        'stock' => (int) ($p->stock ?? $p->stok ?? $p->qty ?? 0),
+                        'image' => $p->image ?? $p->foto ?? $p->gambar ?? null,
+                        'status' => $p->status ?? 'Aktif',
+                        'umkm_name' => $p->user ? ($p->user->name ?? $p->user->username) : 'UMKM Desa',
+                        'category_name' => $p->category ?? $p->kategori ?? 'UMKM Desa',
+                        'created_at' => $p->created_at ? $p->created_at->translatedFormat('d M Y') : '-',
+                    ];
+                })
+            : [
+                'data' => [],
+                'links' => [],
+                'total' => 0,
+                'current_page' => 1,
+            ];
 
         return Inertia::render('admin/Produk', [
             'products' => $products
@@ -190,17 +213,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('admin/pengaturan', function () {
         if (auth()->user()->role === 'umkm') return redirect()->route('umkm.dashboard');
 
+        // Data konfigurasi simpel dan penting
         $webSettings = [
             'app_name' => 'UMKM Desa Mandalamekar',
             'app_description' => 'Platform digitalisasi dan pemasaran produk UMKM unggulan Desa Mandalamekar, Jawa Barat.',
-            'contact_email' => 'admin@mandalamekaryarsi.app',
+            'enable_register_umkm' => true,      // Saklar pendaftaran akun UMKM baru
+            'maintenance_mode' => false,         // Saklar Mode Pemeliharaan (Jika true, web ditutup)
             'contact_phone' => '+62 812-3456-7890',
-            'address' => 'Balai Desa Mandalamekar, Kec. Jatiwaras, Kab. Tasikmalaya, Jawa Barat',
-            'enable_register_umkm' => true,      // Toggle real-time pendaftaran UMKM
-            'enable_auto_verify' => false,       // Verifikasi manual oleh admin
-            'maintenance_mode' => false,         // Mode perbaikan website
-            'payment_gateway' => 'midtrans',     // Gateway pembayaran produk
-            'currency' => 'IDR (Rp)',
             'last_updated' => now()->translatedFormat('d M Y, H:i'),
         ];
 
