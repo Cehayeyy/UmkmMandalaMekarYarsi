@@ -9,21 +9,85 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 // ==========================================
-// --- ROUTE PUBLIK ---
+// --- ROUTE PUBLIK STATIS ---
 // ==========================================
+
 Route::get('/', function () {
-    return Inertia::render('welcome');
+    $umkmCount = User::where('role', 'umkm')->count();
+    $productCount = class_exists(Product::class) ? Product::count() : 0;
+    
+    $categoryCount = class_exists(Product::class) ? Product::distinct('kategori')->count('kategori') : 0;
+
+    $featuredProducts = class_exists(Product::class) 
+        ? Product::with('user:id,name')
+            ->latest()
+            ->take(4)
+            ->get()
+            ->map(function ($p) {
+                return [
+                    'id' => $p->id,
+                    'name' => $p->nama_produk ?? $p->name ?? 'Tanpa Nama',
+                    'price' => (int) ($p->harga ?? $p->price ?? 0),
+                    'category' => $p->kategori ?? 'Lainnya',
+                    'seller' => $p->user ? ($p->user->name ?? $p->user->username) : 'UMKM Desa',
+                    'foto' => $p->foto ?? $p->image ?? null,
+                ];
+            })
+        : [];
+
+    return Inertia::render('welcome', [
+        'statsData' => [
+            'umkm' => $umkmCount,
+            'products' => $productCount,
+            'categories' => $categoryCount,
+        ],
+        'featuredProducts' => $featuredProducts
+    ]);
 })->name('home');
 
 Route::get('/umkm', function () {
-    $umkmList = User::where('role', 'umkm')->latest()->get();
+    $umkmList = User::where('role', 'umkm')->with('products')->latest()->get();
     return Inertia::render('umkm/umkmPage', [
         'umkmList' => $umkmList
     ]);
 })->name('umkm.umkmPage');
 
+// 🛠️ PERBAIKAN: Rute Katalog Produk Utama dengan Data Real
 Route::get('/produk', function () {
-    return Inertia::render('produk');
+    // 1. Ambil semua UMKM untuk opsi filter
+    $umkmList = User::where('role', 'umkm')->get(['id', 'name', 'username']);
+
+    // 2. Ambil semua produk beserta relasi user (UMKM) nya
+    $products = class_exists(Product::class)
+        ? Product::with('user:id,name,username,no_whatsapp')->latest()->get()->map(function ($p) {
+            return [
+                'id' => $p->id,
+                'nama_produk' => $p->nama_produk ?? $p->name ?? 'Tanpa Nama',
+                'harga' => (int) ($p->harga ?? $p->price ?? 0),
+                'kategori' => $p->kategori ?? 'Lainnya',
+                'foto' => $p->foto ?? $p->image ?? null,
+                'deskripsi' => $p->deskripsi ?? '',
+                'umkm_id' => $p->user_id,
+                'seller' => $p->user ? ($p->user->name ?? $p->user->username) : 'UMKM Desa',
+                'seller_username' => $p->user ? $p->user->username : '',
+                'no_whatsapp' => $p->user ? $p->user->no_whatsapp : null, // Penting untuk checkout per-produk nanti
+            ];
+        })
+        : [];
+
+    // 3. Susun data Kategori secara dinamis beserta jumlah produknya
+    $categoriesData = collect($products)->groupBy('kategori')->map(function ($items, $key) {
+        return ['label' => $key, 'count' => count($items)];
+    })->values()->toArray();
+
+    // Tambahkan opsi "Semua Kategori" di awal array
+    array_unshift($categoriesData, ['label' => 'Semua Kategori', 'count' => count($products)]);
+
+    return Inertia::render('produk', [
+        'products' => $products,
+        'umkmList' => $umkmList,
+        'categoriesData' => $categoriesData,
+    ]);
 })->name('produk');
 
 Route::get('/tentangdesa', function () {
@@ -151,7 +215,7 @@ Route::middleware(['auth'])->group(function () {
                     try {
                         $count = $c->products()->count();
                     } catch (\Exception $e) {
-                        $count = 0; // Fallback to 0 if relationship query fails
+                        $count = 0; 
                     }
                 }
 
@@ -178,12 +242,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('admin/produk', function () {
         if (auth()->user()->role === 'umkm') return redirect()->route('umkm.dashboard');
 
-        // Menggunakan paginate(12) agar web tetap ringan saat produk sudah ribuan
         $products = class_exists(\App\Models\Product::class)
             ? \App\Models\Product::with(['user'])
                 ->latest()
                 ->paginate(12)
-                ->withQueryString() // Wajib agar filter/search tidak hilang saat klik nomor halaman
+                ->withQueryString()
                 ->through(function ($p) {
                     return [
                         'id' => $p->id,
@@ -213,12 +276,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('admin/pengaturan', function () {
         if (auth()->user()->role === 'umkm') return redirect()->route('umkm.dashboard');
 
-        // Data konfigurasi simpel dan penting
         $webSettings = [
             'app_name' => 'UMKM Desa Mandalamekar',
             'app_description' => 'Platform digitalisasi dan pemasaran produk UMKM unggulan Desa Mandalamekar, Jawa Barat.',
-            'enable_register_umkm' => true,      // Saklar pendaftaran akun UMKM baru
-            'maintenance_mode' => false,         // Saklar Mode Pemeliharaan (Jika true, web ditutup)
+            'enable_register_umkm' => true,
+            'maintenance_mode' => false,
             'contact_phone' => '+62 812-3456-7890',
             'last_updated' => now()->translatedFormat('d M Y, H:i'),
         ];
@@ -231,7 +293,7 @@ Route::middleware(['auth'])->group(function () {
 
 
 // ==========================================
-// --- ROUTE UMKM ---
+// --- ROUTE PANEL UMKM (HARUS DI ATAS RUTE DINAMIS) ---
 // ==========================================
 Route::middleware(['auth'])->group(function () {
 
@@ -257,5 +319,24 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('umkm/produk/{product}', [ProdukController::class, 'destroy'])->name('umkm.produk.destroy');
 });
 
+
+// ==========================================
+// --- ROUTE DINAMIS UMKM (PALING BAWAH) ---
+// ==========================================
+// 🛠️ Rute ini diletakkan di akhir agar tidak mencaplok rute umkm/profil, umkm/produk, dll.
+Route::get('/umkm/{username}', function ($username) {
+    $umkm = User::where('username', $username)
+                ->where('role', 'umkm')
+                ->firstOrFail();
+
+    $products = Product::where('user_id', $umkm->id)->latest()->get();
+
+    return Inertia::render('umkm/DetailUmkm', [
+        'umkm' => $umkm,
+        'products' => $products
+    ]);
+})->name('umkm.detail');
+
+
 require __DIR__.'/settings.php';
-require __DIR__.'/auth.php';
+require __DIR__.'/auth.php'; // Posisikan selalu di baris paling akhir

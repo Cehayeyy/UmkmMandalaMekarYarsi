@@ -1,55 +1,114 @@
-import { useState, useMemo } from 'react';
-import { Head, Link } from '@inertiajs/react';
+import { useState, useMemo, useEffect } from 'react';
+import { Head, Link, usePage } from '@inertiajs/react';
+import { type SharedData } from '@/types';
+import { useCart } from '@/context/CartContext';
 import {
     Search, Store, ChevronRight, ChevronDown,
     RotateCcw, MapPin, Sprout, ArrowRight, MessageCircle,
-    Facebook, Instagram, Check
+    Facebook, Instagram, Check, Package, Plus, ShoppingBag, Minus, Trash2, X
 } from 'lucide-react';
 
-// 1. DATA DUMMY DIKOSONGKAN
-const DUMMY_UMKM: any[] = [];
-const DUMMY_PRODUCTS: any[] = [];
+interface Product {
+    id: number;
+    nama_produk: string;
+    harga: number;
+    kategori: string;
+    foto: string | null;
+    deskripsi: string;
+    umkm_id: number;
+    seller: string;
+    seller_username: string;
+    no_whatsapp: string | null;
+}
 
-// 2. KATEGORI DENGAN TOTAL 0 (Tampilan dipertahankan)
-const categories = [
-    { label: 'Semua Kategori', count: 0 },
-    { label: 'Makanan & Minuman', count: 0 },
-    { label: 'Kerajinan', count: 0 },
-    { label: 'Pertanian', count: 0 },
-    { label: 'Fashion', count: 0 },
-];
+interface UmkmUser {
+    id: number;
+    name: string;
+    username: string;
+}
+
+interface CategoryData {
+    label: string;
+    count: number;
+}
+
+interface PageProps extends SharedData {
+    products: Product[];
+    umkmList: UmkmUser[];
+    categoriesData: CategoryData[];
+}
 
 export default function ProdukPage() {
-    const [selectedUmkm, setSelectedUmkm] = useState('semua');
-    const [selectedCategory, setSelectedCategory] = useState('Semua');
-    const [searchQuery, setSearchQuery] = useState('');
-    const [sortBy, setSortBy] = useState('terbaru');
-    const [maxPrice, setMaxPrice] = useState(500000);
+    const { auth, products = [], umkmList = [], categoriesData = [] } = usePage<PageProps>().props;
+    
+    // 🛠️ Integrasi Cart Global
+    const { cartItems, addToCart, removeFromCart, updateQuantity, totalPrice, totalItems } = useCart();
+    const [isCartOpen, setIsCartOpen] = useState(false);
 
+    // 🛠️ State Filter & Sort
+    const [selectedUmkm, setSelectedUmkm] = useState<string>('semua');
+    const [selectedCategory, setSelectedCategory] = useState<string>('Semua');
+    const [searchQuery, setSearchQuery] = useState<string>('');
+    const [sortBy, setSortBy] = useState<string>('terbaru');
+    
+    // Cari harga tertinggi dari data secara dinamis (Default 500.000 jika kosong)
+    const absoluteMaxPrice = products.length > 0 ? Math.max(...products.map(p => p.harga)) : 500000;
+    const [maxPrice, setMaxPrice] = useState<number>(absoluteMaxPrice);
+
+    // Update maxPrice awal jika data produk load lambat
+    useEffect(() => {
+        if (products.length > 0) setMaxPrice(absoluteMaxPrice);
+    }, [products]);
+
+    // 🛠️ LOGIKA FILTER DAN PENGURUTAN (REAL-TIME)
     const filteredProducts = useMemo(() => {
-        return DUMMY_PRODUCTS.filter((item) => {
-            const matchUmkm = selectedUmkm === 'semua' || item.umkmId === selectedUmkm;
-            const matchCategory = selectedCategory === 'Semua' || item.category === selectedCategory;
-            const matchSearch = item.title?.toLowerCase().includes(searchQuery.toLowerCase());
-            const matchPrice = item.price <= maxPrice;
+        let result = products.filter((item) => {
+            const matchUmkm = selectedUmkm === 'semua' || item.umkm_id.toString() === selectedUmkm;
+            const matchCategory = selectedCategory === 'Semua' || item.kategori === selectedCategory;
+            const matchSearch = item.nama_produk.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                item.kategori.toLowerCase().includes(searchQuery.toLowerCase());
+            const matchPrice = item.harga <= maxPrice;
+            
             return matchUmkm && matchCategory && matchSearch && matchPrice;
         });
-    }, [selectedUmkm, selectedCategory, searchQuery, sortBy, maxPrice]);
 
+        // Logika Pengurutan
+        if (sortBy === 'termurah') {
+            result.sort((a, b) => a.harga - b.harga);
+        } else if (sortBy === 'termahal') {
+            result.sort((a, b) => b.harga - a.harga);
+        }
+        // Jika 'terbaru', biarkan urutan asli (karena query backend sudah ->latest())
+
+        return result;
+    }, [products, selectedUmkm, selectedCategory, searchQuery, sortBy, maxPrice]);
+
+    // Fungsi Reset Filter
     const handleReset = () => {
         setSelectedUmkm('semua');
         setSelectedCategory('Semua');
         setSearchQuery('');
         setSortBy('terbaru');
-        setMaxPrice(500000);
+        setMaxPrice(absoluteMaxPrice);
+    };
+
+    // Fungsi Gradasi Card (Opsional)
+    const getCardGradient = (id: number) => {
+        const gradients = [
+            'from-amber-100 via-orange-200 to-amber-300',
+            'from-emerald-100 via-teal-200 to-emerald-300',
+            'from-sky-100 via-blue-200 to-indigo-300',
+            'from-rose-100 via-pink-200 to-rose-300'
+        ];
+        return gradients[id % gradients.length];
     };
 
     return (
-        <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(16,185,129,0.12)_0,_rgba(255,255,255,0)_36%),linear-gradient(180deg,#f4faf6_0%,#f8fbf8_45%,#ffffff_100%)] font-sans text-slate-900">
-            <Head title="UMKM - Desa Mandalamekar" />
+        <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(16,185,129,0.12)_0,_rgba(255,255,255,0)_36%),linear-gradient(180deg,#f4faf6_0%,#f8fbf8_45%,#ffffff_100%)] font-sans text-slate-900 relative">
+            <Head title="Katalog Produk - Desa Mandalamekar" />
 
-            {/* HEADER */}
-            <header className="sticky top-0 z-50 border-b border-white/80 bg-white/80 backdrop-blur-xl transition-all">
+            {/* HEADER PUBLIK */}
+            <header className="sticky top-0 z-40 border-b border-white/80 bg-white/80 backdrop-blur-xl transition-all">
                 <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
                     <Link href="/" className="flex items-center gap-3">
                         <div className="flex size-11 items-center justify-center rounded-2xl bg-emerald-600 text-white shadow-lg shadow-emerald-600/25">
@@ -60,6 +119,7 @@ export default function ProdukPage() {
                             <p className="text-base font-extrabold text-slate-900 leading-none">Desa Mandalamekar</p>
                         </div>
                     </Link>
+                    
                     <nav className="hidden items-center gap-8 md:flex">
                         <Link href="/" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Beranda</Link>
                         <Link href="/umkm" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">UMKM</Link>
@@ -68,29 +128,37 @@ export default function ProdukPage() {
                         <Link href="/kontak" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Kontak</Link>
                     </nav>
 
-                    {/* 🛠️ PERBAIKAN: Tombol Login menggunakan Link agar mengarah ke route('login') */}
-                    <Link
-                        href={route('login')}
-                        className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg transition hover:bg-emerald-700"
-                    >
-                        Login <ArrowRight className="size-4" />
-                    </Link>
+                    <div className="flex items-center gap-4">
+                        {/* Tombol Keranjang Belanja */}
+                        <button 
+                            onClick={() => setIsCartOpen(true)}
+                            className="relative flex size-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition cursor-pointer shadow-xs"
+                        >
+                            <ShoppingBag className="size-5" />
+                            {totalItems > 0 && (
+                                <span className="absolute -top-1.5 -right-1.5 flex size-5 items-center justify-center rounded-full bg-rose-500 text-[10px] font-extrabold text-white animate-bounce">
+                                    {totalItems}
+                                </span>
+                            )}
+                        </button>
+
+                        {auth.user ? (
+                            <Link href={route('dashboard')} className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg transition hover:bg-emerald-700">
+                                Dashboard <ArrowRight className="size-4" />
+                            </Link>
+                        ) : (
+                            <Link href={route('login')} className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg transition hover:bg-emerald-700">
+                                Login <ArrowRight className="size-4" />
+                            </Link>
+                        )}
+                    </div>
                 </div>
             </header>
 
-            <main className="mx-auto max-w-7xl px-4 py-8">
-                {/* HERO BANNER - SUDAH DITAMBAHKAN BACKGROUND GAMBAR LAPISAN GRADASI */}
+            <main className="mx-auto max-w-7xl px-4 py-8 pb-24">
+                {/* HERO BANNER PRODUK */}
                 <div className="relative overflow-hidden rounded-[2rem] bg-[#0a1426] text-white mb-8 border border-white/10">
-
-                    {/* Elemen Gambar Latar Belakang */}
-                    <div
-                        className="absolute inset-0 bg-cover bg-center object-cover opacity-100 pointer-events-none"
-                        style={{
-                            backgroundImage: 'linear-gradient(90deg, rgba(10, 20, 38, 0.85) 0%, rgba(10, 20, 38, 0.55) 50%, rgba(10, 20, 38, 0.2) 100%), url("images/Produk-bg.jpg")',
-                        }}
-                    />
-
-                    {/* Konten Teks Hero */}
+                    <div className="absolute inset-0 bg-cover bg-center object-cover opacity-100 pointer-events-none" style={{ backgroundImage: 'linear-gradient(90deg, rgba(10, 20, 38, 0.85) 0%, rgba(10, 20, 38, 0.55) 50%, rgba(10, 20, 38, 0.2) 100%), url("images/Produk-bg.jpg")' }} />
                     <div className="relative z-10 px-10 py-12">
                         <div className="flex items-center gap-2 mb-4">
                             <span className="size-2 rounded-full bg-emerald-400 relative">
@@ -98,75 +166,69 @@ export default function ProdukPage() {
                             </span>
                             <span className="text-xs text-emerald-400 font-medium">Katalog UMKM Desa</span>
                         </div>
-
-                        <h1 className="text-4xl font-extrabold mb-3">
-                            Produk <span className="text-emerald-400">Desa Mandalamekar</span>
-                        </h1>
-
-                        <p className="text-sm text-slate-300 max-w-lg mb-6">
-                            Temukan berbagai produk olahan, kerajinan tangan, dan komoditas unggulan terbaik dari para pelaku UMKM Desa Mandalamekar.
-                        </p>
-
-                        <div className="absolute bottom-6 right-8 flex items-center gap-2 text-xs text-slate-400">
-                            <Link href="/" className="hover:text-white transition">Beranda</Link>
-                            <ChevronRight className="size-3" />
-                            <span className="text-emerald-400 font-medium">UMKM</span>
-                        </div>
+                        <h1 className="text-4xl font-extrabold mb-3">Produk <span className="text-emerald-400">Desa Mandalamekar</span></h1>
+                        <p className="text-sm text-slate-300 max-w-lg mb-6">Temukan berbagai produk olahan, kerajinan tangan, dan komoditas unggulan terbaik langsung dari para pelaku UMKM Desa Mandalamekar.</p>
                     </div>
                 </div>
 
-                {/* FILTER ETALASE */}
-                <div className="mb-6 rounded-[1.75rem] border bg-white p-6 shadow-xl">
+                {/* FILTER PILIH UMKM */}
+                <div className="mb-6 rounded-[1.75rem] border border-slate-100 bg-white p-6 shadow-xl">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-5">
                         <div>
-                            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3.5 py-1.5 text-xs font-bold text-emerald-700 shadow-sm shadow-emerald-100/60">
+                            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3.5 py-1.5 text-xs font-bold text-emerald-700 shadow-sm mb-3">
                                 <Store className="size-3" />
                                 <span>Step 1: Pilih UMKM</span>
                             </div>
-                            <p className="text-sm font-bold text-slate-900 mb-4">Filter Etalase Berdasarkan Toko UMKM</p>
+                            <p className="text-sm font-bold text-slate-900">Filter Etalase Berdasarkan Toko UMKM</p>
                         </div>
 
-                        {/* DROPDOWN PILIH UMKM */}
+                        {/* DROPDOWN UMKM */}
                         <div className="relative min-w-[260px]">
                             <select
                                 value={selectedUmkm}
                                 onChange={(e) => setSelectedUmkm(e.target.value)}
-                                className="w-full appearance-none rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 pr-10 text-xs sm:text-sm font-semibold text-slate-700 transition focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-emerald-500/10 cursor-pointer"
+                                className="w-full appearance-none rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 pr-10 text-xs sm:text-sm font-semibold text-slate-700 transition focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 cursor-pointer"
                             >
-                                <option value="semua">Semua UMKM (0 Produk)</option>
-                                {/* Opsi UMKM lain akan muncul di sini jika ada datanya */}
+                                <option value="semua">Semua UMKM ({products.length} Produk)</option>
+                                {umkmList.map((u) => (
+                                    <option key={u.id} value={u.id.toString()}>{u.name}</option>
+                                ))}
                             </select>
                             <ChevronDown className="pointer-events-none absolute right-3.5 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
                         </div>
                     </div>
 
-                    {/* CHIPS PILIHAN CEPAT */}
-                    <div className="mt-5 flex items-center gap-2.5 overflow-x-auto pb-1 scrollbar-none">
+                    {/* CHIPS UMKM */}
+                    <div className="mt-5 flex items-center gap-2.5 overflow-x-auto pb-2 scrollbar-none">
                         <button
                             onClick={() => setSelectedUmkm('semua')}
-                            className={`flex shrink-0 items-center gap-2 rounded-xl border px-4 py-2.5 text-xs font-semibold transition duration-200 ${
-                                selectedUmkm === 'semua'
-                                    ? 'border-emerald-600 bg-emerald-600 text-white shadow-lg shadow-emerald-600/25 -translate-y-0.5'
-                                    : 'border-slate-200/80 bg-slate-50/80 text-slate-600 hover:border-slate-300 hover:bg-white hover:text-slate-900'
+                            className={`flex shrink-0 items-center gap-2 rounded-xl border px-4 py-2.5 text-xs font-semibold transition duration-200 cursor-pointer ${
+                                selectedUmkm === 'semua' ? 'border-emerald-600 bg-emerald-600 text-white shadow-lg -translate-y-0.5' : 'border-slate-200 bg-slate-50 text-slate-600 hover:bg-white'
                             }`}
                         >
-                            <Store className={`size-3.5 ${selectedUmkm === 'semua' ? 'text-white' : 'text-emerald-600'}`} />
-                            <span>Semua UMKM</span>
-                            <span className={`ml-1 rounded-full px-2 py-0.5 text-[10px] font-bold ${selectedUmkm === 'semua' ? 'bg-emerald-700 text-white' : 'bg-white text-slate-600 shadow-2xs'}`}>
-                                0
-                            </span>
+                            <Store className="size-3.5" /> Semua UMKM
                         </button>
-                        {/* Chips UMKM lain akan muncul di sini jika ada datanya */}
+                        {umkmList.map((u) => (
+                            <button
+                                key={u.id}
+                                onClick={() => setSelectedUmkm(u.id.toString())}
+                                className={`flex shrink-0 items-center gap-2 rounded-xl border px-4 py-2.5 text-xs font-semibold transition duration-200 cursor-pointer ${
+                                    selectedUmkm === u.id.toString() ? 'border-emerald-600 bg-emerald-600 text-white shadow-lg -translate-y-0.5' : 'border-slate-200 bg-slate-50 text-slate-600 hover:bg-white'
+                                }`}
+                            >
+                                <Store className="size-3.5" /> {u.name}
+                            </button>
+                        ))}
                     </div>
                 </div>
 
                 {/* SEARCH BAR & SORTING */}
-                <div className="mb-8 flex flex-col sm:flex-row items-center justify-between gap-4 rounded-[1.5rem] border border-slate-200/80 bg-white p-4 shadow-lg shadow-slate-200/40">
+                <div className="mb-8 flex flex-col sm:flex-row items-center justify-between gap-4 rounded-[1.5rem] border border-slate-100 bg-white p-4 shadow-lg shadow-slate-200/40">
                     <div className="relative w-full sm:flex-1">
                         <Search className="absolute left-4 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
                         <input
                             type="text"
-                            placeholder="Cari produk, contoh: keripik, kopi, madu..."
+                            placeholder="Cari nama produk atau kategori..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             className="w-full rounded-xl border border-slate-200 bg-slate-50/50 py-2.5 pl-11 pr-4 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
@@ -189,21 +251,21 @@ export default function ProdukPage() {
                     </div>
                 </div>
 
+                {/* AREA UTAMA KATALOG (SIDEBAR & GRID PRODUK) */}
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-                    {/* SIDEBAR FILTER */}
-                    <div className="rounded-[1.75rem] border bg-white p-6 shadow-xl space-y-6">
+                    
+                    {/* SIDEBAR FILTER KIRI */}
+                    <div className="rounded-[1.75rem] border border-slate-100 bg-white p-6 shadow-xl h-fit sticky top-28">
                         <h3 className="font-extrabold text-sm mb-4">Kategori</h3>
-                        <div className="space-y-1.5">
-                            {categories.map((cat) => {
+                        <div className="space-y-1.5 mb-6">
+                            {categoriesData.map((cat) => {
                                 const active = selectedCategory === cat.label || (selectedCategory === 'Semua' && cat.label === 'Semua Kategori');
                                 return (
                                     <button
                                         key={cat.label}
                                         onClick={() => setSelectedCategory(cat.label === 'Semua Kategori' ? 'Semua' : cat.label)}
-                                        className={`flex w-full items-center justify-between rounded-xl px-3.5 py-2.5 text-xs transition duration-200 ${
-                                            active
-                                                ? 'bg-emerald-50 text-emerald-700 font-bold border border-emerald-200/60'
-                                                : 'text-slate-600 hover:bg-slate-50 font-medium'
+                                        className={`flex w-full items-center justify-between rounded-xl px-3.5 py-2.5 text-xs transition duration-200 cursor-pointer ${
+                                            active ? 'bg-emerald-50 text-emerald-700 font-bold border border-emerald-200/60' : 'text-slate-600 hover:bg-slate-50 font-medium'
                                         }`}
                                     >
                                         <span className="flex items-center gap-2">
@@ -217,68 +279,221 @@ export default function ProdukPage() {
                                 );
                             })}
                         </div>
-                        <hr />
-                        <h3 className="font-extrabold text-sm mb-4">Rentang Harga</h3>
-                        <input type="range" className="w-full accent-emerald-600" min="0" max="500000" step="10000" value={maxPrice} onChange={(e) => setMaxPrice(Number(e.target.value))} />
+                        
+                        <hr className="border-slate-100 mb-6" />
+                        
+                        <h3 className="font-extrabold text-sm mb-4">Rentang Harga Maksimal</h3>
+                        <input 
+                            type="range" 
+                            className="w-full accent-emerald-600" 
+                            min="0" 
+                            max={absoluteMaxPrice || 500000} 
+                            step="1000" 
+                            value={maxPrice} 
+                            onChange={(e) => setMaxPrice(Number(e.target.value))} 
+                        />
                         <div className="flex justify-between text-xs mt-2 font-bold text-slate-700">
-                            <span className="bg-slate-100 px-2 py-1 rounded-md">Rp 0</span>
-                            <span className="bg-emerald-50 text-emerald-700 px-2 py-1 rounded-md">Rp {maxPrice.toLocaleString('id-ID')}</span>
-                        </div>
-                        <hr />
-                        <h3 className="font-extrabold text-sm mb-4">Lokasi UMKM</h3>
-                        <div className="relative">
-                            <select className="w-full appearance-none rounded-xl border p-2.5 text-xs cursor-pointer bg-slate-50">
-                                <option>Pilih Lokasi</option>
-                                <option>Cimenyan</option>
-                                <option>Mandalamekar Utara</option>
-                                <option>Mandalamekar Selatan</option>
-                            </select>
-                            <ChevronDown className="pointer-events-none absolute right-3.5 top-1/2 size-3.5 -translate-y-1/2 text-slate-400" />
+                            <span className="bg-slate-100 px-2 py-1 rounded-md border border-slate-200">Rp 0</span>
+                            <span className="bg-emerald-50 text-emerald-700 px-2 py-1 rounded-md border border-emerald-200">Rp {maxPrice.toLocaleString('id-ID')}</span>
                         </div>
 
-                        <div className="flex gap-2 mt-4 pt-2">
-                            <button onClick={handleReset} className="flex items-center gap-1 border rounded-xl px-4 py-2.5 text-xs font-bold text-slate-600 hover:bg-slate-50">
-                                <RotateCcw className="size-3.5" /> Reset
+                        <div className="flex gap-2 mt-8 pt-4 border-t border-slate-100">
+                            <button onClick={handleReset} className="flex flex-1 items-center justify-center gap-1 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-600 hover:bg-slate-50 cursor-pointer transition">
+                                <RotateCcw className="size-3.5" /> Reset Filter
                             </button>
-                            <button className="flex-1 bg-emerald-600 rounded-xl text-white text-xs font-bold shadow-lg hover:bg-emerald-700">Terapkan Filter</button>
                         </div>
                     </div>
 
-                    {/* GRID PRODUK KOSONG */}
+                    {/* GRID PRODUK KANAN */}
                     <div className="lg:col-span-3">
-                        <div className="flex items-center justify-between bg-white px-5 py-3 rounded-xl border mb-6 shadow-2xs">
-                            <p className="text-sm font-medium text-slate-600">Menampilkan <span className="font-bold text-slate-900">0 Produk</span></p>
+                        <div className="flex items-center justify-between bg-white px-5 py-3 rounded-xl border border-slate-100 mb-6 shadow-sm">
+                            <p className="text-sm font-medium text-slate-600">Menampilkan <span className="font-bold text-emerald-600">{filteredProducts.length} Produk</span></p>
                         </div>
-                        <div className="py-20 flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-[1.75rem] text-slate-500 bg-white">
-                            <div className="bg-slate-50 p-4 rounded-full mb-4 border border-slate-100 shadow-inner">
-                                <Store className="size-8 text-slate-300" />
+
+                        {filteredProducts.length > 0 ? (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {filteredProducts.map((p) => (
+                                    <article key={p.id} className="group flex flex-col bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+                                        
+                                        {/* Foto Produk */}
+                                        <Link href={`/umkm/${p.seller_username}`} className="aspect-[4/3] bg-slate-100 relative overflow-hidden block">
+                                            {p.foto ? (
+                                                <img 
+                                                    src={`/${p.foto}`} 
+                                                    alt={p.nama_produk} 
+                                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                                />
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center text-slate-300">
+                                                    <Package className="size-12" />
+                                                </div>
+                                            )}
+                                            {/* Badge Kategori */}
+                                            <span className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-[10px] font-extrabold uppercase tracking-wider text-emerald-700 px-3 py-1.5 rounded-full shadow-sm">
+                                                {p.kategori}
+                                            </span>
+                                        </Link>
+
+                                        {/* Info Produk */}
+                                        <div className="p-5 flex flex-col flex-1">
+                                            <h3 className="text-base font-bold text-slate-900 mb-1 line-clamp-1 group-hover:text-emerald-600 transition-colors">
+                                                {p.nama_produk}
+                                            </h3>
+                                            
+                                            <Link href={`/umkm/${p.seller_username}`} className="text-xs text-slate-500 hover:text-emerald-600 flex items-center gap-1.5 mb-4 transition font-medium">
+                                                <Store className="size-3.5" />
+                                                <span className="truncate">{p.seller}</span>
+                                            </Link>
+
+                                            <div className="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between">
+                                                <p className="text-base font-extrabold text-emerald-600">
+                                                    Rp {Number(p.harga).toLocaleString('id-ID')}
+                                                </p>
+                                                
+                                                {/* 🛠️ Tombol Tambah ke Keranjang */}
+                                                <button 
+                                                    onClick={() => addToCart(p)}
+                                                    className="flex items-center justify-center size-9 bg-emerald-50 text-emerald-600 rounded-xl hover:bg-emerald-600 hover:text-white transition-colors active:scale-95 shadow-sm cursor-pointer"
+                                                    title="Tambah ke Keranjang"
+                                                >
+                                                    <Plus className="size-4" />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </article>
+                                ))}
                             </div>
-                            <h3 className="font-extrabold text-slate-800 text-base mb-1">Belum ada data produk yang tersedia.</h3>
-                            <p className="text-xs text-slate-500 max-w-sm text-center">Silakan sesuaikan filter Anda atau kembali lagi nanti saat produk sudah ditambahkan oleh UMKM.</p>
-                        </div>
+                        ) : (
+                            <div className="py-20 flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-[1.75rem] text-slate-500 bg-white">
+                                <div className="bg-slate-50 p-4 rounded-full mb-4 border border-slate-100 shadow-inner">
+                                    <Store className="size-8 text-slate-300" />
+                                </div>
+                                <h3 className="font-extrabold text-slate-800 text-base mb-1">Produk tidak ditemukan</h3>
+                                <p className="text-xs text-slate-500 max-w-sm text-center">Silakan sesuaikan filter pencarian atau rentang harga yang Anda pilih.</p>
+                            </div>
+                        )}
                     </div>
                 </div>
             </main>
 
-            {/* FOOTER MODERN & CLEAN */}
-            <footer id="kontak" className="mt-20 border-t border-slate-200 bg-white">
+            {/* ==========================================
+                🛠️ DRAWER KERANJANG BELANJA
+                ========================================== */}
+            {isCartOpen && (
+                <div className="fixed inset-0 z-50 overflow-hidden">
+                    <div onClick={() => setIsCartOpen(false)} className="absolute inset-0 bg-slate-900/40 backdrop-blur-xs transition-opacity" />
+                    <div className="absolute inset-y-0 right-0 flex max-w-full pl-10">
+                        <div className="w-screen max-w-md transform bg-white shadow-2xl transition-all duration-300 flex flex-col h-full border-l border-slate-100 rounded-l-[2rem]">
+                            
+                            <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 rounded-tl-[2rem]">
+                                <div className="flex items-center gap-2">
+                                    <ShoppingBag className="size-5 text-emerald-600" />
+                                    <h2 className="text-lg font-bold text-slate-900">Keranjang Belanja ({totalItems})</h2>
+                                </div>
+                                <button onClick={() => setIsCartOpen(false)} className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition cursor-pointer">
+                                    <X className="size-5" />
+                                </button>
+                            </div>
+
+                            <div className="flex-1 overflow-y-auto p-6 space-y-4">
+                                {cartItems.length > 0 ? (
+                                    cartItems.map((item) => (
+                                        <div key={item.id} className="flex gap-4 items-center border border-slate-100 p-3 rounded-2xl bg-white shadow-xs">
+                                            <div className="size-16 rounded-xl bg-slate-100 overflow-hidden shrink-0 flex items-center justify-center text-slate-300">
+                                                {item.foto ? <img src={`/${item.foto}`} alt={item.nama_produk} className="w-full h-full object-cover" /> : <Package className="size-6" />}
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <h4 className="font-bold text-slate-900 text-sm truncate">{item.nama_produk}</h4>
+                                                <p className="text-xs text-slate-400 font-medium mb-1.5">{item.seller || item.kategori}</p>
+                                                <p className="text-sm font-extrabold text-emerald-600">Rp {(item.harga * item.quantity).toLocaleString('id-ID')}</p>
+                                            </div>
+                                            <div className="flex flex-col items-center gap-1">
+                                                <div className="flex items-center border border-slate-200 rounded-lg p-0.5 bg-slate-50 shadow-inner">
+                                                    <button onClick={() => updateQuantity(item.id, -1)} className="p-1 hover:text-emerald-600 transition cursor-pointer"><Minus className="size-3" /></button>
+                                                    <span className="px-2 text-xs font-bold text-slate-800">{item.quantity}</span>
+                                                    <button onClick={() => updateQuantity(item.id, 1)} className="p-1 hover:text-emerald-600 transition cursor-pointer"><Plus className="size-3" /></button>
+                                                </div>
+                                                <button onClick={() => removeFromCart(item.id)} className="text-slate-400 hover:text-rose-500 p-1 transition cursor-pointer" title="Hapus"><Trash2 className="size-3.5" /></button>
+                                            </div>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="h-full flex flex-col items-center justify-center text-slate-400 py-12">
+                                        <ShoppingBag className="size-12 text-slate-200 mb-2" />
+                                        <p className="text-sm font-medium">Keranjang belanja kosong</p>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="border-t border-slate-100 p-6 bg-slate-50/50 rounded-bl-[2rem] space-y-4">
+                                <div className="flex items-center justify-between text-slate-900">
+                                    <span className="text-sm font-semibold text-slate-500">Total Pembayaran:</span>
+                                    <span className="text-xl font-black text-emerald-700">Rp {totalPrice.toLocaleString('id-ID')}</span>
+                                </div>
+                                
+                                {/* Tombol Checkout Sementara (di halaman produk global, checkout sebaiknya diarahkan jika beda toko, 
+                                    namun di sini kita simplifikasi menggunakan format detail WA ke no toko jika item pertama punya nomor WA, 
+                                    atau minta pengunjung ke detail toko) */}
+                                {cartItems.length > 0 ? (
+                                    <button 
+                                        onClick={() => {
+                                            // Ambil No WA dari item pertama sebagai toko tujuan (Asumsi beli dari 1 toko)
+                                            const targetPhone = cartItems[0]?.no_whatsapp;
+                                            if (!targetPhone) {
+                                                alert('Mohon maaf, toko produk ini belum mengatur nomor WhatsApp.');
+                                                return;
+                                            }
+                                            let phoneAdmin = targetPhone.replace(/\D/g, '');
+                                            if (phoneAdmin.startsWith('0')) phoneAdmin = '62' + phoneAdmin.substring(1);
+                                            else if (!phoneAdmin.startsWith('62')) phoneAdmin = '62' + phoneAdmin;
+
+                                            let pesan = `Halo, saya ingin memesan produk dari etalase desa:\n\n`;
+                                            cartItems.forEach((item, index) => {
+                                                pesan += `${index + 1}. ${item.nama_produk} (${item.quantity}x) - Rp ${(item.harga * item.quantity).toLocaleString('id-ID')}\n`;
+                                            });
+                                            pesan += `\n*Total Belanja: Rp ${totalPrice.toLocaleString('id-ID')}*`;
+                                            window.open(`https://wa.me/${phoneAdmin}?text=${encodeURIComponent(pesan)}`, '_blank');
+                                        }}
+                                        className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3.5 text-sm font-bold text-white shadow-lg shadow-emerald-600/20 hover:bg-emerald-700 transition cursor-pointer"
+                                    >
+                                        <span>Pesan via WhatsApp</span>
+                                        <ArrowRight className="size-4" />
+                                    </button>
+                                ) : (
+                                    <button disabled className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-slate-200 py-3.5 text-sm font-bold text-slate-400 transition cursor-not-allowed">
+                                        Pesan via WhatsApp <ArrowRight className="size-4" />
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* FLOATING CART BUTTON */}
+            {totalItems > 0 && !isCartOpen && (
+                <button 
+                    onClick={() => setIsCartOpen(true)}
+                    className="fixed bottom-6 right-6 z-40 flex items-center gap-2 rounded-full bg-emerald-600 px-5 py-4 text-white shadow-xl shadow-emerald-600/30 hover:bg-emerald-700 hover:scale-105 transition-all duration-300 animate-bounce cursor-pointer"
+                >
+                    <ShoppingBag className="size-5" />
+                    <span className="text-sm font-bold">Keranjang ({totalItems})</span>
+                </button>
+            )}
+
+            {/* FOOTER */}
+            <footer id="kontak" className="border-t border-slate-200 bg-white">
                 <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 lg:grid-cols-[1.3fr_1fr] lg:px-8">
                     <div>
                         <div className="flex items-center gap-3">
-                            <div className="flex size-10 items-center justify-center rounded-2xl bg-emerald-600 text-white">
-                                <Sprout className="size-5" />
-                            </div>
+                            <div className="flex size-10 items-center justify-center rounded-2xl bg-emerald-600 text-white"><Sprout className="size-5" /></div>
                             <div>
                                 <p className="font-bold text-slate-900">UMKM Desa Mandalamekar</p>
                                 <p className="text-xs font-medium text-slate-500">Portal produk lokal desa</p>
                             </div>
                         </div>
-                        <p className="mt-4 max-w-xl text-sm leading-relaxed text-slate-500">
-                            Situs ini dibuat untuk memperkenalkan produk unggulan, membantu promosi, dan memperluas jangkauan pasar UMKM
-                            Desa Mandalamekar secara digital.
-                        </p>
+                        <p className="mt-4 max-w-xl text-sm leading-relaxed text-slate-500">Situs ini dibuat untuk memperkenalkan produk unggulan, membantu promosi, dan memperluas jangkauan pasar UMKM Desa Mandalamekar secara digital.</p>
                     </div>
-
                     <div className="grid gap-4 sm:grid-cols-2">
                         <div className="rounded-[1.5rem] border border-slate-100 bg-slate-50 p-5 shadow-2xs">
                             <p className="text-sm font-bold text-slate-900">Kontak Resmi</p>
@@ -289,14 +504,12 @@ export default function ProdukPage() {
                                 <a href="#" className="rounded-lg bg-white p-2 shadow-2xs hover:text-emerald-700 transition"><MessageCircle className="size-4" /></a>
                             </div>
                         </div>
-
                         <div className="rounded-[1.5rem] border border-emerald-100 bg-emerald-50/70 p-5">
                             <p className="text-sm font-bold text-emerald-900">Dukungan Lokal</p>
                             <p className="mt-2 text-xs leading-relaxed text-emerald-900/75">Dukung produk lokal, bagikan ke warga, dan ikut memajukan ekonomi desa bersama.</p>
                         </div>
                     </div>
                 </div>
-
                 <div className="border-t border-slate-200/80 py-6 text-center text-xs font-medium text-slate-500">
                     © 2026 UMKM Desa Mandalamekar. Universitas Yarsi.
                 </div>

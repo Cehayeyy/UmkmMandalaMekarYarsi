@@ -159,7 +159,8 @@ export default function ProdukSaya() {
                                             <option value="" disabled hidden>
                                                 Pilih Kategori
                                             </option>
-                                            <option value="Makanan & Minuman">Makanan & Minuman</option>
+                                            <option value="Makanan">Makanan</option>
+                                            <option value="Minuman">Minuman</option>
                                             <option value="Kerajinan">Kerajinan</option>
                                             <option value="Fashion">Fashion</option>
                                             <option value="Lainnya">Lainnya</option>

@@ -296,7 +296,8 @@ export default function DaftarProdukSaya({ produkList = [] }: Readonly<{ produkL
                                         onChange={e => setData('kategori', e.target.value)}
                                         required
                                     >
-                                        <option value="Makanan & Minuman">Makanan & Minuman</option>
+                                        <option value="Makanan">Makanan</option>
+                                        <option value="Minuman">Minuman</option>
                                         <option value="Kerajinan">Kerajinan</option>
                                         <option value="Fashion">Fashion</option>
                                         <option value="Lainnya">Lainnya</option>

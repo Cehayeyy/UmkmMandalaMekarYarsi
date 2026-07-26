@@ -15,6 +15,7 @@ interface LoginForm {
     password: string;
     remember: boolean;
     login_type: 'operator' | 'umkm';
+    [key: string]: any; // 🛠️ Diperbaiki agar sesuai dengan tipe constraint Inertia
 }
 
 interface LoginProps {
@@ -57,7 +58,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                 <button
                     type="button"
                     onClick={() => handleTabChange('operator')}
-                    className={`flex items-center justify-center gap-2 rounded-lg py-2.5 text-xs font-bold transition ${
+                    className={`flex items-center justify-center gap-2 rounded-lg py-2.5 text-xs font-bold transition cursor-pointer ${
                         loginTab === 'operator' ? 'bg-white text-emerald-700 shadow-sm' : 'text-slate-500 hover:text-slate-800'
                     }`}
                 >
@@ -66,7 +67,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                 <button
                     type="button"
                     onClick={() => handleTabChange('umkm')}
-                    className={`flex items-center justify-center gap-2 rounded-lg py-2.5 text-xs font-bold transition ${
+                    className={`flex items-center justify-center gap-2 rounded-lg py-2.5 text-xs font-bold transition cursor-pointer ${
                         loginTab === 'umkm' ? 'bg-amber-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-800'
                     }`}
                 >
@@ -124,7 +125,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
 
                     <Button
                         type="submit"
-                        className={`mt-2 flex w-full items-center justify-center gap-2 rounded-xl py-6 text-sm font-bold text-white shadow-lg transition ${
+                        className={`mt-2 flex w-full items-center justify-center gap-2 rounded-xl py-6 text-sm font-bold text-white shadow-lg transition cursor-pointer ${
                             loginTab === 'operator' ? 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/25' : 'bg-amber-600 hover:bg-amber-700 shadow-amber-600/25'
                         }`}
                         disabled={processing}

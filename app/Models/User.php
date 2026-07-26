@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasMany; // 🛠️ Tambahkan import ini
 
 class User extends Authenticatable
 {
@@ -23,6 +24,9 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'foto_toko',
+        'deskripsi_toko',
+        'no_whatsapp',
     ];
 
     /**
@@ -46,5 +50,14 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    // 🛠️ PERBAIKAN: Tambahkan relasi produk ini
+    /**
+     * Get all of the products for the user (UMKM).
+     */
+    public function products(): HasMany
+    {
+        return $this->hasMany(Product::class, 'user_id', 'id');
     }
 }

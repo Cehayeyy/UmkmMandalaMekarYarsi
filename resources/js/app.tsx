@@ -5,6 +5,7 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
 import { route as routeFn } from 'ziggy-js';
 import { initializeTheme } from './hooks/use-appearance';
+import { CartProvider } from '@/context/CartContext'; // 🛠️ Impor CartProvider
 
 declare global {
     const route: typeof routeFn;
@@ -18,7 +19,12 @@ createInertiaApp({
     setup({ el, App, props }) {
         const root = createRoot(el);
 
-        root.render(<App {...props} />);
+        root.render(
+            // 🛠️ Bungkus <App /> dengan <CartProvider>
+            <CartProvider>
+                <App {...props} />
+            </CartProvider>
+        );
     },
     progress: {
         color: '#4B5563',
