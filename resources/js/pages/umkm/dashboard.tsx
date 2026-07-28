@@ -30,8 +30,13 @@ export default function UmkmDashboard({ produkList = [] }: Readonly<{ produkList
                 {/* SIDEBAR PANEL TOKO */}
                 <aside className="fixed inset-y-0 left-0 z-40 flex w-72 flex-col bg-emerald-950 text-emerald-100">
                     <div className="flex items-center gap-3 px-6 py-6 border-b border-white/10">
-                        <div className="flex size-11 items-center justify-center rounded-2xl bg-emerald-600 text-white shadow-md shrink-0">
-                            <Store className="size-6" />
+                        {/* 🛠️ PERBAIKAN: Menampilkan Foto Toko di Sidebar */}
+                        <div className="flex size-11 items-center justify-center overflow-hidden rounded-2xl bg-emerald-600 text-white shadow-md shrink-0">
+                            {(auth.user as any)?.foto_toko ? (
+                                <img src={`/${(auth.user as any).foto_toko}`} alt="Logo Toko" className="h-full w-full object-cover" />
+                            ) : (
+                                <Store className="size-6" />
+                            )}
                         </div>
                         <div className="min-w-0 flex-1">
                             <p className="text-xs font-semibold text-emerald-300 uppercase tracking-wider">Panel Toko</p>

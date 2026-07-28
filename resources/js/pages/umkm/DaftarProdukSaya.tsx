@@ -13,7 +13,7 @@ import {
     X,
     AlertTriangle
 } from 'lucide-react';
-import { FormEventHandler, useState } from 'react';
+import { FormEventHandler, useState, useMemo } from 'react';
 
 interface Product {
     id: number;
@@ -31,9 +31,27 @@ export default function DaftarProdukSaya({ produkList = [] }: Readonly<{ produkL
 
     // State untuk Modal Edit
     const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+    const [isCustomCategory, setIsCustomCategory] = useState(false); // 🛠️ State untuk mode ketik manual di modal Edit
 
     // State untuk Modal Pop-up Hapus
     const [deletingProduct, setDeletingProduct] = useState<Product | null>(null);
+
+    // 🛠️ LOGIKA KATEGORI DINAMIS: Mengekstrak kategori dari produk (Anti-Duplikat Ketat)
+    const existingCategories = useMemo(() => {
+        const catMap = new Map<string, string>();
+        if (produkList && produkList.length > 0) {
+            produkList.forEach(p => {
+                if (p.kategori) {
+                    const cleanCat = p.kategori.trim();
+                    const lowerCat = cleanCat.toLowerCase();
+                    if (!catMap.has(lowerCat)) {
+                        catMap.set(lowerCat, cleanCat);
+                    }
+                }
+            });
+        }
+        return Array.from(catMap.values());
+    }, [produkList]);
 
     // Form Inertia untuk Edit Produk (Termasuk Deskripsi)
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -41,7 +59,7 @@ export default function DaftarProdukSaya({ produkList = [] }: Readonly<{ produkL
         nama_produk: '',
         kategori: '',
         harga: '',
-        deskripsi: '', // 🛠️ Ditambahkan field deskripsi
+        deskripsi: '', 
         foto: null as File | null,
     });
 
@@ -49,12 +67,14 @@ export default function DaftarProdukSaya({ produkList = [] }: Readonly<{ produkL
     const handleEdit = (product: Product, e?: React.MouseEvent) => {
         if (e) e.stopPropagation();
         setEditingProduct(product);
+        setIsCustomCategory(false); // Pastikan mulai dengan dropdown
+        
         setData({
             _method: 'PUT',
             nama_produk: product.nama_produk,
             kategori: product.kategori,
             harga: Math.floor(Number(product.harga)).toString(),
-            deskripsi: product.deskripsi || '', // 🛠️ Bind deskripsi lama
+            deskripsi: product.deskripsi || '', 
             foto: null,
         });
     };
@@ -74,6 +94,7 @@ export default function DaftarProdukSaya({ produkList = [] }: Readonly<{ produkL
             forceFormData: true,
             onSuccess: () => {
                 setEditingProduct(null);
+                setIsCustomCategory(false);
                 reset();
             },
         });
@@ -104,8 +125,13 @@ export default function DaftarProdukSaya({ produkList = [] }: Readonly<{ produkL
                 {/* SIDEBAR PANEL TOKO */}
                 <aside className="fixed inset-y-0 left-0 z-40 flex w-72 flex-col bg-emerald-950 text-emerald-100">
                     <div className="flex items-center gap-3 px-6 py-6 border-b border-white/10">
-                        <div className="flex size-11 items-center justify-center rounded-2xl bg-emerald-600 text-white shadow-md shrink-0">
-                            <Store className="size-6" />
+                        {/* 🛠️ PERBAIKAN: Menampilkan Foto Toko di Sidebar */}
+                        <div className="flex size-11 items-center justify-center overflow-hidden rounded-2xl bg-emerald-600 text-white shadow-md shrink-0">
+                            {(auth.user as any)?.foto_toko ? (
+                                <img src={`/${(auth.user as any).foto_toko}`} alt="Logo Toko" className="h-full w-full object-cover" />
+                            ) : (
+                                <Store className="size-6" />
+                            )}
                         </div>
                         <div className="min-w-0 flex-1">
                             <p className="text-xs font-semibold text-emerald-300 uppercase tracking-wider">Panel Toko</p>
@@ -287,21 +313,54 @@ export default function DaftarProdukSaya({ produkList = [] }: Readonly<{ produkL
                             </div>
 
                             <div className="grid grid-cols-2 gap-3">
+                                {/* 🛠️ KATEGORI DINAMIS */}
                                 <div>
                                     <label htmlFor="edit-kategori" className="block text-xs font-bold uppercase text-slate-500 mb-1">Kategori</label>
-                                    <select
-                                        id="edit-kategori"
-                                        className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm text-slate-900 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
-                                        value={data.kategori}
-                                        onChange={e => setData('kategori', e.target.value)}
-                                        required
-                                    >
-                                        <option value="Makanan">Makanan</option>
-                                        <option value="Minuman">Minuman</option>
-                                        <option value="Kerajinan">Kerajinan</option>
-                                        <option value="Fashion">Fashion</option>
-                                        <option value="Lainnya">Lainnya</option>
-                                    </select>
+                                    {!isCustomCategory ? (
+                                        <select
+                                            id="edit-kategori"
+                                            className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm text-slate-900 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                                            value={data.kategori}
+                                            onChange={e => {
+                                                if (e.target.value === 'custom') {
+                                                    setIsCustomCategory(true);
+                                                    setData('kategori', '');
+                                                } else {
+                                                    setData('kategori', e.target.value);
+                                                }
+                                            }}
+                                            required
+                                        >
+                                            <option value="" disabled hidden>Pilih Kategori</option>
+                                            {existingCategories.map((cat) => (
+                                                <option key={cat} value={cat}>{cat}</option>
+                                            ))}
+                                            <option value="custom" className="font-bold text-emerald-600">➕ Kategori Lain...</option>
+                                        </select>
+                                    ) : (
+                                        <div className="flex items-center gap-1.5">
+                                            <input
+                                                type="text"
+                                                placeholder="Ketik kategori..."
+                                                className="w-full rounded-xl border border-emerald-500 bg-emerald-50/30 px-3 py-2 text-sm text-slate-900 focus:outline-none"
+                                                value={data.kategori}
+                                                onChange={e => setData('kategori', e.target.value)}
+                                                required
+                                                autoFocus
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setIsCustomCategory(false);
+                                                    setData('kategori', editingProduct?.kategori || '');
+                                                }}
+                                                className="shrink-0 p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition"
+                                                title="Batal"
+                                            >
+                                                <X className="size-4" />
+                                            </button>
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div>
@@ -324,12 +383,12 @@ export default function DaftarProdukSaya({ produkList = [] }: Readonly<{ produkL
                                     id="edit-foto"
                                     type="file"
                                     accept="image/*"
-                                    className="w-full rounded-xl border border-slate-200 bg-white p-1.5 text-xs text-slate-700 file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 transition cursor-pointer"
+                                    className="w-full rounded-xl border border-slate-200 bg-white p-1.5 text-xs text-slate-700 file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:bg-emerald-50 file:text-emerald-700 cursor-pointer"
                                     onChange={e => setData('foto', e.target.files?.[0] || null)}
                                 />
                             </div>
 
-                            {/* 🛠️ DITAMBAHKAN: FIELD DESKRIPSI PRODUK */}
+                            {/* FIELD DESKRIPSI PRODUK */}
                             <div>
                                 <label htmlFor="edit-deskripsi" className="block text-xs font-bold uppercase text-slate-500 mb-1">Deskripsi Produk</label>
                                 <textarea

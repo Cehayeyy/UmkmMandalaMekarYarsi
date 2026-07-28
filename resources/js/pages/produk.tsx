@@ -3,64 +3,36 @@ import { Head, Link, usePage } from '@inertiajs/react';
 import { type SharedData } from '@/types';
 import { useCart } from '@/context/CartContext';
 import {
-    Search, Store, ChevronRight, ChevronDown,
-    RotateCcw, MapPin, Sprout, ArrowRight, MessageCircle,
-    Facebook, Instagram, Check, Package, Plus, ShoppingBag, Minus, Trash2, X
+    Search, Store, ChevronRight, ChevronDown, RotateCcw, MapPin, Sprout, ArrowRight, MessageCircle, Facebook, Instagram, Check, Package, Plus, ShoppingBag, Minus, Trash2, X
 } from 'lucide-react';
 
-interface Product {
-    id: number;
-    nama_produk: string;
-    harga: number;
-    kategori: string;
-    foto: string | null;
-    deskripsi: string;
-    umkm_id: number;
-    seller: string;
-    seller_username: string;
-    no_whatsapp: string | null;
-}
-
-interface UmkmUser {
-    id: number;
-    name: string;
-    username: string;
-}
-
-interface CategoryData {
-    label: string;
-    count: number;
-}
-
-interface PageProps extends SharedData {
-    products: Product[];
-    umkmList: UmkmUser[];
-    categoriesData: CategoryData[];
-}
+interface Product { id: number; nama_produk: string; harga: number; kategori: string; foto: string | null; deskripsi: string; umkm_id: number; seller: string; seller_username: string; no_whatsapp: string | null; }
+interface UmkmUser { id: number; name: string; username: string; }
+interface CategoryData { label: string; count: number; }
+interface PageProps extends SharedData { products: Product[]; umkmList: UmkmUser[]; categoriesData: CategoryData[]; }
 
 export default function ProdukPage() {
     const { auth, products = [], umkmList = [], categoriesData = [] } = usePage<PageProps>().props;
     
-    // 🛠️ Integrasi Cart Global
+    // Integrasi Cart Global
     const { cartItems, addToCart, removeFromCart, updateQuantity, totalPrice, totalItems } = useCart();
     const [isCartOpen, setIsCartOpen] = useState(false);
 
-    // 🛠️ State Filter & Sort
+    // State Filter & Sort
     const [selectedUmkm, setSelectedUmkm] = useState<string>('semua');
     const [selectedCategory, setSelectedCategory] = useState<string>('Semua');
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [sortBy, setSortBy] = useState<string>('terbaru');
     
-    // Cari harga tertinggi dari data secara dinamis (Default 500.000 jika kosong)
+    // Rentang Harga Dinamis
     const absoluteMaxPrice = products.length > 0 ? Math.max(...products.map(p => p.harga)) : 500000;
     const [maxPrice, setMaxPrice] = useState<number>(absoluteMaxPrice);
 
-    // Update maxPrice awal jika data produk load lambat
-    useEffect(() => {
-        if (products.length > 0) setMaxPrice(absoluteMaxPrice);
+    useEffect(() => { 
+        if (products.length > 0) setMaxPrice(absoluteMaxPrice); 
     }, [products]);
 
-    // 🛠️ LOGIKA FILTER DAN PENGURUTAN (REAL-TIME)
+    // LOGIKA FILTER DAN PENGURUTAN (REAL-TIME)
     const filteredProducts = useMemo(() => {
         let result = products.filter((item) => {
             const matchUmkm = selectedUmkm === 'semua' || item.umkm_id.toString() === selectedUmkm;
@@ -72,35 +44,21 @@ export default function ProdukPage() {
             return matchUmkm && matchCategory && matchSearch && matchPrice;
         });
 
-        // Logika Pengurutan
         if (sortBy === 'termurah') {
             result.sort((a, b) => a.harga - b.harga);
         } else if (sortBy === 'termahal') {
             result.sort((a, b) => b.harga - a.harga);
         }
-        // Jika 'terbaru', biarkan urutan asli (karena query backend sudah ->latest())
 
         return result;
     }, [products, selectedUmkm, selectedCategory, searchQuery, sortBy, maxPrice]);
 
-    // Fungsi Reset Filter
-    const handleReset = () => {
-        setSelectedUmkm('semua');
-        setSelectedCategory('Semua');
-        setSearchQuery('');
-        setSortBy('terbaru');
-        setMaxPrice(absoluteMaxPrice);
-    };
-
-    // Fungsi Gradasi Card (Opsional)
-    const getCardGradient = (id: number) => {
-        const gradients = [
-            'from-amber-100 via-orange-200 to-amber-300',
-            'from-emerald-100 via-teal-200 to-emerald-300',
-            'from-sky-100 via-blue-200 to-indigo-300',
-            'from-rose-100 via-pink-200 to-rose-300'
-        ];
-        return gradients[id % gradients.length];
+    const handleReset = () => { 
+        setSelectedUmkm('semua'); 
+        setSelectedCategory('Semua'); 
+        setSearchQuery(''); 
+        setSortBy('terbaru'); 
+        setMaxPrice(absoluteMaxPrice); 
     };
 
     return (
@@ -129,7 +87,6 @@ export default function ProdukPage() {
                     </nav>
 
                     <div className="flex items-center gap-4">
-                        {/* Tombol Keranjang Belanja */}
                         <button 
                             onClick={() => setIsCartOpen(true)}
                             className="relative flex size-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition cursor-pointer shadow-xs"
@@ -182,7 +139,6 @@ export default function ProdukPage() {
                             <p className="text-sm font-bold text-slate-900">Filter Etalase Berdasarkan Toko UMKM</p>
                         </div>
 
-                        {/* DROPDOWN UMKM */}
                         <div className="relative min-w-[260px]">
                             <select
                                 value={selectedUmkm}
@@ -198,7 +154,6 @@ export default function ProdukPage() {
                         </div>
                     </div>
 
-                    {/* CHIPS UMKM */}
                     <div className="mt-5 flex items-center gap-2.5 overflow-x-auto pb-2 scrollbar-none">
                         <button
                             onClick={() => setSelectedUmkm('semua')}
@@ -258,6 +213,7 @@ export default function ProdukPage() {
                     <div className="rounded-[1.75rem] border border-slate-100 bg-white p-6 shadow-xl h-fit sticky top-28">
                         <h3 className="font-extrabold text-sm mb-4">Kategori</h3>
                         <div className="space-y-1.5 mb-6">
+                            {/* 🛠️ PERBAIKAN: HANYA MAPPING categoriesData (Bawaan Laravel) */}
                             {categoriesData.map((cat) => {
                                 const active = selectedCategory === cat.label || (selectedCategory === 'Semua' && cat.label === 'Semua Kategori');
                                 return (
@@ -312,56 +268,82 @@ export default function ProdukPage() {
 
                         {filteredProducts.length > 0 ? (
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {filteredProducts.map((p) => (
-                                    <article key={p.id} className="group flex flex-col bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
-                                        
-                                        {/* Foto Produk */}
-                                        <Link href={`/umkm/${p.seller_username}`} className="aspect-[4/3] bg-slate-100 relative overflow-hidden block">
-                                            {p.foto ? (
-                                                <img 
-                                                    src={`/${p.foto}`} 
-                                                    alt={p.nama_produk} 
-                                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                                                />
-                                            ) : (
-                                                <div className="w-full h-full flex items-center justify-center text-slate-300">
-                                                    <Package className="size-12" />
-                                                </div>
-                                            )}
-                                            {/* Badge Kategori */}
-                                            <span className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-[10px] font-extrabold uppercase tracking-wider text-emerald-700 px-3 py-1.5 rounded-full shadow-sm">
-                                                {p.kategori}
-                                            </span>
-                                        </Link>
-
-                                        {/* Info Produk */}
-                                        <div className="p-5 flex flex-col flex-1">
-                                            <h3 className="text-base font-bold text-slate-900 mb-1 line-clamp-1 group-hover:text-emerald-600 transition-colors">
-                                                {p.nama_produk}
-                                            </h3>
+                                {filteredProducts.map((p) => {
+                                    const cartItem = cartItems.find(item => item.id === p.id);
+                                    
+                                    return (
+                                        <article key={p.id} className="group flex flex-col bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
                                             
-                                            <Link href={`/umkm/${p.seller_username}`} className="text-xs text-slate-500 hover:text-emerald-600 flex items-center gap-1.5 mb-4 transition font-medium">
-                                                <Store className="size-3.5" />
-                                                <span className="truncate">{p.seller}</span>
+                                            <Link href={`/umkm/${p.seller_username}`} className="aspect-[4/3] bg-slate-100 relative overflow-hidden block">
+                                                {p.foto ? (
+                                                    <img 
+                                                        src={`/${p.foto}`} 
+                                                        alt={p.nama_produk} 
+                                                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                                    />
+                                                ) : (
+                                                    <div className="w-full h-full flex items-center justify-center text-slate-300">
+                                                        <Package className="size-12" />
+                                                    </div>
+                                                )}
+                                                <span className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-[10px] font-extrabold uppercase tracking-wider text-emerald-700 px-3 py-1.5 rounded-full shadow-sm">
+                                                    {p.kategori}
+                                                </span>
                                             </Link>
 
-                                            <div className="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between">
-                                                <p className="text-base font-extrabold text-emerald-600">
-                                                    Rp {Number(p.harga).toLocaleString('id-ID')}
-                                                </p>
+                                            <div className="p-5 flex flex-col flex-1">
+                                                <h3 className="text-base font-bold text-slate-900 mb-1 line-clamp-1 group-hover:text-emerald-600 transition-colors">
+                                                    {p.nama_produk}
+                                                </h3>
                                                 
-                                                {/* 🛠️ Tombol Tambah ke Keranjang */}
-                                                <button 
-                                                    onClick={() => addToCart(p)}
-                                                    className="flex items-center justify-center size-9 bg-emerald-50 text-emerald-600 rounded-xl hover:bg-emerald-600 hover:text-white transition-colors active:scale-95 shadow-sm cursor-pointer"
-                                                    title="Tambah ke Keranjang"
-                                                >
-                                                    <Plus className="size-4" />
-                                                </button>
+                                                <Link href={`/umkm/${p.seller_username}`} className="text-xs text-slate-500 hover:text-emerald-600 flex items-center gap-1.5 mb-4 mt-1 transition font-medium">
+                                                    <Store className="size-3.5" />
+                                                    <span className="truncate">{p.seller}</span>
+                                                </Link>
+
+                                                <div className="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between">
+                                                    <p className="text-base font-extrabold text-emerald-600">
+                                                        Rp {Number(p.harga).toLocaleString('id-ID')}
+                                                    </p>
+                                                    
+                                                    {cartItem ? (
+                                                        <div className="flex items-center border border-emerald-200 rounded-xl p-0.5 bg-emerald-50 h-9">
+                                                            <button 
+                                                                onClick={() => {
+                                                                    if (cartItem.quantity <= 1) {
+                                                                        removeFromCart(p.id);
+                                                                    } else {
+                                                                        updateQuantity(p.id, -1);
+                                                                    }
+                                                                }} 
+                                                                className="p-1.5 text-emerald-600 hover:bg-emerald-100 rounded-lg transition cursor-pointer"
+                                                            >
+                                                                <Minus className="size-3.5" />
+                                                            </button>
+                                                            <span className="min-w-[20px] text-center text-xs font-bold text-emerald-800">
+                                                                {cartItem.quantity}
+                                                            </span>
+                                                            <button 
+                                                                onClick={() => updateQuantity(p.id, 1)} 
+                                                                className="p-1.5 text-emerald-600 hover:bg-emerald-100 rounded-lg transition cursor-pointer"
+                                                            >
+                                                                <Plus className="size-3.5" />
+                                                            </button>
+                                                        </div>
+                                                    ) : (
+                                                        <button 
+                                                            onClick={() => addToCart(p)}
+                                                            className="flex items-center justify-center size-9 bg-emerald-50 text-emerald-600 rounded-xl hover:bg-emerald-600 hover:text-white transition-colors active:scale-95 shadow-sm cursor-pointer"
+                                                            title="Tambah ke Keranjang"
+                                                        >
+                                                            <Plus className="size-4" />
+                                                        </button>
+                                                    )}
+                                                </div>
                                             </div>
-                                        </div>
-                                    </article>
-                                ))}
+                                        </article>
+                                    );
+                                })}
                             </div>
                         ) : (
                             <div className="py-20 flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-[1.75rem] text-slate-500 bg-white">
@@ -376,9 +358,7 @@ export default function ProdukPage() {
                 </div>
             </main>
 
-            {/* ==========================================
-                🛠️ DRAWER KERANJANG BELANJA
-                ========================================== */}
+            {/* DRAWER KERANJANG BELANJA */}
             {isCartOpen && (
                 <div className="fixed inset-0 z-50 overflow-hidden">
                     <div onClick={() => setIsCartOpen(false)} className="absolute inset-0 bg-slate-900/40 backdrop-blur-xs transition-opacity" />
@@ -409,7 +389,18 @@ export default function ProdukPage() {
                                             </div>
                                             <div className="flex flex-col items-center gap-1">
                                                 <div className="flex items-center border border-slate-200 rounded-lg p-0.5 bg-slate-50 shadow-inner">
-                                                    <button onClick={() => updateQuantity(item.id, -1)} className="p-1 hover:text-emerald-600 transition cursor-pointer"><Minus className="size-3" /></button>
+                                                    <button 
+                                                        onClick={() => {
+                                                            if (item.quantity <= 1) {
+                                                                removeFromCart(item.id);
+                                                            } else {
+                                                                updateQuantity(item.id, -1);
+                                                            }
+                                                        }} 
+                                                        className="p-1 hover:text-emerald-600 transition cursor-pointer"
+                                                    >
+                                                        <Minus className="size-3" />
+                                                    </button>
                                                     <span className="px-2 text-xs font-bold text-slate-800">{item.quantity}</span>
                                                     <button onClick={() => updateQuantity(item.id, 1)} className="p-1 hover:text-emerald-600 transition cursor-pointer"><Plus className="size-3" /></button>
                                                 </div>
@@ -431,13 +422,9 @@ export default function ProdukPage() {
                                     <span className="text-xl font-black text-emerald-700">Rp {totalPrice.toLocaleString('id-ID')}</span>
                                 </div>
                                 
-                                {/* Tombol Checkout Sementara (di halaman produk global, checkout sebaiknya diarahkan jika beda toko, 
-                                    namun di sini kita simplifikasi menggunakan format detail WA ke no toko jika item pertama punya nomor WA, 
-                                    atau minta pengunjung ke detail toko) */}
                                 {cartItems.length > 0 ? (
                                     <button 
                                         onClick={() => {
-                                            // Ambil No WA dari item pertama sebagai toko tujuan (Asumsi beli dari 1 toko)
                                             const targetPhone = cartItems[0]?.no_whatsapp;
                                             if (!targetPhone) {
                                                 alert('Mohon maaf, toko produk ini belum mengatur nomor WhatsApp.');

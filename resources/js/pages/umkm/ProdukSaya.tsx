@@ -6,12 +6,34 @@ import {
     Package,
     Store,
     Tag,
-    ShoppingBag
+    ShoppingBag,
+    X
 } from 'lucide-react';
-import { FormEventHandler } from 'react';
+import { FormEventHandler, useState, useMemo } from 'react';
+
+interface Product { kategori: string; }
+interface PageProps extends SharedData { produkList?: Product[]; }
 
 export default function ProdukSaya() {
-    const { auth } = usePage<SharedData>().props;
+    const { auth, produkList = [] } = usePage<PageProps>().props;
+    const [isCustomCategory, setIsCustomCategory] = useState(false); // 🛠️ State untuk Kategori Kustom
+
+    // 🛠️ MENGAMBIL KATEGORI YANG PERNAH DIBUAT UMKM INI (Anti-Duplikat Ketat)
+    const existingCategories = useMemo(() => {
+        const catMap = new Map<string, string>();
+        if (produkList && produkList.length > 0) {
+            produkList.forEach(p => {
+                if (p.kategori) {
+                    const cleanCat = p.kategori.trim();
+                    const lowerCat = cleanCat.toLowerCase();
+                    if (!catMap.has(lowerCat)) {
+                        catMap.set(lowerCat, cleanCat);
+                    }
+                }
+            });
+        }
+        return Array.from(catMap.values());
+    }, [produkList]);
 
     const { data, setData, post, processing, reset, errors } = useForm({
         nama_produk: '',
@@ -28,7 +50,8 @@ export default function ProdukSaya() {
             forceFormData: true,
             onSuccess: () => {
                 reset();
-                // 🛠️ Otomatis alihkan halaman ke Daftar Produk Saya setelah simpan
+                setIsCustomCategory(false);
+                // Otomatis alihkan halaman ke Daftar Produk Saya setelah simpan
                 router.get(route('umkm.produk.daftar'));
             },
         });
@@ -39,13 +62,16 @@ export default function ProdukSaya() {
             <Head title="Produk Saya - Panel Toko" />
             <div className="flex min-h-screen bg-slate-50 text-slate-900 font-sans">
 
-                {/* ==========================================
-                    SIDEBAR PANEL TOKO
-                   ========================================== */}
+                {/* SIDEBAR PANEL TOKO */}
                 <aside className="fixed inset-y-0 left-0 z-40 flex w-72 flex-col bg-emerald-950 text-emerald-100">
                     <div className="flex items-center gap-3 px-6 py-6 border-b border-white/10">
-                        <div className="flex size-11 items-center justify-center rounded-2xl bg-emerald-600 text-white shadow-md shrink-0">
-                            <Store className="size-6" />
+                        {/* 🛠️ PERBAIKAN: Menampilkan Foto Toko di Sidebar */}
+                        <div className="flex size-11 items-center justify-center overflow-hidden rounded-2xl bg-emerald-600 text-white shadow-md shrink-0">
+                            {(auth.user as any)?.foto_toko ? (
+                                <img src={`/${(auth.user as any).foto_toko}`} alt="Logo Toko" className="h-full w-full object-cover" />
+                            ) : (
+                                <Store className="size-6" />
+                            )}
                         </div>
                         <div className="min-w-0 flex-1">
                             <p className="text-xs font-semibold text-emerald-300 uppercase tracking-wider">Panel Toko</p>
@@ -56,65 +82,39 @@ export default function ProdukSaya() {
                     </div>
 
                     <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
-                        <Link
-                            href={route('umkm.dashboard')}
-                            className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-emerald-100/80 hover:bg-white/5 transition"
-                        >
+                        <Link href={route('umkm.dashboard')} className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-emerald-100/80 hover:bg-white/5 transition">
                             <LayoutDashboard className="size-4" />
                             <span>Dashboard Toko</span>
                         </Link>
-
-                        {/* Menu Aktif saat ini */}
-                        <Link
-                            href={route('umkm.produk.index')}
-                            className="flex w-full items-center gap-3 rounded-xl bg-emerald-600 px-4 py-3 text-sm font-bold text-white shadow-md shadow-emerald-900/40"
-                        >
+                        <Link href={route('umkm.produk.index')} className="flex w-full items-center gap-3 rounded-xl bg-emerald-600 px-4 py-3 text-sm font-bold text-white shadow-md shadow-emerald-900/40">
                             <Package className="size-4" />
                             <span>Produk Saya</span>
                         </Link>
-
-                        {/* Menu Link ke Daftar Produk Saya */}
-                        <Link
-                            href={route('umkm.produk.daftar')}
-                            className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-emerald-100/80 hover:bg-white/5 transition"
-                        >
+                        <Link href={route('umkm.produk.daftar')} className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-emerald-100/80 hover:bg-white/5 transition">
                             <ShoppingBag className="size-4" />
                             <span>Daftar Produk Saya</span>
                         </Link>
-
-                        <Link
-                            href={route('umkm.profil.edit')}
-                            className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-emerald-100/80 hover:bg-white/5 transition"
-                        >
+                        <Link href={route('umkm.profil.edit')} className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-emerald-100/80 hover:bg-white/5 transition">
                             <Tag className="size-4" />
                             <span>Profil Toko</span>
                         </Link>
                     </nav>
 
                     <div className="border-t border-white/10 p-4">
-                        <Link
-                            href={route('logout')}
-                            method="post"
-                            as="button"
-                            className="flex w-full items-center gap-3 rounded-xl border border-white/10 px-4 py-2.5 text-sm font-semibold text-emerald-100 transition hover:bg-white/5 hover:text-rose-200"
-                        >
+                        <Link href={route('logout')} method="post" as="button" className="flex w-full items-center gap-3 rounded-xl border border-white/10 px-4 py-2.5 text-sm font-semibold text-emerald-100 transition hover:bg-white/5 hover:text-rose-200">
                             <LogOut className="size-4" />
                             <span>Keluar</span>
                         </Link>
                     </div>
                 </aside>
 
-                {/* ==========================================
-                    AREA KONTEN UTAMA (KHUSUS FORM INPUT)
-                   ========================================== */}
+                {/* KONTEN UTAMA */}
                 <div className="ml-72 flex-1 flex flex-col min-h-screen">
                     <header className="bg-white border-b border-slate-200 px-8 py-5 flex items-center justify-between sticky top-0 z-30">
                         <h1 className="text-xl font-bold text-slate-900">Produk Saya</h1>
                     </header>
 
                     <main className="p-8 space-y-8 flex-1">
-
-                        {/* FORM TAMBAH PRODUK BARU */}
                         <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm w-full">
                             <div className="border-b border-slate-100 pb-4 mb-6">
                                 <h2 className="text-base font-bold text-slate-900">Tambah Produk Baru</h2>
@@ -124,11 +124,8 @@ export default function ProdukSaya() {
                             <form onSubmit={submit} encType="multipart/form-data" className="space-y-5">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
 
-                                    {/* 1. Nama Produk */}
                                     <div>
-                                        <label htmlFor="nama-produk" className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
-                                            Nama Produk
-                                        </label>
+                                        <label htmlFor="nama-produk" className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Nama Produk</label>
                                         <input
                                             id="nama-produk"
                                             type="text"
@@ -136,43 +133,66 @@ export default function ProdukSaya() {
                                             className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 transition"
                                             value={data.nama_produk}
                                             onChange={e => setData('nama_produk', e.target.value)}
-                                            autoComplete="off"     // 🛠️ Mencegah saran "Saved info" dari browser
-                                            spellCheck={false}     // 🛠️ Mematikan garis merah dan saran ejaan
-                                            data-gramm="false"
+                                            autoComplete="off"
+                                            spellCheck={false}
                                             required
                                         />
                                         {errors.nama_produk && <p className="text-xs text-rose-500 mt-1">{errors.nama_produk}</p>}
                                     </div>
 
-                                    {/* 2. Kategori */}
+                                    {/* 🛠️ LOGIKA KATEGORI */}
                                     <div>
-                                        <label htmlFor="kategori" className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
-                                            Kategori
-                                        </label>
-                                        <select
-                                            id="kategori"
-                                            className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-800 focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 transition"
-                                            value={data.kategori}
-                                            onChange={e => setData('kategori', e.target.value)}
-                                            required
-                                        >
-                                            <option value="" disabled hidden>
-                                                Pilih Kategori
-                                            </option>
-                                            <option value="Makanan">Makanan</option>
-                                            <option value="Minuman">Minuman</option>
-                                            <option value="Kerajinan">Kerajinan</option>
-                                            <option value="Fashion">Fashion</option>
-                                            <option value="Lainnya">Lainnya</option>
-                                        </select>
+                                        <label htmlFor="kategori" className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Kategori</label>
+                                        {!isCustomCategory ? (
+                                            <select
+                                                id="kategori"
+                                                className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-800 focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 transition cursor-pointer"
+                                                value={data.kategori}
+                                                onChange={e => {
+                                                    if (e.target.value === 'custom') {
+                                                        setIsCustomCategory(true);
+                                                        setData('kategori', '');
+                                                    } else {
+                                                        setData('kategori', e.target.value);
+                                                    }
+                                                }}
+                                                required
+                                            >
+                                                <option value="" disabled hidden>Pilih Kategori</option>
+                                                {existingCategories.map((cat) => (
+                                                    <option key={cat} value={cat}>{cat}</option>
+                                                ))}
+                                                <option value="custom" className="font-bold text-emerald-600">➕ Tambah Kategori Baru...</option>
+                                            </select>
+                                        ) : (
+                                            <div className="flex items-center gap-2">
+                                                <input
+                                                    type="text"
+                                                    placeholder="Ketik kategori baru..."
+                                                    className="w-full rounded-xl border border-emerald-500 bg-emerald-50/30 px-4 py-2.5 text-sm text-slate-800 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition"
+                                                    value={data.kategori}
+                                                    onChange={e => setData('kategori', e.target.value)}
+                                                    required
+                                                    autoFocus
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        setIsCustomCategory(false);
+                                                        setData('kategori', '');
+                                                    }}
+                                                    className="flex shrink-0 size-10 items-center justify-center rounded-xl bg-slate-100 text-slate-500 hover:bg-rose-100 hover:text-rose-600 transition"
+                                                    title="Batal Tambah Kategori"
+                                                >
+                                                    <X className="size-4" />
+                                                </button>
+                                            </div>
+                                        )}
                                         {errors.kategori && <p className="text-xs text-rose-500 mt-1">{errors.kategori}</p>}
                                     </div>
 
-                                    {/* 3. Harga */}
                                     <div>
-                                        <label htmlFor="harga" className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
-                                            Harga (Rp)
-                                        </label>
+                                        <label htmlFor="harga" className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Harga (Rp)</label>
                                         <input
                                             id="harga"
                                             type="number"
@@ -186,11 +206,8 @@ export default function ProdukSaya() {
                                         {errors.harga && <p className="text-xs text-rose-500 mt-1">{errors.harga}</p>}
                                     </div>
 
-                                    {/* 4. Foto Produk */}
                                     <div>
-                                        <label htmlFor="foto-produk" className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
-                                            Foto Produk
-                                        </label>
+                                        <label htmlFor="foto-produk" className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Foto Produk</label>
                                         <input
                                             id="foto-produk"
                                             type="file"
@@ -201,11 +218,8 @@ export default function ProdukSaya() {
                                         {errors.foto && <p className="text-xs text-rose-500 mt-1">{errors.foto}</p>}
                                     </div>
 
-                                    {/* 5. Deskripsi Produk */}
                                     <div className="md:col-span-2">
-                                        <label htmlFor="deskripsi-produk" className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
-                                            Deskripsi Produk
-                                        </label>
+                                        <label htmlFor="deskripsi-produk" className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Deskripsi Produk</label>
                                         <textarea
                                             id="deskripsi-produk"
                                             rows={3}
@@ -217,19 +231,13 @@ export default function ProdukSaya() {
                                     </div>
                                 </div>
 
-                                {/* TOMBOL SIMPAN */}
                                 <div className="pt-3 border-t border-slate-100 flex justify-end">
-                                    <button
-                                        type="submit"
-                                        disabled={processing}
-                                        className="inline-flex items-center justify-center rounded-xl bg-emerald-600 px-6 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-emerald-700 transition disabled:opacity-50"
-                                    >
+                                    <button type="submit" disabled={processing} className="inline-flex items-center justify-center rounded-xl bg-emerald-600 px-6 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-emerald-700 transition disabled:opacity-50">
                                         {processing ? 'Menyimpan...' : 'Simpan Produk'}
                                     </button>
                                 </div>
                             </form>
                         </div>
-
                     </main>
                 </div>
             </div>

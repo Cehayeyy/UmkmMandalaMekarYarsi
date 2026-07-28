@@ -32,22 +32,26 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'username' => 'required|string|max:255|unique:users,username', // Tambah validasi
+            'username' => 'required|string|max:255|unique:users,username',
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
         $user = User::create([
             'name' => $request->name,
-            'username' => $request->username, // <--- TAMBAH INI
+            'username' => $request->username,
             'email' => $request->email,
-            'role' => 'umkm', // <--- Memberikan role otomatis
+            'role' => 'umkm',
+            'status' => 'pending', // 🛠️ Set status awal pendaftaran menjadi pending
             'password' => Hash::make($request->password),
         ]);
 
         event(new Registered($user));
-        Auth::login($user);
 
-        return to_route('dashboard');
+        // 🛠️ Matikan Auto-Login bawaan Laravel Breeze
+        // Auth::login($user);
+
+        // 🛠️ Alihkan kembali ke halaman login dengan membawa flash status notification
+        return redirect(route('login'))->with('status', 'Pendaftaran berhasil! Akun Anda saat ini sedang menunggu proses verifikasi dan persetujuan dari Admin Desa Mandalamekar.');
     }
 }

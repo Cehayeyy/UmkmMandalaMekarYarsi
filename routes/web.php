@@ -12,14 +12,17 @@ use Inertia\Inertia;
 // --- ROUTE PUBLIK STATIS ---
 // ==========================================
 
+// ==========================================
+// --- ROUTE PUBLIK STATIS ---
+// ==========================================
+
 Route::get('/', function () {
     $umkmCount = User::where('role', 'umkm')->count();
     $productCount = class_exists(Product::class) ? Product::count() : 0;
-    
     $categoryCount = class_exists(Product::class) ? Product::distinct('kategori')->count('kategori') : 0;
 
     $featuredProducts = class_exists(Product::class) 
-        ? Product::with('user:id,name')
+        ? Product::with('user:id,name,username')
             ->latest()
             ->take(4)
             ->get()
@@ -30,10 +33,33 @@ Route::get('/', function () {
                     'price' => (int) ($p->harga ?? $p->price ?? 0),
                     'category' => $p->kategori ?? 'Lainnya',
                     'seller' => $p->user ? ($p->user->name ?? $p->user->username) : 'UMKM Desa',
+                    'seller_username' => $p->user->username ?? '',
                     'foto' => $p->foto ?? $p->image ?? null,
                 ];
             })
         : [];
+
+    // 🛠️ PERBAIKAN: Ambil 4 Kategori yang paling banyak digunakan dari database
+    $topCategories = class_exists(Product::class)
+        ? Product::select('kategori', \Illuminate\Support\Facades\DB::raw('count(*) as total'))
+            ->groupBy('kategori')
+            ->orderByDesc('total')
+            ->take(4)
+            ->get()
+            ->map(function ($item) {
+                return ['label' => $item->kategori, 'count' => $item->total];
+            })->toArray()
+        : [];
+
+    // Jika database masih kosong, berikan kategori default sementara agar desain tidak rusak
+    if (empty($topCategories)) {
+        $topCategories = [
+            ['label' => 'Makanan & Minuman', 'count' => 0],
+            ['label' => 'Kerajinan', 'count' => 0],
+            ['label' => 'Fashion', 'count' => 0],
+            ['label' => 'Lainnya', 'count' => 0],
+        ];
+    }
 
     return Inertia::render('welcome', [
         'statsData' => [
@@ -41,7 +67,8 @@ Route::get('/', function () {
             'products' => $productCount,
             'categories' => $categoryCount,
         ],
-        'featuredProducts' => $featuredProducts
+        'featuredProducts' => $featuredProducts,
+        'topCategories' => $topCategories // 🛠️ Kirim ke frontend
     ]);
 })->name('home');
 
@@ -52,12 +79,9 @@ Route::get('/umkm', function () {
     ]);
 })->name('umkm.umkmPage');
 
-// 🛠️ PERBAIKAN: Rute Katalog Produk Utama dengan Data Real
 Route::get('/produk', function () {
-    // 1. Ambil semua UMKM untuk opsi filter
     $umkmList = User::where('role', 'umkm')->get(['id', 'name', 'username']);
 
-    // 2. Ambil semua produk beserta relasi user (UMKM) nya
     $products = class_exists(Product::class)
         ? Product::with('user:id,name,username,no_whatsapp')->latest()->get()->map(function ($p) {
             return [
@@ -70,17 +94,15 @@ Route::get('/produk', function () {
                 'umkm_id' => $p->user_id,
                 'seller' => $p->user ? ($p->user->name ?? $p->user->username) : 'UMKM Desa',
                 'seller_username' => $p->user ? $p->user->username : '',
-                'no_whatsapp' => $p->user ? $p->user->no_whatsapp : null, // Penting untuk checkout per-produk nanti
+                'no_whatsapp' => $p->user ? $p->user->no_whatsapp : null,
             ];
         })
         : [];
 
-    // 3. Susun data Kategori secara dinamis beserta jumlah produknya
     $categoriesData = collect($products)->groupBy('kategori')->map(function ($items, $key) {
         return ['label' => $key, 'count' => count($items)];
     })->values()->toArray();
 
-    // Tambahkan opsi "Semua Kategori" di awal array
     array_unshift($categoriesData, ['label' => 'Semua Kategori', 'count' => count($products)]);
 
     return Inertia::render('produk', [
@@ -112,10 +134,13 @@ Route::middleware(['auth'])->group(function () {
             return redirect()->route('umkm.dashboard');
         }
 
-        $totalUmkm = User::where('role', 'umkm')->count();
+        // 🛠️ PERBAIKAN 1: Hitung statistik dengan benar
+        $totalUmkm = User::where('role', 'umkm')->count(); // Total semua pendaftar
         $totalAkunUmkm = User::where('role', 'umkm')->count();
         $totalProduk = class_exists(Product::class) ? Product::count() : 0;
-        $umkmAktif = User::where('role', 'umkm')->count();
+        
+        // Hanya hitung UMKM yang statusnya benar-benar 'aktif'
+        $umkmAktif = User::where('role', 'umkm')->where('status', 'aktif')->count();
 
         $umkmTerbaru = User::where('role', 'umkm')->latest()->take(3)->get()->map(function ($u) {
             return [
@@ -132,7 +157,8 @@ Route::middleware(['auth'])->group(function () {
                 'name' => $u->name ?? '-',
                 'owner' => $u->username,
                 'email' => $u->email ?? $u->username . '@mandalamekar.desa',
-                'status' => 'Aktif',
+                // 🛠️ PERBAIKAN 2: Ambil status asli dari database, ubah huruf awalnya jadi kapital (Aktif / Pending)
+                'status' => ucfirst($u->status ?? 'aktif'), 
                 'tone' => 'from-emerald-700 via-emerald-800 to-stone-900',
             ];
         });
@@ -180,7 +206,7 @@ Route::middleware(['auth'])->group(function () {
                 'name' => $u->name ?? 'Belum ada nama toko',
                 'username' => $u->username,
                 'email' => $u->email ?? '-',
-                'status' => 'Aktif & Terverifikasi',
+                'status' => $u->status ?? 'aktif', // 🛠️ Mengirim status riil ('pending' / 'aktif')
                 'joined_at' => $u->created_at ? $u->created_at->translatedFormat('d M Y') : 'Baru saja',
             ];
         });
@@ -189,6 +215,20 @@ Route::middleware(['auth'])->group(function () {
             'umkms' => $umkms
         ]);
     })->name('admin.umkm');
+
+    // 🛠️ RUTE BARU: Menangani persetujuan aktivasi status UMKM dari Admin
+    Route::put('admin/manajemen-umkm/{id}/approve', function ($id) {
+        if (auth()->user()->role === 'umkm') return abort(403);
+
+        $user = User::findOrFail($id);
+        
+        if ($user->role === 'umkm' && $user->status === 'pending') {
+            $user->update(['status' => 'aktif']);
+            return redirect()->back()->with('success', 'Akun UMKM berhasil disetujui.');
+        }
+
+        return redirect()->back()->with('error', 'Akun tidak valid atau sudah aktif.');
+    })->name('admin.umkm.approve');
 
     // 3. Manajemen Akun Admin
     Route::get('admin/manajemen-akun', function () {
@@ -323,7 +363,6 @@ Route::middleware(['auth'])->group(function () {
 // ==========================================
 // --- ROUTE DINAMIS UMKM (PALING BAWAH) ---
 // ==========================================
-// 🛠️ Rute ini diletakkan di akhir agar tidak mencaplok rute umkm/profil, umkm/produk, dll.
 Route::get('/umkm/{username}', function ($username) {
     $umkm = User::where('username', $username)
                 ->where('role', 'umkm')
@@ -337,6 +376,5 @@ Route::get('/umkm/{username}', function ($username) {
     ]);
 })->name('umkm.detail');
 
-
 require __DIR__.'/settings.php';
-require __DIR__.'/auth.php'; // Posisikan selalu di baris paling akhir
+require __DIR__.'/auth.php';

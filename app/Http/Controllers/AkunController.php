@@ -29,6 +29,7 @@ class AkunController extends Controller
             'name' => $request->username, // Nama disamakan dengan username
             'username' => $request->username,
             'role' => 'operator', // Default peran sebagai operator
+            'status' => 'aktif', // 🛠️ Operator langsung aktif
             'password' => Hash::make($request->password),
         ]);
 
@@ -48,10 +49,11 @@ class AkunController extends Controller
             'name' => $request->name,
             'username' => $request->username,
             'role' => 'umkm', // PENTING: Kunci perannya sebagai umkm
+            'status' => 'pending', // 🛠️ PERBAIKAN: Akun UMKM baru otomatis berstatus pending
             'password' => Hash::make($request->password),
         ]);
 
-        return back()->with('success', 'Akun UMKM berhasil dibuat!');
+        return back()->with('success', 'Akun UMKM berhasil dibuat dan menunggu persetujuan!');
     }
 
     // 3. Memperbarui Akun (Edit Username / Password)

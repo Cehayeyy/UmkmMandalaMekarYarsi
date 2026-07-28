@@ -13,6 +13,7 @@ interface UserData {
     foto_toko?: string | null;
     deskripsi_toko?: string | null;
     no_whatsapp?: string | null;
+    alamat_toko?: string | null; // 🛠️ Menambahkan field alamat_toko
 }
 
 export default function ProfilToko({ user }: { user: UserData }) {
@@ -25,7 +26,8 @@ export default function ProfilToko({ user }: { user: UserData }) {
         _method: 'PUT', 
         name: user.name || '',
         deskripsi_toko: user.deskripsi_toko || '',
-        no_whatsapp: user.no_whatsapp || '', // 🛠️ Tambahkan baris ini
+        no_whatsapp: user.no_whatsapp || '',
+        alamat_toko: user.alamat_toko || '', // 🛠️ Mengikat data alamat_toko ke form
         foto_toko: null as File | null,
     });
 
@@ -51,13 +53,9 @@ export default function ProfilToko({ user }: { user: UserData }) {
             <Head title="Profil Toko" />
             <div className="flex min-h-screen bg-slate-50 text-slate-900">
 
-                {/* ==========================================
-                    SIDEBAR PANEL TOKO
-                   ========================================== */}
+                {/* SIDEBAR PANEL TOKO */}
                 <aside className="fixed inset-y-0 left-0 z-40 flex w-72 flex-col bg-emerald-950 text-emerald-100">
                     <div className="flex items-center gap-3 px-6 py-6 border-b border-white/10">
-                        
-                        {/* 🛠️ PERBAIKAN: Logo Sidebar Dinamis */}
                         <div className="flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-emerald-600 text-white shadow-md">
                             {user.foto_toko ? (
                                 <img src={`/${user.foto_toko}`} alt="Logo Toko" className="h-full w-full object-cover" />
@@ -66,7 +64,6 @@ export default function ProfilToko({ user }: { user: UserData }) {
                             )}
                         </div>
                         
-                        {/* 🛠️ PERBAIKAN: Nama Toko Mengikuti Data Terbaru */}
                         <div>
                             <p className="text-xs font-semibold text-emerald-300 uppercase tracking-wider">Panel Toko</p>
                             <p className="text-base font-bold leading-tight text-white truncate w-48">{user.name}</p>
@@ -115,9 +112,7 @@ export default function ProfilToko({ user }: { user: UserData }) {
                     </div>
                 </aside>
 
-                {/* ==========================================
-                    MAIN CONTENT 
-                   ========================================== */}
+                {/* MAIN CONTENT */}
                 <div className="ml-72 flex-1">
                     <header className="bg-white border-b border-slate-200 px-8 py-6">
                         <h1 className="text-xl font-bold text-slate-900">Pengaturan Profil Toko</h1>
@@ -186,7 +181,6 @@ export default function ProfilToko({ user }: { user: UserData }) {
                                     </div>
                                 </div>
 
-                                {/* 🛠️ Tambahkan Input No WhatsApp di bawah sini */}
                                 <div className="mt-6">
                                     <label htmlFor="no_whatsapp" className="block text-sm font-medium text-slate-700 mb-2">
                                         Nomor WhatsApp (Untuk menerima pesanan)
@@ -206,6 +200,20 @@ export default function ProfilToko({ user }: { user: UserData }) {
                                     </div>
                                     <p className="mt-2 text-[11px] text-slate-500">Pastikan nomor aktif dan terhubung ke WhatsApp.</p>
                                     {errors.no_whatsapp && <p className="mt-2 text-sm text-red-600">{errors.no_whatsapp}</p>}
+                                </div>
+
+                                {/* 🛠️ INPUT ALAMAT TOKO */}
+                                <div className="mt-6">
+                                    <label htmlFor="alamat_toko" className="block text-sm font-medium text-slate-700 mb-2">Alamat Lengkap Toko</label>
+                                    <input
+                                        id="alamat_toko"
+                                        type="text"
+                                        placeholder="Contoh: Jl. Pasir Angin RT 01/02, Desa Mandalamekar"
+                                        className="w-full rounded-xl border-slate-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm px-4 py-3 bg-slate-50"
+                                        value={data.alamat_toko}
+                                        onChange={(e) => setData('alamat_toko', e.target.value)}
+                                    />
+                                    {errors.alamat_toko && <p className="mt-2 text-sm text-red-600">{errors.alamat_toko}</p>}
                                 </div>
 
                                 <div>

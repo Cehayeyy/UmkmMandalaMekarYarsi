@@ -34,13 +34,14 @@ interface UmkmUser {
     username: string;
     foto_toko?: string | null;
     deskripsi_toko?: string | null;
-    no_whatsapp?: string | null; // 🛠️ Menampung nomor WA dinamis dari DB
+    no_whatsapp?: string | null; 
+    alamat_toko?: string | null;
 }
 
 export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, products: Product[] }) {
     const { auth } = usePage<SharedData>().props;
     
-    // 🛠️ Hubungkan Context Keranjang Belanja Global
+    // Hubungkan Context Keranjang Belanja Global
     const { cartItems, addToCart, removeFromCart, updateQuantity, totalPrice, totalItems } = useCart();
     const [isCartOpen, setIsCartOpen] = useState(false);
 
@@ -54,11 +55,10 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
         return gradients[id % gradients.length];
     };
 
-    // 🛠️ LOGIKA PEMBENTUKAN URL WHATSAPP SECARA AMAN & DINAMIS
+    // LOGIKA PEMBENTUKAN URL WHATSAPP
     const whatsappUrl = useMemo(() => {
         if (!umkm.no_whatsapp || cartItems.length === 0) return '#';
 
-        // Bersihkan karakter non-angka
         let phoneAdmin = umkm.no_whatsapp.replace(/\D/g, '');
         if (phoneAdmin.startsWith('0')) {
             phoneAdmin = '62' + phoneAdmin.substring(1);
@@ -66,7 +66,6 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
             phoneAdmin = '62' + phoneAdmin;
         }
 
-        // Susun struktur cetak teks struk belanjaan
         let pesan = `Halo *${umkm.name}*, saya ingin memesan produk berikut:\n\n`;
         cartItems.forEach((item, index) => {
             pesan += `${index + 1}. ${item.nama_produk} (${item.quantity}x) - Rp ${(item.harga * item.quantity).toLocaleString('id-ID')}\n`;
@@ -90,9 +89,7 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
             <Head title={`${umkm.name} - UMKM Mandalamekar`} />
             <div className="min-h-screen bg-slate-50 text-slate-900 font-sans relative">
 
-                {/* ==========================================
-                    HEADER / NAVBAR PUBLIK
-                   ========================================== */}
+                {/* HEADER / NAVBAR PUBLIK */}
                 <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/90 backdrop-blur-xl">
                     <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
                         <Link href="/" className="flex items-center gap-3">
@@ -114,7 +111,6 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
                         </nav>
 
                         <div className="flex items-center gap-4">
-                            {/* Tombol Ikon Keranjang Belanja di Navbar */}
                             <button 
                                 onClick={() => setIsCartOpen(true)}
                                 className="relative flex size-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition cursor-pointer shadow-xs"
@@ -142,16 +138,13 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
                 </header>
 
                 <main className="pb-20">
-                    {/* ==========================================
-                        BANNER TOKO (CARD LEBAR)
-                       ========================================== */}
+                    {/* BANNER TOKO (CARD LEBAR) */}
                     <section className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 lg:px-8">
                         <Link href="/umkm" className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-emerald-600 mb-6 transition">
                             <ChevronLeft className="size-4" /> Kembali ke Daftar UMKM
                         </Link>
 
                         <div className="relative overflow-hidden rounded-[2rem] bg-slate-900 shadow-xl shadow-slate-200 min-h-[320px] flex flex-col justify-end">
-                            {/* Background Image / Gradient */}
                             {umkm.foto_toko ? (
                                 <img 
                                     src={`/${umkm.foto_toko}`} 
@@ -162,10 +155,8 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
                                 <div className={`absolute inset-0 bg-gradient-to-br ${getDefaultGradient(umkm.id)} opacity-90`} />
                             )}
                             
-                            {/* Overlay Gelap agar teks mudah dibaca */}
                             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/60 to-transparent" />
 
-                            {/* Konten Profil Toko */}
                             <div className="relative z-10 p-8 sm:p-12 flex flex-col sm:flex-row sm:items-end justify-between gap-6">
                                 <div className="flex items-end gap-6">
                                     <div className="hidden sm:flex size-24 shrink-0 items-center justify-center rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-white shadow-lg overflow-hidden">
@@ -194,18 +185,22 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
                                 </div>
 
                                 <div className="shrink-0">
-                                    <div className="flex items-center gap-2 text-sm font-medium text-white/90 bg-white/10 backdrop-blur-md px-4 py-2.5 rounded-xl border border-white/10">
-                                        <MapPin className="size-4 text-emerald-400" />
-                                        <span>Desa Mandalamekar</span>
-                                    </div>
+                                    <a 
+                                        href={`https://maps.google.com/?q=${encodeURIComponent((umkm.alamat_toko || 'Desa Mandalamekar') + ', Mandalamekar, Bandung')}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center gap-2 text-sm font-medium text-white/90 bg-white/10 backdrop-blur-md px-4 py-2.5 rounded-xl border border-white/10 hover:bg-white/20 transition cursor-pointer"
+                                        title="Buka di Google Maps"
+                                    >
+                                        <MapPin className="size-4 text-emerald-400 shrink-0" />
+                                        <span className="truncate max-w-[200px]">{umkm.alamat_toko || 'Desa Mandalamekar'}</span>
+                                    </a>
                                 </div>
                             </div>
                         </div>
                     </section>
 
-                    {/* ==========================================
-                        KATALOG PRODUK TOKO INI
-                       ========================================== */}
+                    {/* KATALOG PRODUK TOKO INI */}
                     <section className="mx-auto max-w-7xl px-4 pt-12 sm:px-6 lg:px-8">
                         <div className="flex items-center justify-between mb-8 border-b border-slate-200 pb-4">
                             <h2 className="text-2xl font-bold text-slate-900">Etalase Produk</h2>
@@ -216,54 +211,81 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
 
                         {products.length > 0 ? (
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                                {products.map((p) => (
-                                    <article key={p.id} className="group flex flex-col bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
-                                        
-                                        {/* Foto Produk */}
-                                        <div className="aspect-[4/3] bg-slate-100 relative overflow-hidden">
-                                            {p.foto ? (
-                                                <img 
-                                                    src={`/${p.foto}`} 
-                                                    alt={p.nama_produk} 
-                                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                                                />
-                                            ) : (
-                                                <div className="w-full h-full flex items-center justify-center text-slate-300">
-                                                    <Package className="size-12" />
-                                                </div>
-                                            )}
-                                            {/* Badge Kategori */}
-                                            <span className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-[10px] font-extrabold uppercase tracking-wider text-emerald-700 px-3 py-1.5 rounded-full shadow-sm">
-                                                {p.kategori}
-                                            </span>
-                                        </div>
-
-                                        {/* Info Produk */}
-                                        <div className="p-5 flex flex-col flex-1">
-                                            <h3 className="text-lg font-bold text-slate-900 mb-1 line-clamp-1 group-hover:text-emerald-600 transition-colors">
-                                                {p.nama_produk}
-                                            </h3>
+                                {products.map((p) => {
+                                    const cartItem = cartItems.find(item => item.id === p.id);
+                                    
+                                    return (
+                                        <article key={p.id} className="group flex flex-col bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
                                             
-                                            <p className="text-sm text-slate-500 line-clamp-2 min-h-[40px] mb-4">
-                                                {p.deskripsi || "Tidak ada deskripsi produk."}
-                                            </p>
-
-                                            <div className="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between">
-                                                <p className="text-lg font-extrabold text-emerald-600">
-                                                    Rp {Number(p.harga).toLocaleString('id-ID')}
-                                                </p>
-                                                
-                                                <button 
-                                                    onClick={() => addToCart(p)}
-                                                    className="flex items-center justify-center size-9 bg-emerald-50 text-emerald-600 rounded-xl hover:bg-emerald-600 hover:text-white transition-colors active:scale-95 shadow-sm cursor-pointer"
-                                                    title="Tambah ke Keranjang"
-                                                >
-                                                    <Plus className="size-4" />
-                                                </button>
+                                            <div className="aspect-[4/3] bg-slate-100 relative overflow-hidden">
+                                                {p.foto ? (
+                                                    <img 
+                                                        src={`/${p.foto}`} 
+                                                        alt={p.nama_produk} 
+                                                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                                    />
+                                                ) : (
+                                                    <div className="w-full h-full flex items-center justify-center text-slate-300">
+                                                        <Package className="size-12" />
+                                                    </div>
+                                                )}
+                                                <span className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-[10px] font-extrabold uppercase tracking-wider text-emerald-700 px-3 py-1.5 rounded-full shadow-sm">
+                                                    {p.kategori}
+                                                </span>
                                             </div>
-                                        </div>
-                                    </article>
-                                ))}
+
+                                            <div className="p-5 flex flex-col flex-1">
+                                                <h3 className="text-lg font-bold text-slate-900 mb-1 line-clamp-1 group-hover:text-emerald-600 transition-colors">
+                                                    {p.nama_produk}
+                                                </h3>
+                                                
+                                                <p className="text-sm text-slate-500 line-clamp-2 min-h-[40px] mb-4">
+                                                    {p.deskripsi || "Tidak ada deskripsi produk."}
+                                                </p>
+
+                                                <div className="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between">
+                                                    <p className="text-lg font-extrabold text-emerald-600">
+                                                        Rp {Number(p.harga).toLocaleString('id-ID')}
+                                                    </p>
+                                                    
+                                                    {cartItem ? (
+                                                        <div className="flex items-center border border-emerald-200 rounded-xl p-0.5 bg-emerald-50 h-9">
+                                                            <button 
+                                                                onClick={() => {
+                                                                    if (cartItem.quantity <= 1) {
+                                                                        removeFromCart(p.id);
+                                                                    } else {
+                                                                        updateQuantity(p.id, -1);
+                                                                    }
+                                                                }} 
+                                                                className="p-1.5 text-emerald-600 hover:bg-emerald-100 rounded-lg transition cursor-pointer"
+                                                            >
+                                                                <Minus className="size-3.5" />
+                                                            </button>
+                                                            <span className="min-w-[20px] text-center text-xs font-bold text-emerald-800">
+                                                                {cartItem.quantity}
+                                                            </span>
+                                                            <button 
+                                                                onClick={() => updateQuantity(p.id, 1)} 
+                                                                className="p-1.5 text-emerald-600 hover:bg-emerald-100 rounded-lg transition cursor-pointer"
+                                                            >
+                                                                <Plus className="size-3.5" />
+                                                            </button>
+                                                        </div>
+                                                    ) : (
+                                                        <button 
+                                                            onClick={() => addToCart(p)}
+                                                            className="flex items-center justify-center size-9 bg-emerald-50 text-emerald-600 rounded-xl hover:bg-emerald-600 hover:text-white transition-colors active:scale-95 shadow-sm cursor-pointer"
+                                                            title="Tambah ke Keranjang"
+                                                        >
+                                                            <Plus className="size-4" />
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </article>
+                                    );
+                                })}
                             </div>
                         ) : (
                             <div className="py-20 flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-[2rem] bg-white text-slate-500">
@@ -277,9 +299,7 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
                     </section>
                 </main>
 
-                {/* ==========================================
-                    🛠️ SLIDE-OVER DRAWER: SISI KERANJANG BELANJA
-                   ========================================== */}
+                {/* SLIDE-OVER DRAWER: SISI KERANJANG BELANJA */}
                 {isCartOpen && (
                     <div className="fixed inset-0 z-50 overflow-hidden">
                         <div onClick={() => setIsCartOpen(false)} className="absolute inset-0 bg-slate-900/40 backdrop-blur-xs transition-opacity" />
@@ -287,7 +307,6 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
                         <div className="absolute inset-y-0 right-0 flex max-w-full pl-10">
                             <div className="w-screen max-w-md transform bg-white shadow-2xl transition-all duration-300 flex flex-col h-full border-l border-slate-100 rounded-l-[2rem]">
                                 
-                                {/* Bagian Atas Drawer */}
                                 <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 rounded-tl-[2rem]">
                                     <div className="flex items-center gap-2">
                                         <ShoppingBag className="size-5 text-emerald-600" />
@@ -298,7 +317,6 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
                                     </button>
                                 </div>
 
-                                {/* List Item Belanjaan */}
                                 <div className="flex-1 overflow-y-auto p-6 space-y-4">
                                     {cartItems.length > 0 ? (
                                         cartItems.map((item) => (
@@ -316,10 +334,20 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
                                                     <p className="text-sm font-extrabold text-emerald-600">Rp {(item.harga * item.quantity).toLocaleString('id-ID')}</p>
                                                 </div>
 
-                                                {/* Kontrol Jumlah Item (+ / -) */}
                                                 <div className="flex flex-col items-center gap-1">
                                                     <div className="flex items-center border border-slate-200 rounded-lg p-0.5 bg-slate-50 shadow-inner">
-                                                        <button onClick={() => updateQuantity(item.id, -1)} className="p-1 hover:text-emerald-600 transition cursor-pointer"><Minus className="size-3" /></button>
+                                                        <button 
+                                                            onClick={() => {
+                                                                if (item.quantity <= 1) {
+                                                                    removeFromCart(item.id);
+                                                                } else {
+                                                                    updateQuantity(item.id, -1);
+                                                                }
+                                                            }} 
+                                                            className="p-1 hover:text-emerald-600 transition cursor-pointer"
+                                                        >
+                                                            <Minus className="size-3" />
+                                                        </button>
                                                         <span className="px-2 text-xs font-bold text-slate-800">{item.quantity}</span>
                                                         <button onClick={() => updateQuantity(item.id, 1)} className="p-1 hover:text-emerald-600 transition cursor-pointer"><Plus className="size-3" /></button>
                                                     </div>
@@ -335,14 +363,12 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
                                     )}
                                 </div>
 
-                                {/* Bagian Bawah Summary Checkout */}
                                 <div className="border-t border-slate-100 p-6 bg-slate-50/50 rounded-bl-[2rem] space-y-4">
                                     <div className="flex items-center justify-between text-slate-900">
                                         <span className="text-sm font-semibold text-slate-500">Total Pembayaran:</span>
                                         <span className="text-xl font-black text-emerald-700">Rp {totalPrice.toLocaleString('id-ID')}</span>
                                     </div>
                                     
-                                    {/* 🛠️ PERBAIKAN MUTLAK: Menggunakan Tag <a> murni untuk Link Keluar WhatsApp (Bebas dari 404 Inertia) */}
                                     {cartItems.length > 0 ? (
                                         <a 
                                             href={whatsappUrl}
@@ -381,9 +407,7 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
                     </button>
                 )}
 
-                {/* ==========================================
-                    FOOTER PUBLIK
-                   ========================================== */}
+                {/* FOOTER PUBLIK */}
                 <footer className="bg-emerald-950 text-emerald-100 border-t border-emerald-900">
                     <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-4 lg:px-8">
                         <div>

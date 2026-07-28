@@ -30,12 +30,25 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
-        $request->session()->regenerate();
 
+        // 🛠️ Ambil data user yang mencoba login untuk divalidasi statusnya
         $user = $request->user();
+
+        // 🛠️ KEAMANAN: Blokir login jika status user masih 'pending'
+        if ($user->status === 'pending') {
+            Auth::guard('web')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return back()->withErrors([
+                'username' => 'Akun Anda sedang dalam tahap verifikasi oleh Admin Desa. Mohon tunggu beberapa saat sebelum dapat mengakses panel toko.',
+            ]);
+        }
+
+        $request->session()->regenerate();
         $loginType = $request->input('login_type', 'operator');
 
-        // LOGIKA KEAMANAN:
+        // LOGIKA KEAMANAN PERBEDAAN TAB LOGIN:
         // Jika User adalah UMKM, tapi mencoba login di tab Operator -> Tolak!
         if ($user->role === 'umkm' && $loginType === 'operator') {
             Auth::guard('web')->logout();
@@ -48,7 +61,7 @@ class AuthenticatedSessionController extends Controller
             return back()->withErrors(['username' => 'Akun ini terdaftar sebagai Operator, silakan gunakan tab "Login Operator"!']);
         }
 
-        // PENGALIHAN DASHBOARD (Yang ini wajib diperbaiki):
+        // PENGALIHAN DASHBOARD BERDASARKAN ROLE:
         if ($user->role === 'umkm') {
             return redirect()->intended(route('umkm.dashboard'));
         }

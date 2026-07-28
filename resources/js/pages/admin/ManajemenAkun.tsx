@@ -12,7 +12,7 @@ const sidebarSections = [
         title: 'MANAJEMEN',
         items: [
            { label: 'Manajemen UMKM', icon: Store, hasSubmenu: false, href: '/admin/manajemen-umkm', active: false },
-            { label: 'Manajemen Akun', icon: Users, hasSubmenu: false, href: '/admin/manajemen-akun', active: false },
+            { label: 'Manajemen Akun', icon: Users, hasSubmenu: false, href: '/admin/manajemen-akun', active: true }, // 🛠️ Menandakan tab ini sedang aktif
             { label: 'Kategori Produk', icon: Tag, hasSubmenu: false, href: '/admin/kategori-produk', active: false },
             { label: 'Produk', icon: Package, hasSubmenu: false, href: '/admin/produk', active: false },
         ],
@@ -69,7 +69,7 @@ export default function ManajemenAkun({ users = [] }: { users?: any[] }) {
     // FUNGSI BUKA MODAL EDIT
     const openEditModal = (user: any) => {
         setSelectedUser(user);
-        editForm.setData({ username: user.username, password: '' });
+        editForm.setData({ name: '', username: user.username, password: '' });
         setIsEditModalOpen(true);
     };
 
@@ -207,7 +207,20 @@ export default function ManajemenAkun({ users = [] }: { users?: any[] }) {
                                                 <tr key={u.id} className="transition hover:bg-slate-50/50">
                                                     <td className="px-6 py-4 font-medium text-slate-900">@{u.username}</td>
                                                     <td className="px-6 py-4 text-slate-600 uppercase text-xs font-bold">{u.role || 'Operator'}</td>
-                                                    <td className="px-6 py-4"><span className="inline-flex rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 border border-emerald-200/60">Aktif</span></td>
+                                                    
+                                                    {/* 🛠️ PERBAIKAN: PILL BADGE STATUS DINAMIS (KUNING UNTUK PENDING, HIJAU UNTUK AKTIF) */}
+                                                    <td className="px-6 py-4">
+                                                        {u.status === 'pending' ? (
+                                                            <span className="inline-flex rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700 border border-amber-200/60">
+                                                                Pending
+                                                            </span>
+                                                        ) : (
+                                                            <span className="inline-flex rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 border border-emerald-200/60">
+                                                                Aktif
+                                                            </span>
+                                                        )}
+                                                    </td>
+
                                                     <td className="px-6 py-4 text-right">
                                                         <div className="flex justify-end gap-2">
                                                             <button onClick={() => openEditModal(u)} className="rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-emerald-600 transition" title="Edit Akun"><Edit className="size-4" /></button>
