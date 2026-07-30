@@ -7,7 +7,6 @@ import {
     Phone,
     Mail,
     MessageCircle,
-    ChevronRight,
     Send,
     CheckCircle2,
     Instagram,
@@ -39,12 +38,17 @@ export default function Kontak() {
         <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(16,185,129,0.12)_0,_rgba(255,255,255,0)_36%),linear-gradient(180deg,#f4faf6_0%,#f8fbf8_45%,#ffffff_100%)] font-sans text-slate-900">
             <Head title="Hubungi Kami - Desa Mandalamekar" />
 
-            {/* HEADER / NAVBAR */}
+            {/* HEADER / NAVBAR DENGAN LOGO DESA */}
             <header className="sticky top-0 z-50 border-b border-white/80 bg-white/80 backdrop-blur-xl transition-all">
                 <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
                     <Link href="/" className="flex items-center gap-3">
-                        <div className="flex size-11 items-center justify-center rounded-2xl bg-emerald-600 text-white shadow-lg shadow-emerald-600/25">
-                            <Sprout className="size-6" />
+                        <div className="flex size-11 items-center justify-center overflow-hidden rounded-2xl bg-white p-1 shadow-md border border-slate-100 shrink-0">
+                            <img
+                                src="/images/Logo DesaMandalamekar.png"
+                                alt="Logo Desa Mandalamekar"
+                                style={{ imageRendering: '-webkit-optimize-contrast' }}
+                                className="size-full object-contain drop-shadow-xs"
+                            />
                         </div>
                         <div>
                             <p className="text-xs font-bold uppercase tracking-wider text-emerald-600">UMKM</p>
@@ -56,7 +60,6 @@ export default function Kontak() {
                         <Link href="/" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Beranda</Link>
                         <Link href="/umkm" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">UMKM</Link>
                         <Link href="/produk" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Produk</Link>
-                        {/* Tambahkan garis miring di bawah ini */}
                         <Link href="/tentangdesa" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Tentang Desa</Link>
                         <Link href="/kontak" className="text-sm font-semibold text-emerald-600">Kontak</Link>
                     </nav>
@@ -74,35 +77,62 @@ export default function Kontak() {
             </header>
 
             <main className="pb-20">
-                {/* HERO BANNER ATAS - EDISI HUBUNGI KAMI */}
+                {/* HERO BANNER ATAS */}
                 <div className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 lg:px-8 lg:pt-10">
                     <div className="relative overflow-hidden rounded-[2rem] border border-white/60 bg-slate-900 text-white shadow-[0_30px_90px_rgba(15,23,42,0.22)]">
 
-                        {/* Background Image Banner */}
-                        <div
-                            className="absolute inset-0 bg-cover bg-center object-cover opacity-100"
-                            style={{
-                                backgroundImage: 'linear-gradient(90deg, rgba(3, 7, 18, 0.75) 0%, rgba(3, 7, 18, 0.45) 50%, rgba(3, 7, 18, 0.15) 100%), url("images/kontak-bg.jpg")',
-                            }}
+                        {/* GAMBAR BANNER KUALITAS HD */}
+                        <img
+                            src="/images/Banner Kontak.jpg"
+                            alt="Banner Kontak Desa Mandalamekar"
+                            style={{ imageRendering: '-webkit-optimize-contrast' }}
+                            className="absolute inset-0 size-full object-cover object-center"
                         />
 
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.25),transparent_40%)]" />
+                        {/* OVERLAY GRADIENT BANNER */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/60 to-transparent" />
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.3),transparent_35%),radial-gradient(circle_at_bottom_left,rgba(132,204,22,0.2),transparent_30%)]" />
 
-                        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6 px-6 py-12 sm:px-10 sm:py-16 lg:px-12">
-                            <div>
-                                <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl">
-                                    Kontak <span className="text-emerald-400">Desa</span>
+                        {/* BADGE LOGO DESA & YARSI DI BANNER */}
+                        <div className="absolute top-6 right-6 z-10 hidden sm:inline-flex items-center gap-4 rounded-full border border-white/30 bg-slate-950/60 px-6 py-3 backdrop-blur-md shadow-2xl">
+                            <div className="flex items-center gap-3">
+                                <div className="size-12 sm:size-14 overflow-hidden rounded-full bg-white p-1.5 shrink-0 shadow-md ring-2 ring-white/20">
+                                    <img
+                                        src="/images/Logo DesaMandalamekar.png"
+                                        alt="Logo Desa"
+                                        style={{ imageRendering: '-webkit-optimize-contrast' }}
+                                        className="size-full object-contain"
+                                    />
+                                </div>
+                                <div className="size-12 sm:size-14 overflow-hidden rounded-full bg-white p-1.5 shrink-0 shadow-md ring-2 ring-white/20">
+                                    <img
+                                        src="/images/Logo universitas-yarsi.png"
+                                        alt="Logo Yarsi"
+                                        style={{ imageRendering: '-webkit-optimize-contrast' }}
+                                        className="size-full object-contain"
+                                    />
+                                </div>
+                            </div>
+                            <span className="text-xs sm:text-sm font-bold tracking-wide text-emerald-200 border-l border-white/20 pl-4">
+                                Desa Mandalamekar & Universitas Yarsi
+                            </span>
+                        </div>
+
+                        {/* CONTAINER GRID TEKS BANNER (min-h-[540px]) */}
+                        <div className="relative grid min-h-[540px] items-end gap-10 px-6 py-8 sm:px-10 sm:py-10 lg:grid-cols-[1.2fr_0.8fr] lg:px-12 lg:py-12 z-10">
+                            <div className="max-w-2xl pb-4 pt-12 lg:py-16">
+                                <h1 className="max-w-xl text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
+                                    Kontak <span className="block text-emerald-300">Desa Mandalamekar</span>
                                 </h1>
-
-                                <p className="mt-3 max-w-xl text-sm leading-relaxed text-slate-200 sm:text-base">
-                                    Koneksi langsung dengan pihak pengelola platform digital UMKM dan aparatur Desa Mandalamekar.
+                                <p className="mt-5 max-w-xl text-base leading-7 text-slate-100/90 sm:text-lg">
+                                    Koneksi langsung dengan pihak pengelola platform digital UMKM dan aparatur Desa Mandalamekar <span className="whitespace-nowrap">Kecamatan Cimenyan</span> <span className="whitespace-nowrap">Kabupaten Bandung</span> <span className="whitespace-nowrap">Provinsi Jawa Barat</span>.
                                 </p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {/* KONTEN UTAMA: LAYOUT FORM DAN DETAIL DETAIL KONTAK */}
+                {/* KONTEN UTAMA: LAYOUT FORM DAN DETAIL KONTAK */}
                 <section className="mx-auto max-w-7xl px-4 pt-16 sm:px-6 lg:px-8">
                     <div className="grid gap-12 lg:grid-cols-12 lg:items-start">
 
@@ -161,7 +191,7 @@ export default function Kontak() {
                             </div>
                         </div>
 
-                        {/* KANAN: FORMULIR KIRIM PESAN INTERAKTIF SEJAJAR KEBOWAH (7 Kolom) */}
+                        {/* KANAN: FORMULIR KIRIM PESAN INTERAKTIF (7 Kolom) */}
                         <div className="lg:col-span-7">
                             <div className="rounded-[2rem] border border-slate-100 bg-white p-6 shadow-xl shadow-slate-200/40 sm:p-8">
                                 <h3 className="text-xl font-bold text-slate-900 mb-2">Kirim Pesan</h3>
@@ -182,7 +212,7 @@ export default function Kontak() {
                                                 required
                                                 value={formData.nama}
                                                 onChange={(e) => setFormData({...formData, nama: e.target.value})}
-                                                 placeholder="Nama "
+                                                placeholder="Nama"
                                                 className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-sm focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 transition"
                                             />
                                         </div>
@@ -254,17 +284,21 @@ export default function Kontak() {
 
                     </div>
                 </section>
-
-                {/* INTEGRASI PETA GOOGLE MAPS INDEPENDEN */}
-
             </main>
 
-            {/* FOOTER */}
+            {/* FOOTER PEKAT */}
             <footer className="bg-emerald-950 text-emerald-100">
                 <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-4 lg:px-8">
                     <div>
                         <div className="flex items-center gap-3">
-                            <div className="flex size-10 items-center justify-center rounded-2xl bg-emerald-600 text-white"><Sprout className="size-5" /></div>
+                            <div className="flex size-10 items-center justify-center rounded-2xl bg-white p-1 border border-slate-200 shadow-xs shrink-0">
+                                <img
+                                    src="/images/Logo DesaMandalamekar.png"
+                                    alt="Logo Desa Mandalamekar"
+                                    style={{ imageRendering: '-webkit-optimize-contrast' }}
+                                    className="size-full object-contain"
+                                />
+                            </div>
                             <p className="font-semibold text-white">UMKM Desa Mandalamekar</p>
                         </div>
                         <p className="mt-4 max-w-xs text-sm leading-6 text-emerald-200/80">Dukung produk lokal, majukan ekonomi desa.</p>
@@ -281,8 +315,14 @@ export default function Kontak() {
                     <div>
                         <p className="font-semibold text-white">Kontak</p>
                         <ul className="mt-4 space-y-3 text-sm text-emerald-200/80">
-                            <li className="flex items-start gap-2"><MapPin className="mt-0.5 size-4 shrink-0 text-emerald-400" /> <span>Desa Mandalamekar, Kec. Cimenyan</span></li>
-                            <li className="flex items-center gap-2"><Phone className="size-4 text-emerald-400" /> <span>0812-3456-7890</span></li>
+                            <li className="flex items-start gap-2">
+                                <MapPin className="mt-0.5 size-4 shrink-0 text-emerald-400" />
+                                <span>Desa Mandalamekar, <span className="whitespace-nowrap">Kec. Cimenyan, Kab. Bandung</span></span>
+                            </li>
+                            <li className="flex items-center gap-2">
+                                <Phone className="size-4 text-emerald-400" />
+                                <span>0812-3456-7890</span>
+                            </li>
                         </ul>
                     </div>
                     <div>
@@ -293,7 +333,9 @@ export default function Kontak() {
                         </div>
                     </div>
                 </div>
-                <div className="border-t border-white/5 py-4 text-center text-xs text-emerald-200/60">© 2026 UMKM Desa Mandalamekar. Universitas Yarsi.</div>
+                <div className="border-t border-white/5 py-4 text-center text-xs text-emerald-200/60">
+                    © 2026 UMKM Desa Mandalamekar Kecamatan Cimenyan Kabupaten Bandung Provinsi Jawa Barat. Universitas Yarsi.
+                </div>
             </footer>
         </div>
     );

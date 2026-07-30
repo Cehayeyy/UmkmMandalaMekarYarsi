@@ -34,13 +34,13 @@ interface UmkmUser {
     username: string;
     foto_toko?: string | null;
     deskripsi_toko?: string | null;
-    no_whatsapp?: string | null; 
+    no_whatsapp?: string | null;
     alamat_toko?: string | null;
 }
 
 export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, products: Product[] }) {
     const { auth } = usePage<SharedData>().props;
-    
+
     // Hubungkan Context Keranjang Belanja Global
     const { cartItems, addToCart, removeFromCart, updateQuantity, totalPrice, totalItems } = useCart();
     const [isCartOpen, setIsCartOpen] = useState(false);
@@ -70,7 +70,7 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
         cartItems.forEach((item, index) => {
             pesan += `${index + 1}. ${item.nama_produk} (${item.quantity}x) - Rp ${(item.harga * item.quantity).toLocaleString('id-ID')}\n`;
         });
-        
+
         pesan += `\n*Total Belanja: Rp ${totalPrice.toLocaleString('id-ID')}*`;
         pesan += `\n\nMohon informasi ketersediaan, ongkos kirim, dan cara pembayarannya. Terima kasih!`;
 
@@ -111,7 +111,7 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
                         </nav>
 
                         <div className="flex items-center gap-4">
-                            <button 
+                            <button
                                 onClick={() => setIsCartOpen(true)}
                                 className="relative flex size-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition cursor-pointer shadow-xs"
                                 title="Buka Keranjang"
@@ -146,15 +146,15 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
 
                         <div className="relative overflow-hidden rounded-[2rem] bg-slate-900 shadow-xl shadow-slate-200 min-h-[320px] flex flex-col justify-end">
                             {umkm.foto_toko ? (
-                                <img 
-                                    src={`/${umkm.foto_toko}`} 
-                                    alt={`Banner ${umkm.name}`} 
+                                <img
+                                    src={`/${umkm.foto_toko}`}
+                                    alt={`Banner ${umkm.name}`}
                                     className="absolute inset-0 h-full w-full object-cover opacity-60 mix-blend-overlay"
                                 />
                             ) : (
                                 <div className={`absolute inset-0 bg-gradient-to-br ${getDefaultGradient(umkm.id)} opacity-90`} />
                             )}
-                            
+
                             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/60 to-transparent" />
 
                             <div className="relative z-10 p-8 sm:p-12 flex flex-col sm:flex-row sm:items-end justify-between gap-6">
@@ -185,7 +185,7 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
                                 </div>
 
                                 <div className="shrink-0">
-                                    <a 
+                                    <a
                                         href={`https://maps.google.com/?q=${encodeURIComponent((umkm.alamat_toko || 'Desa Mandalamekar') + ', Mandalamekar, Bandung')}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
@@ -213,15 +213,15 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                                 {products.map((p) => {
                                     const cartItem = cartItems.find(item => item.id === p.id);
-                                    
+
                                     return (
                                         <article key={p.id} className="group flex flex-col bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
-                                            
+
                                             <div className="aspect-[4/3] bg-slate-100 relative overflow-hidden">
                                                 {p.foto ? (
-                                                    <img 
-                                                        src={`/${p.foto}`} 
-                                                        alt={p.nama_produk} 
+                                                    <img
+                                                        src={`/${p.foto}`}
+                                                        alt={p.nama_produk}
                                                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                                                     />
                                                 ) : (
@@ -238,7 +238,7 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
                                                 <h3 className="text-lg font-bold text-slate-900 mb-1 line-clamp-1 group-hover:text-emerald-600 transition-colors">
                                                     {p.nama_produk}
                                                 </h3>
-                                                
+
                                                 <p className="text-sm text-slate-500 line-clamp-2 min-h-[40px] mb-4">
                                                     {p.deskripsi || "Tidak ada deskripsi produk."}
                                                 </p>
@@ -247,17 +247,17 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
                                                     <p className="text-lg font-extrabold text-emerald-600">
                                                         Rp {Number(p.harga).toLocaleString('id-ID')}
                                                     </p>
-                                                    
+
                                                     {cartItem ? (
                                                         <div className="flex items-center border border-emerald-200 rounded-xl p-0.5 bg-emerald-50 h-9">
-                                                            <button 
+                                                            <button
                                                                 onClick={() => {
                                                                     if (cartItem.quantity <= 1) {
                                                                         removeFromCart(p.id);
                                                                     } else {
                                                                         updateQuantity(p.id, -1);
                                                                     }
-                                                                }} 
+                                                                }}
                                                                 className="p-1.5 text-emerald-600 hover:bg-emerald-100 rounded-lg transition cursor-pointer"
                                                             >
                                                                 <Minus className="size-3.5" />
@@ -265,15 +265,15 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
                                                             <span className="min-w-[20px] text-center text-xs font-bold text-emerald-800">
                                                                 {cartItem.quantity}
                                                             </span>
-                                                            <button 
-                                                                onClick={() => updateQuantity(p.id, 1)} 
+                                                            <button
+                                                                onClick={() => updateQuantity(p.id, 1)}
                                                                 className="p-1.5 text-emerald-600 hover:bg-emerald-100 rounded-lg transition cursor-pointer"
                                                             >
                                                                 <Plus className="size-3.5" />
                                                             </button>
                                                         </div>
                                                     ) : (
-                                                        <button 
+                                                        <button
                                                             onClick={() => addToCart(p)}
                                                             className="flex items-center justify-center size-9 bg-emerald-50 text-emerald-600 rounded-xl hover:bg-emerald-600 hover:text-white transition-colors active:scale-95 shadow-sm cursor-pointer"
                                                             title="Tambah ke Keranjang"
@@ -303,10 +303,10 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
                 {isCartOpen && (
                     <div className="fixed inset-0 z-50 overflow-hidden">
                         <div onClick={() => setIsCartOpen(false)} className="absolute inset-0 bg-slate-900/40 backdrop-blur-xs transition-opacity" />
-                        
+
                         <div className="absolute inset-y-0 right-0 flex max-w-full pl-10">
                             <div className="w-screen max-w-md transform bg-white shadow-2xl transition-all duration-300 flex flex-col h-full border-l border-slate-100 rounded-l-[2rem]">
-                                
+
                                 <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 rounded-tl-[2rem]">
                                     <div className="flex items-center gap-2">
                                         <ShoppingBag className="size-5 text-emerald-600" />
@@ -336,14 +336,14 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
 
                                                 <div className="flex flex-col items-center gap-1">
                                                     <div className="flex items-center border border-slate-200 rounded-lg p-0.5 bg-slate-50 shadow-inner">
-                                                        <button 
+                                                        <button
                                                             onClick={() => {
                                                                 if (item.quantity <= 1) {
                                                                     removeFromCart(item.id);
                                                                 } else {
                                                                     updateQuantity(item.id, -1);
                                                                 }
-                                                            }} 
+                                                            }}
                                                             className="p-1 hover:text-emerald-600 transition cursor-pointer"
                                                         >
                                                             <Minus className="size-3" />
@@ -368,11 +368,11 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
                                         <span className="text-sm font-semibold text-slate-500">Total Pembayaran:</span>
                                         <span className="text-xl font-black text-emerald-700">Rp {totalPrice.toLocaleString('id-ID')}</span>
                                     </div>
-                                    
+
                                     {cartItems.length > 0 ? (
-                                        <a 
+                                        <a
                                             href={whatsappUrl}
-                                            target="_blank" 
+                                            target="_blank"
                                             rel="noopener noreferrer"
                                             onClick={handleWhatsappClick}
                                             className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3.5 text-sm font-bold text-white shadow-lg shadow-emerald-600/20 hover:bg-emerald-700 transition text-center cursor-pointer"
@@ -381,7 +381,7 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
                                             <ArrowRight className="size-4" />
                                         </a>
                                     ) : (
-                                        <button 
+                                        <button
                                             disabled
                                             className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-slate-200 py-3.5 text-sm font-bold text-slate-400 transition cursor-not-allowed"
                                         >
@@ -398,7 +398,7 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
 
                 {/* Floating Button Keranjang di Sudut Kanan Bawah */}
                 {totalItems > 0 && !isCartOpen && (
-                    <button 
+                    <button
                         onClick={() => setIsCartOpen(true)}
                         className="fixed bottom-6 right-6 z-40 flex items-center gap-2 rounded-full bg-emerald-600 px-5 py-4 text-white shadow-xl shadow-emerald-600/30 hover:bg-emerald-700 hover:scale-105 transition-all duration-300 animate-bounce cursor-pointer"
                     >

@@ -17,12 +17,12 @@ interface UmkmUser { id: number; name: string; username: string; foto_toko?: str
 export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) {
     const { auth } = usePage<SharedData>().props;
     const [isCategoryOpen, setIsCategoryOpen] = useState(false);
-    
+
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('Semua Kategori');
     const [currentPage, setCurrentPage] = useState(1);
 
-    // 🛠️ LOGIKA KATEGORI DINAMIS: Mengekstrak semua kategori unik yang ada di produk UMKM
+    // LOGIKA KATEGORI DINAMIS: Mengekstrak semua kategori unik yang ada di produk UMKM
     const dynamicCategoryFilters = useMemo(() => {
         const uniqueCategories = new Set<string>();
         umkmList.forEach(umkm => {
@@ -47,7 +47,7 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
         return umkmList.reduce((acc, current) => acc + (current.products?.length || 0), 0);
     }, [umkmList]);
 
-    const totalCategoriesCount = dynamicCategoryFilters.length - 1; // Kurangi Semua Kategori
+    const totalCategoriesCount = dynamicCategoryFilters.length - 1;
 
     const itemsPerPage = 8;
     const totalPages = Math.ceil(filteredUmkmList.length / itemsPerPage);
@@ -77,10 +77,23 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
             <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(16,185,129,0.16)_0,_rgba(255,255,255,0)_36%),linear-gradient(180deg,#f4faf6_0%,#f8fbf8_45%,#ffffff_100%)] text-slate-900">
                 <header className="sticky top-0 z-50 border-b border-white/70 bg-white/95 backdrop-blur-xl">
                     <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+
+                        {/* KIRI HEADER: LOGO DESA */}
                         <Link href="/" className="flex items-center gap-3">
-                            <div className="flex size-11 items-center justify-center rounded-2xl bg-emerald-600 text-white shadow-lg shadow-emerald-600/25"><Sprout className="size-6" /></div>
-                            <div><p className="text-sm font-semibold text-emerald-700">UMKM</p><p className="text-lg font-bold tracking-tight">Desa Mandalamekar</p></div>
+                            <div className="flex size-11 items-center justify-center overflow-hidden rounded-2xl bg-white p-1 shadow-md border border-slate-100 shrink-0">
+                                <img
+                                    src="/images/Logo DesaMandalamekar.png"
+                                    alt="Logo Desa Mandalamekar"
+                                    style={{ imageRendering: '-webkit-optimize-contrast' }}
+                                    className="size-full object-contain drop-shadow-xs"
+                                />
+                            </div>
+                            <div>
+                                <p className="text-sm font-semibold text-emerald-700">UMKM</p>
+                                <p className="text-lg font-bold tracking-tight">Desa Mandalamekar</p>
+                            </div>
                         </Link>
+
                         <nav className="hidden items-center gap-8 lg:flex">
                             {navItems.map((item) => (
                                 <Link key={item.label} href={item.href} className={`text-sm transition ${item.href === '/umkm' ? 'font-semibold text-emerald-600' : 'font-medium text-slate-600 hover:text-emerald-700'}`}>{item.label}</Link>
@@ -95,15 +108,58 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
                 </header>
 
                 <main>
-                    <div className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 lg:px-8 lg:pt-10">
+                    {/* HERO BANNER UTAMA HD */}
+                    <section id="beranda" className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 lg:px-8 lg:pt-10">
                         <div className="relative overflow-hidden rounded-[2rem] border border-white/60 bg-slate-900 text-white shadow-[0_30px_90px_rgba(15,23,42,0.22)]">
-                            <div className="absolute inset-0 bg-cover bg-center opacity-100" style={{ backgroundImage: 'linear-gradient(90deg, rgba(3, 7, 18, 0.8) 0%, rgba(3, 7, 18, 0.5) 50%, rgba(3, 7, 18, 0.15) 100%), url("images/UMKM-bg.jpg")' }} />
-                            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.25),transparent_40%)]" />
-                            <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-6 px-6 py-12 sm:px-10 sm:py-16 lg:px-12 lg:py-16">
-                                <div><h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl">UMKM <span className="text-emerald-400">Desa Mandalamekar</span></h1><p className="mt-3 max-w-xl text-sm leading-relaxed text-slate-200 sm:text-base">Kenali para pelaku usaha lokal yang berkontribusi mengembangkan dan memajukan roda ekonomi desa.</p></div>
+
+                            {/* GAMBAR BANNER KUALITAS HD */}
+                            <img
+                                src="/images/Banner UMKM.jpg"
+                                alt="Banner UMKM Desa Mandalamekar"
+                                style={{ imageRendering: '-webkit-optimize-contrast' }}
+                                className="absolute inset-0 size-full object-cover object-center"
+                            />
+
+                            <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/60 to-transparent" />
+                            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.3),transparent_35%),radial-gradient(circle_at_bottom_left,rgba(132,204,22,0.2),transparent_30%)]" />
+
+                            {/* BADGE LOGO DESA & YARSI DI BANNER */}
+                            <div className="absolute top-6 right-6 z-10 hidden sm:inline-flex items-center gap-4 rounded-full border border-white/30 bg-slate-950/60 px-6 py-3 backdrop-blur-md shadow-2xl">
+                                <div className="flex items-center gap-3">
+                                    <div className="size-12 sm:size-14 overflow-hidden rounded-full bg-white p-1.5 shrink-0 shadow-md ring-2 ring-white/20">
+                                        <img
+                                            src="/images/Logo DesaMandalamekar.png"
+                                            alt="Logo Desa"
+                                            style={{ imageRendering: '-webkit-optimize-contrast' }}
+                                            className="size-full object-contain"
+                                        />
+                                    </div>
+                                    <div className="size-12 sm:size-14 overflow-hidden rounded-full bg-white p-1.5 shrink-0 shadow-md ring-2 ring-white/20">
+                                        <img
+                                            src="/images/Logo universitas-yarsi.png"
+                                            alt="Logo Yarsi"
+                                            style={{ imageRendering: '-webkit-optimize-contrast' }}
+                                            className="size-full object-contain"
+                                        />
+                                    </div>
+                                </div>
+                                <span className="text-xs sm:text-sm font-bold tracking-wide text-emerald-200 border-l border-white/20 pl-4">
+                                    Desa Mandalamekar & Universitas Yarsi
+                                </span>
+                            </div>
+
+                            <div className="relative grid min-h-[540px] items-end gap-10 px-6 py-8 sm:px-10 sm:py-10 lg:grid-cols-[1.2fr_0.8fr] lg:px-12 lg:py-12">
+                                <div className="max-w-2xl pb-4 pt-12 lg:py-16">
+                                    <h1 className="max-w-xl text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
+                                        UMKM <span className="block text-emerald-300">Desa Mandalamekar</span>
+                                    </h1>
+                                    <p className="mt-5 max-w-xl text-base leading-7 text-slate-100/90 sm:text-lg">
+                                        Kenali para pelaku usaha lokal yang berkontribusi mengembangkan dan memajukan roda ekonomi desa.
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </section>
 
                     <section className="relative z-10 mx-auto -mt-10 max-w-7xl px-4 sm:px-6 lg:px-8">
                         <div className="grid gap-6 rounded-[1.75rem] border border-white bg-white p-6 shadow-xl sm:grid-cols-2 lg:grid-cols-4">
@@ -117,22 +173,54 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
                     </section>
 
                     <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-                        <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
-                            <h2 className="text-2xl font-bold text-slate-900">Semua UMKM</h2>
-                            <div className="flex items-center gap-3">
-                                <div className="relative">
-                                    <Search className="absolute left-4 top-3 size-4 text-slate-400" />
-                                    <input type="text" value={searchQuery} onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }} placeholder="Cari nama UMKM..." className="rounded-full border border-slate-200 py-2.5 pl-10 pr-4 text-sm focus:border-emerald-500 focus:ring-emerald-500" />
+
+                        {/* 🛠️ AREA FILTER: PUTIH TRANSPARAN / GLASSMORPHISM */}
+                        <div className="flex flex-wrap items-center justify-between gap-4 mb-8 bg-white/80 backdrop-blur-md p-5 rounded-[2rem] border border-emerald-100/80 shadow-lg">
+                            <div className="flex items-center gap-3 pl-2">
+                                <div className="flex size-9 items-center justify-center rounded-xl bg-emerald-50/80 text-emerald-600 border border-emerald-200/60">
+                                    <Store className="size-5" />
                                 </div>
+                                <h2 className="text-2xl font-extrabold text-slate-900">
+                                    Semua <span className="text-emerald-600">UMKM</span>
+                                </h2>
+                            </div>
+
+                            <div className="flex items-center gap-3">
+                                {/* SEARCH INPUT: HIJAU TRANSPARAN SAAT FOKUS/DIKLIK */}
+                                <div className="relative group">
+                                    <Search className="absolute left-4 top-3 size-4 text-emerald-600/70 group-focus-within:text-emerald-700 transition-colors z-10 pointer-events-none" />
+                                    <input
+                                        type="text"
+                                        value={searchQuery}
+                                        onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
+                                        placeholder="Cari nama UMKM..."
+                                        className="rounded-full border border-emerald-200/70 bg-emerald-50/40 py-2.5 pl-10 pr-4 text-sm text-slate-800 placeholder:text-slate-400 focus:bg-emerald-100/60 focus:text-emerald-950 focus:placeholder:text-emerald-700/60 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 shadow-xs transition-all duration-200"
+                                    />
+                                </div>
+
+                                {/* DROPDOWN BUTTON: HIJAU TRANSPARAN SAAT TERBUKA/DIKLIK */}
                                 <div className="relative">
-                                    <button onClick={() => setIsCategoryOpen(!isCategoryOpen)} className="flex items-center gap-2 rounded-full border border-slate-200 bg-white py-2.5 px-4 text-sm text-slate-700 hover:bg-slate-50 transition">
-                                        <Store className="size-4 text-emerald-600" /> {selectedCategory} <ChevronDown className="size-4" />
+                                    <button
+                                        onClick={() => setIsCategoryOpen(!isCategoryOpen)}
+                                        className={`flex items-center gap-2 rounded-full border px-5 py-2.5 text-sm font-semibold shadow-xs transition-all duration-200 ${
+                                            isCategoryOpen
+                                                ? 'bg-emerald-600/15 text-emerald-800 border-emerald-500/40 shadow-sm'
+                                                : 'bg-emerald-50/40 text-slate-700 border-emerald-200/70 hover:bg-emerald-100/50 hover:text-emerald-800'
+                                        }`}
+                                    >
+                                        <Store className="size-4 text-emerald-600" />
+                                        <span>{selectedCategory}</span>
+                                        <ChevronDown className={`size-4 text-emerald-600 transition-transform duration-200 ${isCategoryOpen ? 'rotate-180' : ''}`} />
                                     </button>
+
                                     {isCategoryOpen && (
-                                        <div className="absolute right-0 mt-2 w-56 rounded-2xl border border-slate-100 bg-white p-2 shadow-xl z-30 animate-in fade-in slide-in-from-top-2 duration-200">
-                                            {/* 🛠️ MENAMPILKAN KATEGORI DINAMIS YANG ADA SAJA */}
+                                        <div className="absolute right-0 mt-2 w-56 rounded-2xl border border-emerald-100 bg-white/95 backdrop-blur-md p-2 shadow-2xl z-30 animate-in fade-in slide-in-from-top-2 duration-200">
                                             {dynamicCategoryFilters.map((category) => (
-                                                <button key={category} onClick={() => { setSelectedCategory(category); setIsCategoryOpen(false); setCurrentPage(1); }} className={`w-full text-left px-4 py-2.5 text-sm rounded-xl transition ${selectedCategory === category ? 'bg-emerald-50 font-bold text-emerald-700' : 'text-slate-600 hover:bg-slate-50'}`}>
+                                                <button
+                                                    key={category}
+                                                    onClick={() => { setSelectedCategory(category); setIsCategoryOpen(false); setCurrentPage(1); }}
+                                                    className={`w-full text-left px-4 py-2.5 text-sm rounded-xl transition ${selectedCategory === category ? 'bg-emerald-600 text-white font-bold shadow-md shadow-emerald-600/20' : 'text-slate-700 hover:bg-emerald-50/80 hover:text-emerald-800'}`}
+                                                >
                                                     {category}
                                                 </button>
                                             ))}
@@ -190,12 +278,22 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
                     </div>
                 </section>
 
+                {/* FOOTER ASLI 100% PERSIS KODE ASLIMU */}
                 <footer className="bg-emerald-950 text-emerald-100">
                     <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-4 lg:px-8">
                         <div>
                             <div className="flex items-center gap-3">
-                                <div className="flex size-10 items-center justify-center rounded-2xl bg-emerald-600 text-white"><Sprout className="size-5" /></div>
-                                <p className="font-semibold text-white">UMKM Desa Mandalamekar</p>
+                                <div className="flex size-10 items-center justify-center rounded-2xl bg-white p-1 border border-slate-200 shadow-xs shrink-0">
+                                    <img
+                                        src="/images/Logo DesaMandalamekar.png"
+                                        alt="Logo Desa Mandalamekar"
+                                        style={{ imageRendering: '-webkit-optimize-contrast' }}
+                                        className="size-full object-contain"
+                                    />
+                                </div>
+                                <div>
+                                    <p className="font-semibold text-white">UMKM Desa Mandalamekar</p>
+                                </div>
                             </div>
                             <p className="mt-4 max-w-xs text-sm leading-6 text-emerald-200/80">Dukung produk lokal, majukan ekonomi desa.</p>
                         </div>
@@ -208,8 +306,11 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
                         <div>
                             <p className="font-semibold text-white">Kontak</p>
                             <ul className="mt-4 space-y-3 text-sm text-emerald-200/80">
-                                <li className="flex items-start gap-2"><MapPin className="mt-0.5 size-4" /> <span>Desa Mandalamekar, Kab. Bandung</span></li>
-                                <li className="flex items-center gap-2"><Phone className="size-4" /> <span>0812-3456-7890</span></li>
+                                <li className="flex items-start gap-2">
+                                    <MapPin className="mt-0.5 size-4 shrink-0 text-emerald-400" />
+                                    <span>Desa Mandalamekar, <span className="whitespace-nowrap">Kec. Cimenyan, Kab. Bandung</span></span>
+                                </li>
+                                <li className="flex items-center gap-2"><Phone className="size-4 text-emerald-400" /> <span>0812-3456-7890</span></li>
                             </ul>
                         </div>
                         <div>
@@ -220,7 +321,7 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
                             </div>
                         </div>
                     </div>
-                    <div className="border-t border-white/10 py-4 text-center text-sm text-emerald-200/70">© 2026 UMKM Desa Mandalamekar. Universitas Yarsi.</div>
+                    <div className="border-t border-white/10 py-4 text-center text-sm text-emerald-200/70">© 2026 UMKM Desa Mandalamekar Kecamatan Cimenyan Kabupaten Bandung. Universitas Yarsi.</div>
                 </footer>
             </div>
         </>

@@ -3,11 +3,6 @@ import { LoaderCircle, ArrowLeft } from 'lucide-react';
 import { FormEventHandler } from 'react';
 
 import InputError from '@/components/input-error';
-import TextLink from '@/components/text-link';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import AuthLayout from '@/layouts/auth-layout';
 
 interface RegisterForm {
     name: string;
@@ -35,113 +30,161 @@ export default function Register() {
     };
 
     return (
-        <div className="relative min-h-screen">
-            {/* 🛠️ TOMBOL KEMBALI KE BERANDA (FLOATING) */}
-            <Link 
-                href="/" 
-                className="absolute left-6 top-6 z-50 flex items-center gap-2 rounded-full bg-white/80 px-4 py-2.5 text-sm font-bold text-emerald-700 shadow-sm backdrop-blur-md transition-all hover:-translate-x-1 hover:bg-white hover:text-emerald-800 hover:shadow-md"
+        <div className="relative flex min-h-screen flex-col items-center justify-center bg-[radial-gradient(circle_at_top,_rgba(16,185,129,0.12)_0,_rgba(255,255,255,0)_36%),linear-gradient(180deg,#f4faf6_0%,#f8fbf8_45%,#ffffff_100%)] p-6 font-sans text-slate-900">
+            <Head title="Create an account - UMKM Desa Mandalamekar" />
+
+            {/* TOMBOL KEMBALI KE BERANDA */}
+            <Link
+                href="/"
+                className="absolute left-6 top-6 z-50 flex items-center gap-2 rounded-full bg-white/90 px-4 py-2.5 text-sm font-bold text-emerald-700 shadow-md backdrop-blur-md transition-all hover:-translate-x-1 hover:bg-white hover:text-emerald-800"
             >
                 <ArrowLeft className="size-4" />
                 Kembali ke Beranda
             </Link>
 
-            <AuthLayout title="Create an account" description="Enter your details below to create your account">
-                <Head title="Register" />
-                
-                <form className="flex flex-col gap-6" onSubmit={submit}>
-                    <div className="grid gap-6">
-                        <div className="grid gap-2">
-                            <Label htmlFor="name">Name</Label>
-                            <Input
-                                id="name"
-                                type="text"
-                                required
-                                autoFocus
-                                tabIndex={1}
-                                autoComplete="name"
-                                value={data.name}
-                                onChange={(e) => setData('name', e.target.value)}
-                                disabled={processing}
-                                placeholder="Full name"
-                            />
-                            <InputError message={errors.name} className="mt-2" />
-                        </div>
+            {/* KARTU FORMULIR REGISTER */}
+            <div className="w-full max-w-md overflow-hidden rounded-[2rem] border border-slate-100 bg-white p-8 shadow-xl shadow-slate-200/60">
 
-                        <div className="grid gap-2">
-                            <Label htmlFor="username">Username</Label>
-                            <Input
-                                id="username"
-                                type="text"
-                                required
-                                value={data.username}
-                                onChange={(e) => setData('username', e.target.value)}
-                                placeholder="Enter your username"
-                            />
-                            <InputError message={errors.username} />
-                        </div>
+                {/* HEADER LOGO DESA MANDALAMEKAR */}
+                <div className="flex flex-col items-center text-center mb-6">
+                    <div className="flex size-14 items-center justify-center overflow-hidden rounded-2xl bg-white p-1.5 shadow-md border border-slate-100 shrink-0 mb-3">
+                        <img
+                            src="/images/Logo DesaMandalamekar.png"
+                            alt="Logo Desa Mandalamekar"
+                            className="size-full object-contain drop-shadow-xs"
+                        />
+                    </div>
+                    <span className="text-xs font-bold uppercase tracking-wider text-emerald-600">UMKM</span>
+                    <h2 className="text-lg font-extrabold text-slate-900 leading-none">Desa Mandalamekar</h2>
 
-                        <div className="grid gap-2">
-                            <Label htmlFor="email">Email address</Label>
-                            <Input
-                                id="email"
-                                type="email"
-                                required
-                                tabIndex={2}
-                                autoComplete="email"
-                                value={data.email}
-                                onChange={(e) => setData('email', e.target.value)}
-                                disabled={processing}
-                                placeholder="email@example.com"
-                            />
-                            <InputError message={errors.email} />
-                        </div>
+                    <h3 className="mt-5 text-2xl font-bold tracking-tight text-slate-900">Create an account</h3>
+                    <p className="mt-1 text-sm text-slate-500">Enter your details below to create your account</p>
+                </div>
 
-                        <div className="grid gap-2">
-                            <Label htmlFor="password">Password</Label>
-                            <Input
-                                id="password"
-                                type="password"
-                                required
-                                tabIndex={3}
-                                autoComplete="new-password"
-                                value={data.password}
-                                onChange={(e) => setData('password', e.target.value)}
-                                disabled={processing}
-                                placeholder="Password"
-                            />
-                            <InputError message={errors.password} />
-                        </div>
-
-                        <div className="grid gap-2">
-                            <Label htmlFor="password_confirmation">Confirm password</Label>
-                            <Input
-                                id="password_confirmation"
-                                type="password"
-                                required
-                                tabIndex={4}
-                                autoComplete="new-password"
-                                value={data.password_confirmation}
-                                onChange={(e) => setData('password_confirmation', e.target.value)}
-                                disabled={processing}
-                                placeholder="Confirm password"
-                            />
-                            <InputError message={errors.password_confirmation} />
-                        </div>
-
-                        <Button type="submit" className="mt-2 w-full" tabIndex={5} disabled={processing}>
-                            {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                            Create account
-                        </Button>
+                <form className="flex flex-col gap-5" onSubmit={submit}>
+                    {/* 1. Name */}
+                    <div className="grid gap-1.5">
+                        <label htmlFor="name" className="text-slate-700 font-semibold text-xs uppercase tracking-wider">
+                            Name
+                        </label>
+                        <input
+                            id="name"
+                            type="text"
+                            required
+                            autoFocus
+                            tabIndex={1}
+                            autoComplete="name"
+                            value={data.name}
+                            onChange={(e) => setData('name', e.target.value)}
+                            disabled={processing}
+                            placeholder="Full name"
+                            className="w-full border border-slate-200 bg-slate-50/50 text-slate-800 placeholder:text-slate-400 focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-3 text-sm transition"
+                        />
+                        <InputError message={errors.name} />
                     </div>
 
-                    <div className="text-muted-foreground text-center text-sm">
+                    {/* 2. Username */}
+                    <div className="grid gap-1.5">
+                        <label htmlFor="username" className="text-slate-700 font-semibold text-xs uppercase tracking-wider">
+                            Username
+                        </label>
+                        <input
+                            id="username"
+                            type="text"
+                            required
+                            value={data.username}
+                            onChange={(e) => setData('username', e.target.value)}
+                            disabled={processing}
+                            placeholder="Enter your username"
+                            className="w-full border border-slate-200 bg-slate-50/50 text-slate-800 placeholder:text-slate-400 focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-3 text-sm transition"
+                        />
+                        <InputError message={errors.username} />
+                    </div>
+
+                    {/* 3. Email */}
+                    <div className="grid gap-1.5">
+                        <label htmlFor="email" className="text-slate-700 font-semibold text-xs uppercase tracking-wider">
+                            Email address
+                        </label>
+                        <input
+                            id="email"
+                            type="email"
+                            required
+                            tabIndex={2}
+                            autoComplete="email"
+                            value={data.email}
+                            onChange={(e) => setData('email', e.target.value)}
+                            disabled={processing}
+                            placeholder="email@example.com"
+                            className="w-full border border-slate-200 bg-slate-50/50 text-slate-800 placeholder:text-slate-400 focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-3 text-sm transition"
+                        />
+                        <InputError message={errors.email} />
+                    </div>
+
+                    {/* 4. Password */}
+                    <div className="grid gap-1.5">
+                        <label htmlFor="password" className="text-slate-700 font-semibold text-xs uppercase tracking-wider">
+                            Password
+                        </label>
+                        <input
+                            id="password"
+                            type="password"
+                            required
+                            tabIndex={3}
+                            autoComplete="new-password"
+                            value={data.password}
+                            onChange={(e) => setData('password', e.target.value)}
+                            disabled={processing}
+                            placeholder="Password"
+                            className="w-full border border-slate-200 bg-slate-50/50 text-slate-800 placeholder:text-slate-400 focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-3 text-sm transition"
+                        />
+                        <InputError message={errors.password} />
+                    </div>
+
+                    {/* 5. Confirm Password */}
+                    <div className="grid gap-1.5">
+                        <label htmlFor="password_confirmation" className="text-slate-700 font-semibold text-xs uppercase tracking-wider">
+                            Confirm password
+                        </label>
+                        <input
+                            id="password_confirmation"
+                            type="password"
+                            required
+                            tabIndex={4}
+                            autoComplete="new-password"
+                            value={data.password_confirmation}
+                            onChange={(e) => setData('password_confirmation', e.target.value)}
+                            disabled={processing}
+                            placeholder="Confirm password"
+                            className="w-full border border-slate-200 bg-slate-50/50 text-slate-800 placeholder:text-slate-400 focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-3 text-sm transition"
+                        />
+                        <InputError message={errors.password_confirmation} />
+                    </div>
+
+                    {/* TOMBOL CREATE ACCOUNT HIJAU */}
+                    <button
+                        type="submit"
+                        disabled={processing}
+                        className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3.5 text-sm font-bold text-white shadow-lg shadow-emerald-600/25 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition cursor-pointer disabled:opacity-50"
+                        tabIndex={5}
+                    >
+                        {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
+                        <span>Create account</span>
+                    </button>
+
+                    {/* TAUTAN LOG IN */}
+                    <div className="text-center text-sm font-medium text-slate-600 pt-2">
                         Already have an account?{' '}
-                        <TextLink href={route('login')} tabIndex={6}>
+                        <Link
+                            href={route('login')}
+                            tabIndex={6}
+                            className="font-bold text-emerald-600 hover:text-emerald-700 hover:underline transition"
+                        >
                             Log in
-                        </TextLink>
+                        </Link>
                     </div>
                 </form>
-            </AuthLayout>
+            </div>
         </div>
     );
 }

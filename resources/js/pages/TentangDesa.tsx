@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, Trees, HeartHandshake, Eye, Target, ChevronRight, Sprout, ArrowRight, Landmark } from 'lucide-react';
+import { ShieldCheck, Trees, HeartHandshake, Eye, Target, Sprout, ArrowRight, Landmark } from 'lucide-react';
 import { Link, Head } from '@inertiajs/react';
 
 export default function TentangDesa() {
@@ -7,12 +7,17 @@ export default function TentangDesa() {
         <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(16,185,129,0.12)_0,_rgba(255,255,255,0)_36%),linear-gradient(180deg,#f4faf6_0%,#f8fbf8_45%,#ffffff_100%)] font-sans text-slate-900">
             <Head title="Tentang Desa - Desa Mandalamekar" />
 
-            {/* NAVBAR YANG SERASI DENGAN BERANDA & UMKM */}
+            {/* NAVBAR / HEADER PUBLIK DENGAN LOGO DESA */}
             <header className="sticky top-0 z-50 border-b border-white/80 bg-white/80 backdrop-blur-xl transition-all">
                 <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
                     <Link href="/" className="flex items-center gap-3">
-                        <div className="flex size-11 items-center justify-center rounded-2xl bg-emerald-600 text-white shadow-lg shadow-emerald-600/25">
-                            <Sprout className="size-6" />
+                        <div className="flex size-11 items-center justify-center overflow-hidden rounded-2xl bg-white p-1 shadow-md border border-slate-100 shrink-0">
+                            <img
+                                src="/images/Logo DesaMandalamekar.png"
+                                alt="Logo Desa Mandalamekar"
+                                style={{ imageRendering: '-webkit-optimize-contrast' }}
+                                className="size-full object-contain drop-shadow-xs"
+                            />
                         </div>
                         <div>
                             <p className="text-xs font-bold uppercase tracking-wider text-emerald-600">UMKM</p>
@@ -50,37 +55,62 @@ export default function TentangDesa() {
                 </div>
             </header>
 
-            {/* HERO BANNER ATAS - EDISI TENTANG DESA */}
+            {/* HERO BANNER ATAS (MODE HD & UKURAN SAMAKAN DENGAN WELCOME) */}
             <div className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 lg:px-8 lg:pt-10">
                 <div className="relative overflow-hidden rounded-[2rem] border border-white/60 bg-slate-900 text-white shadow-[0_30px_90px_rgba(15,23,42,0.22)]">
 
-                    {/* Background Image Banner */}
-                    <div
-                        className="absolute inset-0 bg-cover bg-center object-cover opacity-100"
-                        style={{
-                            backgroundImage: 'linear-gradient(90deg, rgba(3, 7, 18, 0.75) 0%, rgba(3, 7, 18, 0.45) 50%, rgba(3, 7, 18, 0.15) 100%), url("images/TentangDesa-bg.jpg")',
-                        }}
+                    {/* GAMBAR BANNER KUALITAS HD */}
+                    <img
+                        src="/images/Banner Tentang Desa.jpg"
+                        alt="Banner Tentang Desa Mandalamekar"
+                        style={{ imageRendering: '-webkit-optimize-contrast' }}
+                        className="absolute inset-0 size-full object-cover object-center"
                     />
 
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.25),transparent_40%)]" />
+                    {/* OVERLAY GRADIENT BANNER WELCOME */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/60 to-transparent" />
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.3),transparent_35%),radial-gradient(circle_at_bottom_left,rgba(132,204,22,0.2),transparent_30%)]" />
 
-                    <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-6 px-6 py-10 sm:px-10 sm:py-12 lg:px-12 lg:py-14">
-                        <div>
+                    {/* BADGE LOGO DESA & YARSI DI BANNER */}
+                    <div className="absolute top-6 right-6 z-10 hidden sm:inline-flex items-center gap-4 rounded-full border border-white/30 bg-slate-950/60 px-6 py-3 backdrop-blur-md shadow-2xl">
+                        <div className="flex items-center gap-3">
+                            <div className="size-12 sm:size-14 overflow-hidden rounded-full bg-white p-1.5 shrink-0 shadow-md ring-2 ring-white/20">
+                                <img
+                                    src="/images/Logo DesaMandalamekar.png"
+                                    alt="Logo Desa"
+                                    style={{ imageRendering: '-webkit-optimize-contrast' }}
+                                    className="size-full object-contain"
+                                />
+                            </div>
+                            <div className="size-12 sm:size-14 overflow-hidden rounded-full bg-white p-1.5 shrink-0 shadow-md ring-2 ring-white/20">
+                                <img
+                                    src="/images/Logo universitas-yarsi.png"
+                                    alt="Logo Yarsi"
+                                    style={{ imageRendering: '-webkit-optimize-contrast' }}
+                                    className="size-full object-contain"
+                                />
+                            </div>
+                        </div>
+                        <span className="text-xs sm:text-sm font-bold tracking-wide text-emerald-200 border-l border-white/20 pl-4">
+                            Desa Mandalamekar & Universitas Yarsi
+                        </span>
+                    </div>
 
-
-                            <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl">
-                                Tentang <span className="text-emerald-400">Desa</span>
+                    {/* CONTAINER GRID TEKS BANNER (min-h-[540px]) */}
+                    <div className="relative grid min-h-[540px] items-end gap-10 px-6 py-8 sm:px-10 sm:py-10 lg:grid-cols-[1.2fr_0.8fr] lg:px-12 lg:py-12 z-10">
+                        <div className="max-w-2xl pb-4 pt-12 lg:py-16">
+                            <h1 className="max-w-xl text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
+                                Tentang <span className="block text-emerald-300">Desa Mandalamekar</span>
                             </h1>
-
-                            <p className="mt-3 max-w-xl text-sm leading-relaxed text-slate-200 sm:text-base">
-                                Mengenal lebih dekat sejarah, visi misi, serta komitmen pengembangan potensi ekonomi digital di Desa Mandalamekar.
+                            <p className="mt-5 max-w-xl text-base leading-7 text-slate-100/90 sm:text-lg">
+                                Mengenal lebih dekat sejarah, visi misi, serta komitmen pengembangan potensi ekonomi digital di Desa Mandalamekar <span className="whitespace-nowrap">Kecamatan Cimenyan</span> <span className="whitespace-nowrap">Kabupaten Bandung</span> <span className="whitespace-nowrap">Provinsi Jawa Barat</span>.
                             </p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* DATA SEKTOR KOMODITAS UNGGULAN DESA (PENGGANTI DATA PENDUDUK / LUAS WILAYAH) */}
+            {/* DATA SEKTOR KOMODITAS UNGGULAN DESA */}
             <div className="mx-auto max-w-7xl px-4 mt-12 sm:px-6 lg:px-8">
                 <div className="grid gap-4 grid-cols-1 sm:grid-cols-3 bg-white border border-slate-100 rounded-3xl p-6 shadow-sm">
 
@@ -126,8 +156,6 @@ export default function TentangDesa() {
 
                     {/* SISI KIRI: Deskripsi Cerita Desa */}
                     <div className="flex flex-col justify-center">
-
-
                         <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
                             Membangun Kemandirian Ekonomi <span className="text-emerald-600">Lewat Potensi Lokal</span>
                         </h2>

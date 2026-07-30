@@ -3,7 +3,7 @@ import { Head, Link, usePage } from '@inertiajs/react';
 import { type SharedData } from '@/types';
 import { useCart } from '@/context/CartContext';
 import {
-    Search, Store, ChevronRight, ChevronDown, RotateCcw, MapPin, Sprout, ArrowRight, MessageCircle, Facebook, Instagram, Check, Package, Plus, ShoppingBag, Minus, Trash2, X
+    Search, Store, ChevronRight, ChevronDown, RotateCcw, MapPin, Sprout, ArrowRight, MessageCircle, Facebook, Instagram, Check, Package, Plus, ShoppingBag, Minus, Trash2, X, Phone
 } from 'lucide-react';
 
 interface Product { id: number; nama_produk: string; harga: number; kategori: string; foto: string | null; deskripsi: string; umkm_id: number; seller: string; seller_username: string; no_whatsapp: string | null; }
@@ -13,7 +13,7 @@ interface PageProps extends SharedData { products: Product[]; umkmList: UmkmUser
 
 export default function ProdukPage() {
     const { auth, products = [], umkmList = [], categoriesData = [] } = usePage<PageProps>().props;
-    
+
     // Integrasi Cart Global
     const { cartItems, addToCart, removeFromCart, updateQuantity, totalPrice, totalItems } = useCart();
     const [isCartOpen, setIsCartOpen] = useState(false);
@@ -23,13 +23,13 @@ export default function ProdukPage() {
     const [selectedCategory, setSelectedCategory] = useState<string>('Semua');
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [sortBy, setSortBy] = useState<string>('terbaru');
-    
+
     // Rentang Harga Dinamis
     const absoluteMaxPrice = products.length > 0 ? Math.max(...products.map(p => p.harga)) : 500000;
     const [maxPrice, setMaxPrice] = useState<number>(absoluteMaxPrice);
 
-    useEffect(() => { 
-        if (products.length > 0) setMaxPrice(absoluteMaxPrice); 
+    useEffect(() => {
+        if (products.length > 0) setMaxPrice(absoluteMaxPrice);
     }, [products]);
 
     // LOGIKA FILTER DAN PENGURUTAN (REAL-TIME)
@@ -37,10 +37,10 @@ export default function ProdukPage() {
         let result = products.filter((item) => {
             const matchUmkm = selectedUmkm === 'semua' || item.umkm_id.toString() === selectedUmkm;
             const matchCategory = selectedCategory === 'Semua' || item.kategori === selectedCategory;
-            const matchSearch = item.nama_produk.toLowerCase().includes(searchQuery.toLowerCase()) || 
+            const matchSearch = item.nama_produk.toLowerCase().includes(searchQuery.toLowerCase()) ||
                                 item.kategori.toLowerCase().includes(searchQuery.toLowerCase());
             const matchPrice = item.harga <= maxPrice;
-            
+
             return matchUmkm && matchCategory && matchSearch && matchPrice;
         });
 
@@ -53,12 +53,12 @@ export default function ProdukPage() {
         return result;
     }, [products, selectedUmkm, selectedCategory, searchQuery, sortBy, maxPrice]);
 
-    const handleReset = () => { 
-        setSelectedUmkm('semua'); 
-        setSelectedCategory('Semua'); 
-        setSearchQuery(''); 
-        setSortBy('terbaru'); 
-        setMaxPrice(absoluteMaxPrice); 
+    const handleReset = () => {
+        setSelectedUmkm('semua');
+        setSelectedCategory('Semua');
+        setSearchQuery('');
+        setSortBy('terbaru');
+        setMaxPrice(absoluteMaxPrice);
     };
 
     return (
@@ -68,16 +68,22 @@ export default function ProdukPage() {
             {/* HEADER PUBLIK */}
             <header className="sticky top-0 z-40 border-b border-white/80 bg-white/80 backdrop-blur-xl transition-all">
                 <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+                    {/* LOGO DESA DI HEADER */}
                     <Link href="/" className="flex items-center gap-3">
-                        <div className="flex size-11 items-center justify-center rounded-2xl bg-emerald-600 text-white shadow-lg shadow-emerald-600/25">
-                            <Sprout className="size-6" />
+                        <div className="flex size-11 items-center justify-center overflow-hidden rounded-2xl bg-white p-1 shadow-md border border-slate-100 shrink-0">
+                            <img
+                                src="/images/Logo DesaMandalamekar.png"
+                                alt="Logo Desa Mandalamekar"
+                                style={{ imageRendering: '-webkit-optimize-contrast' }}
+                                className="size-full object-contain drop-shadow-xs"
+                            />
                         </div>
                         <div>
                             <p className="text-xs font-bold uppercase tracking-wider text-emerald-600">UMKM</p>
                             <p className="text-base font-extrabold text-slate-900 leading-none">Desa Mandalamekar</p>
                         </div>
                     </Link>
-                    
+
                     <nav className="hidden items-center gap-8 md:flex">
                         <Link href="/" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Beranda</Link>
                         <Link href="/umkm" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">UMKM</Link>
@@ -87,7 +93,7 @@ export default function ProdukPage() {
                     </nav>
 
                     <div className="flex items-center gap-4">
-                        <button 
+                        <button
                             onClick={() => setIsCartOpen(true)}
                             className="relative flex size-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition cursor-pointer shadow-xs"
                         >
@@ -114,17 +120,61 @@ export default function ProdukPage() {
 
             <main className="mx-auto max-w-7xl px-4 py-8 pb-24">
                 {/* HERO BANNER PRODUK */}
-                <div className="relative overflow-hidden rounded-[2rem] bg-[#0a1426] text-white mb-8 border border-white/10">
-                    <div className="absolute inset-0 bg-cover bg-center object-cover opacity-100 pointer-events-none" style={{ backgroundImage: 'linear-gradient(90deg, rgba(10, 20, 38, 0.85) 0%, rgba(10, 20, 38, 0.55) 50%, rgba(10, 20, 38, 0.2) 100%), url("images/Produk-bg.jpg")' }} />
-                    <div className="relative z-10 px-10 py-12">
-                        <div className="flex items-center gap-2 mb-4">
-                            <span className="size-2 rounded-full bg-emerald-400 relative">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                            </span>
-                            <span className="text-xs text-emerald-400 font-medium">Katalog UMKM Desa</span>
+                <div className="relative overflow-hidden rounded-[2rem] border border-white/60 bg-slate-900 text-white mb-8 shadow-[0_30px_90px_rgba(15,23,42,0.22)]">
+                    {/* GAMBAR BANNER HD */}
+                    <img
+                        src="/images/Banner Produk.jpg"
+                        alt="Banner Produk Desa Mandalamekar"
+                        style={{ imageRendering: '-webkit-optimize-contrast' }}
+                        className="absolute inset-0 size-full object-cover object-center"
+                    />
+
+                    {/* OVERLAY GRADIENT */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/60 to-transparent" />
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.3),transparent_35%),radial-gradient(circle_at_bottom_left,rgba(132,204,22,0.2),transparent_30%)]" />
+
+                    {/* BADGE LOGO DESA & YARSI DI BANNER */}
+                    <div className="absolute top-6 right-6 z-10 hidden sm:inline-flex items-center gap-4 rounded-full border border-white/30 bg-slate-950/60 px-6 py-3 backdrop-blur-md shadow-2xl">
+                        <div className="flex items-center gap-3">
+                            <div className="size-12 sm:size-14 overflow-hidden rounded-full bg-white p-1.5 shrink-0 shadow-md ring-2 ring-white/20">
+                                <img
+                                    src="/images/Logo DesaMandalamekar.png"
+                                    alt="Logo Desa"
+                                    style={{ imageRendering: '-webkit-optimize-contrast' }}
+                                    className="size-full object-contain"
+                                />
+                            </div>
+                            <div className="size-12 sm:size-14 overflow-hidden rounded-full bg-white p-1.5 shrink-0 shadow-md ring-2 ring-white/20">
+                                <img
+                                    src="/images/Logo universitas-yarsi.png"
+                                    alt="Logo Yarsi"
+                                    style={{ imageRendering: '-webkit-optimize-contrast' }}
+                                    className="size-full object-contain"
+                                />
+                            </div>
                         </div>
-                        <h1 className="text-4xl font-extrabold mb-3">Produk <span className="text-emerald-400">Desa Mandalamekar</span></h1>
-                        <p className="text-sm text-slate-300 max-w-lg mb-6">Temukan berbagai produk olahan, kerajinan tangan, dan komoditas unggulan terbaik langsung dari para pelaku UMKM Desa Mandalamekar.</p>
+                        <span className="text-xs sm:text-sm font-bold tracking-wide text-emerald-200 border-l border-white/20 pl-4">
+                            Desa Mandalamekar & Universitas Yarsi
+                        </span>
+                    </div>
+
+                    {/* CONTAINER GRID TEKS BANNER */}
+                    <div className="relative grid min-h-[540px] items-end gap-10 px-6 py-8 sm:px-10 sm:py-10 lg:grid-cols-[1.2fr_0.8fr] lg:px-12 lg:py-12 z-10">
+                        <div className="max-w-2xl pb-4 pt-12 lg:py-16">
+                            <div className="flex items-center gap-2 mb-4">
+                                <span className="size-2 rounded-full bg-emerald-400 relative">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                </span>
+                                <span className="text-xs text-emerald-400 font-bold uppercase tracking-wider">Katalog UMKM Desa</span>
+                            </div>
+                            <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl mb-3">
+                                Produk <span className="block text-emerald-300">Desa Mandalamekar</span>
+                            </h1>
+                            {/* 🛠️ TEKS DIKASIH JAWA BARAT DAN FORMAT RAPI PERSIS WELCOME */}
+                            <p className="mt-5 max-w-xl text-base leading-7 text-slate-100/90 sm:text-lg">
+                                Temukan berbagai produk olahan, kerajinan tangan, dan komoditas unggulan terbaik langsung dari para pelaku UMKM Desa Mandalamekar <span className="whitespace-nowrap">Kecamatan Cimenyan</span> <span className="whitespace-nowrap">Kabupaten Bandung</span> <span className="whitespace-nowrap">Provinsi Jawa Barat</span>.
+                            </p>
+                        </div>
                     </div>
                 </div>
 
@@ -208,12 +258,11 @@ export default function ProdukPage() {
 
                 {/* AREA UTAMA KATALOG (SIDEBAR & GRID PRODUK) */}
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-                    
+
                     {/* SIDEBAR FILTER KIRI */}
                     <div className="rounded-[1.75rem] border border-slate-100 bg-white p-6 shadow-xl h-fit sticky top-28">
                         <h3 className="font-extrabold text-sm mb-4">Kategori</h3>
                         <div className="space-y-1.5 mb-6">
-                            {/* 🛠️ PERBAIKAN: HANYA MAPPING categoriesData (Bawaan Laravel) */}
                             {categoriesData.map((cat) => {
                                 const active = selectedCategory === cat.label || (selectedCategory === 'Semua' && cat.label === 'Semua Kategori');
                                 return (
@@ -235,18 +284,18 @@ export default function ProdukPage() {
                                 );
                             })}
                         </div>
-                        
+
                         <hr className="border-slate-100 mb-6" />
-                        
+
                         <h3 className="font-extrabold text-sm mb-4">Rentang Harga Maksimal</h3>
-                        <input 
-                            type="range" 
-                            className="w-full accent-emerald-600" 
-                            min="0" 
-                            max={absoluteMaxPrice || 500000} 
-                            step="1000" 
-                            value={maxPrice} 
-                            onChange={(e) => setMaxPrice(Number(e.target.value))} 
+                        <input
+                            type="range"
+                            className="w-full accent-emerald-600"
+                            min="0"
+                            max={absoluteMaxPrice || 500000}
+                            step="1000"
+                            value={maxPrice}
+                            onChange={(e) => setMaxPrice(Number(e.target.value))}
                         />
                         <div className="flex justify-between text-xs mt-2 font-bold text-slate-700">
                             <span className="bg-slate-100 px-2 py-1 rounded-md border border-slate-200">Rp 0</span>
@@ -270,15 +319,15 @@ export default function ProdukPage() {
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {filteredProducts.map((p) => {
                                     const cartItem = cartItems.find(item => item.id === p.id);
-                                    
+
                                     return (
                                         <article key={p.id} className="group flex flex-col bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
-                                            
+
                                             <Link href={`/umkm/${p.seller_username}`} className="aspect-[4/3] bg-slate-100 relative overflow-hidden block">
                                                 {p.foto ? (
-                                                    <img 
-                                                        src={`/${p.foto}`} 
-                                                        alt={p.nama_produk} 
+                                                    <img
+                                                        src={`/${p.foto}`}
+                                                        alt={p.nama_produk}
                                                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                                                     />
                                                 ) : (
@@ -295,7 +344,7 @@ export default function ProdukPage() {
                                                 <h3 className="text-base font-bold text-slate-900 mb-1 line-clamp-1 group-hover:text-emerald-600 transition-colors">
                                                     {p.nama_produk}
                                                 </h3>
-                                                
+
                                                 <Link href={`/umkm/${p.seller_username}`} className="text-xs text-slate-500 hover:text-emerald-600 flex items-center gap-1.5 mb-4 mt-1 transition font-medium">
                                                     <Store className="size-3.5" />
                                                     <span className="truncate">{p.seller}</span>
@@ -305,17 +354,17 @@ export default function ProdukPage() {
                                                     <p className="text-base font-extrabold text-emerald-600">
                                                         Rp {Number(p.harga).toLocaleString('id-ID')}
                                                     </p>
-                                                    
+
                                                     {cartItem ? (
                                                         <div className="flex items-center border border-emerald-200 rounded-xl p-0.5 bg-emerald-50 h-9">
-                                                            <button 
+                                                            <button
                                                                 onClick={() => {
                                                                     if (cartItem.quantity <= 1) {
                                                                         removeFromCart(p.id);
                                                                     } else {
                                                                         updateQuantity(p.id, -1);
                                                                     }
-                                                                }} 
+                                                                }}
                                                                 className="p-1.5 text-emerald-600 hover:bg-emerald-100 rounded-lg transition cursor-pointer"
                                                             >
                                                                 <Minus className="size-3.5" />
@@ -323,15 +372,15 @@ export default function ProdukPage() {
                                                             <span className="min-w-[20px] text-center text-xs font-bold text-emerald-800">
                                                                 {cartItem.quantity}
                                                             </span>
-                                                            <button 
-                                                                onClick={() => updateQuantity(p.id, 1)} 
+                                                            <button
+                                                                onClick={() => updateQuantity(p.id, 1)}
                                                                 className="p-1.5 text-emerald-600 hover:bg-emerald-100 rounded-lg transition cursor-pointer"
                                                             >
                                                                 <Plus className="size-3.5" />
                                                             </button>
                                                         </div>
                                                     ) : (
-                                                        <button 
+                                                        <button
                                                             onClick={() => addToCart(p)}
                                                             className="flex items-center justify-center size-9 bg-emerald-50 text-emerald-600 rounded-xl hover:bg-emerald-600 hover:text-white transition-colors active:scale-95 shadow-sm cursor-pointer"
                                                             title="Tambah ke Keranjang"
@@ -364,7 +413,7 @@ export default function ProdukPage() {
                     <div onClick={() => setIsCartOpen(false)} className="absolute inset-0 bg-slate-900/40 backdrop-blur-xs transition-opacity" />
                     <div className="absolute inset-y-0 right-0 flex max-w-full pl-10">
                         <div className="w-screen max-w-md transform bg-white shadow-2xl transition-all duration-300 flex flex-col h-full border-l border-slate-100 rounded-l-[2rem]">
-                            
+
                             <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 rounded-tl-[2rem]">
                                 <div className="flex items-center gap-2">
                                     <ShoppingBag className="size-5 text-emerald-600" />
@@ -389,14 +438,14 @@ export default function ProdukPage() {
                                             </div>
                                             <div className="flex flex-col items-center gap-1">
                                                 <div className="flex items-center border border-slate-200 rounded-lg p-0.5 bg-slate-50 shadow-inner">
-                                                    <button 
+                                                    <button
                                                         onClick={() => {
                                                             if (item.quantity <= 1) {
                                                                 removeFromCart(item.id);
                                                             } else {
                                                                 updateQuantity(item.id, -1);
                                                             }
-                                                        }} 
+                                                        }}
                                                         className="p-1 hover:text-emerald-600 transition cursor-pointer"
                                                     >
                                                         <Minus className="size-3" />
@@ -421,9 +470,9 @@ export default function ProdukPage() {
                                     <span className="text-sm font-semibold text-slate-500">Total Pembayaran:</span>
                                     <span className="text-xl font-black text-emerald-700">Rp {totalPrice.toLocaleString('id-ID')}</span>
                                 </div>
-                                
+
                                 {cartItems.length > 0 ? (
-                                    <button 
+                                    <button
                                         onClick={() => {
                                             const targetPhone = cartItems[0]?.no_whatsapp;
                                             if (!targetPhone) {
@@ -459,7 +508,7 @@ export default function ProdukPage() {
 
             {/* FLOATING CART BUTTON */}
             {totalItems > 0 && !isCartOpen && (
-                <button 
+                <button
                     onClick={() => setIsCartOpen(true)}
                     className="fixed bottom-6 right-6 z-40 flex items-center gap-2 rounded-full bg-emerald-600 px-5 py-4 text-white shadow-xl shadow-emerald-600/30 hover:bg-emerald-700 hover:scale-105 transition-all duration-300 animate-bounce cursor-pointer"
                 >
@@ -468,37 +517,46 @@ export default function ProdukPage() {
                 </button>
             )}
 
-            {/* FOOTER */}
-            <footer id="kontak" className="border-t border-slate-200 bg-white">
-                <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 lg:grid-cols-[1.3fr_1fr] lg:px-8">
+            {/* FOOTER HIJAU PEKAT */}
+            <footer id="kontak" className="bg-emerald-950 text-emerald-100">
+                <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1.3fr_1fr] lg:px-8">
                     <div>
                         <div className="flex items-center gap-3">
-                            <div className="flex size-10 items-center justify-center rounded-2xl bg-emerald-600 text-white"><Sprout className="size-5" /></div>
+                            <div className="flex size-10 items-center justify-center overflow-hidden rounded-2xl bg-white p-1 border border-slate-200 shadow-xs shrink-0">
+                                <img
+                                    src="/images/Logo DesaMandalamekar.png"
+                                    alt="Logo Desa Mandalamekar"
+                                    style={{ imageRendering: '-webkit-optimize-contrast' }}
+                                    className="size-full object-contain"
+                                />
+                            </div>
                             <div>
-                                <p className="font-bold text-slate-900">UMKM Desa Mandalamekar</p>
-                                <p className="text-xs font-medium text-slate-500">Portal produk lokal desa</p>
+                                <p className="font-bold text-white">UMKM Desa Mandalamekar</p>
+                                <p className="text-xs font-medium text-emerald-200/70">Portal produk lokal desa</p>
                             </div>
                         </div>
-                        <p className="mt-4 max-w-xl text-sm leading-relaxed text-slate-500">Situs ini dibuat untuk memperkenalkan produk unggulan, membantu promosi, dan memperluas jangkauan pasar UMKM Desa Mandalamekar secara digital.</p>
+                        <p className="mt-4 max-w-xl text-sm leading-relaxed text-emerald-200/80">
+                            Situs ini dibuat untuk memperkenalkan produk unggulan, membantu promosi, dan memperluas jangkauan pasar UMKM Desa Mandalamekar secara digital.
+                        </p>
                     </div>
                     <div className="grid gap-4 sm:grid-cols-2">
-                        <div className="rounded-[1.5rem] border border-slate-100 bg-slate-50 p-5 shadow-2xs">
-                            <p className="text-sm font-bold text-slate-900">Kontak Resmi</p>
-                            <p className="mt-2 text-xs leading-relaxed text-slate-500">Hubungi perangkat desa atau pengelola UMKM melalui kanal resmi.</p>
-                            <div className="mt-4 flex gap-3 text-emerald-600">
-                                <a href="#" className="rounded-lg bg-white p-2 shadow-2xs hover:text-emerald-700 transition"><Facebook className="size-4" /></a>
-                                <a href="#" className="rounded-lg bg-white p-2 shadow-2xs hover:text-emerald-700 transition"><Instagram className="size-4" /></a>
-                                <a href="#" className="rounded-lg bg-white p-2 shadow-2xs hover:text-emerald-700 transition"><MessageCircle className="size-4" /></a>
+                        <div className="rounded-[1.5rem] border border-white/10 bg-white/10 p-5 backdrop-blur-md">
+                            <p className="text-sm font-bold text-white">Kontak Resmi</p>
+                            <p className="mt-2 text-xs leading-relaxed text-emerald-200/80">Hubungi perangkat desa atau pengelola UMKM melalui kanal resmi.</p>
+                            <div className="mt-4 flex gap-3 text-white">
+                                <a href="#" className="flex size-8 items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 transition"><Facebook className="size-4" /></a>
+                                <a href="#" className="flex size-8 items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition"><Instagram className="size-4" /></a>
+                                <a href="#" className="flex size-8 items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition"><MessageCircle className="size-4" /></a>
                             </div>
                         </div>
-                        <div className="rounded-[1.5rem] border border-emerald-100 bg-emerald-50/70 p-5">
-                            <p className="text-sm font-bold text-emerald-900">Dukungan Lokal</p>
-                            <p className="mt-2 text-xs leading-relaxed text-emerald-900/75">Dukung produk lokal, bagikan ke warga, dan ikut memajukan ekonomi desa bersama.</p>
+                        <div className="rounded-[1.5rem] border border-white/10 bg-emerald-900/60 p-5 backdrop-blur-md">
+                            <p className="text-sm font-bold text-emerald-300">Dukungan Lokal</p>
+                            <p className="mt-2 text-xs leading-relaxed text-emerald-100/80">Dukung produk lokal, bagikan ke warga, dan ikut memajukan ekonomi desa bersama.</p>
                         </div>
                     </div>
                 </div>
-                <div className="border-t border-slate-200/80 py-6 text-center text-xs font-medium text-slate-500">
-                    © 2026 UMKM Desa Mandalamekar. Universitas Yarsi.
+                <div className="border-t border-white/10 py-6 text-center text-xs font-medium text-emerald-200/60 px-4">
+                    © 2026 UMKM Desa Mandalamekar <span className="whitespace-nowrap">Kecamatan Cimenyan Kabupaten Bandung Provinsi Jawa Barat</span>. Universitas Yarsi.
                 </div>
             </footer>
         </div>
