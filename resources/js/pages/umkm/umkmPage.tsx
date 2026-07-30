@@ -175,7 +175,7 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
                     <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
 
                         {/* 🛠️ AREA FILTER: PUTIH TRANSPARAN / GLASSMORPHISM */}
-                        <div className="flex flex-wrap items-center justify-between gap-4 mb-8 bg-white/80 backdrop-blur-md p-5 rounded-[2rem] border border-emerald-100/80 shadow-lg">
+                        <div className="relative z-40 flex flex-wrap items-center justify-between gap-4 mb-8 bg-white/80 backdrop-blur-md p-5 rounded-[2rem] border border-emerald-100/80 shadow-lg">
                             <div className="flex items-center gap-3 pl-2">
                                 <div className="flex size-9 items-center justify-center rounded-xl bg-emerald-50/80 text-emerald-600 border border-emerald-200/60">
                                     <Store className="size-5" />
@@ -214,8 +214,9 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
                                     </button>
 
                                     {isCategoryOpen && (
-                                        <div className="absolute right-0 mt-2 w-56 rounded-2xl border border-emerald-100 bg-white/95 backdrop-blur-md p-2 shadow-2xl z-30 animate-in fade-in slide-in-from-top-2 duration-200">
-                                            {dynamicCategoryFilters.map((category) => (
+                                    <div className="absolute right-0 mt-2 w-56 rounded-2xl border border-emerald-100 bg-white/95 backdrop-blur-md p-2 shadow-2xl z-30 animate-in fade-in slide-in-from-top-2 duration-200">
+                                        {/* 🛠️ MENAMPILKAN KATEGORI DINAMIS */}
+                                        {dynamicCategoryFilters.map((category) => (
                                                 <button
                                                     key={category}
                                                     onClick={() => { setSelectedCategory(category); setIsCategoryOpen(false); setCurrentPage(1); }}
