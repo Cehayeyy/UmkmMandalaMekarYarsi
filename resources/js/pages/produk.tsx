@@ -68,7 +68,7 @@ export default function ProdukPage() {
             {/* HEADER PUBLIK */}
             <header className="sticky top-0 z-40 border-b border-white/80 bg-white/80 backdrop-blur-xl transition-all">
                 <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-                    {/* LOGO DESA DI HEADER */}
+                    {/* LOGO DESA DI HEADER (UKURAN FONT DISAMAKAN DENGAN UMKM INDEX) */}
                     <Link href="/" className="flex items-center gap-3">
                         <div className="flex size-11 items-center justify-center overflow-hidden rounded-2xl bg-white p-1 shadow-md border border-slate-100 shrink-0">
                             <img
@@ -79,8 +79,8 @@ export default function ProdukPage() {
                             />
                         </div>
                         <div>
-                            <p className="text-xs font-bold uppercase tracking-wider text-emerald-600">UMKM</p>
-                            <p className="text-base font-extrabold text-slate-900 leading-none">Desa Mandalamekar</p>
+                            <p className="text-sm font-semibold text-emerald-700">UMKM</p>
+                            <p className="text-lg font-bold tracking-tight text-slate-900">Desa Mandalamekar</p>
                         </div>
                     </Link>
 
@@ -121,7 +121,7 @@ export default function ProdukPage() {
             <main className="mx-auto max-w-7xl px-4 py-8 pb-24">
                 {/* HERO BANNER PRODUK */}
                 <div className="relative overflow-hidden rounded-[2rem] border border-white/60 bg-slate-900 text-white mb-8 shadow-[0_30px_90px_rgba(15,23,42,0.22)]">
-                    {/* GAMBAR BANNER HD */}
+                    {/* GAMBAR BANNER KUALITAS HD */}
                     <img
                         src="/images/Banner Produk.jpg"
                         alt="Banner Produk Desa Mandalamekar"
@@ -129,12 +129,12 @@ export default function ProdukPage() {
                         className="absolute inset-0 size-full object-cover object-center"
                     />
 
-                    {/* OVERLAY GRADIENT */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/60 to-transparent" />
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.3),transparent_35%),radial-gradient(circle_at_bottom_left,rgba(132,204,22,0.2),transparent_30%)]" />
+                    {/* OVERLAY DENGAN GRADIENT DARI KANAN KE KIRI */}
+                    <div className="absolute inset-0 bg-gradient-to-l from-slate-950/80 via-slate-950/40 to-transparent" />
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.15),transparent_40%)]" />
 
-                    {/* BADGE LOGO DESA & YARSI DI BANNER */}
-                    <div className="absolute top-6 right-6 z-10 hidden sm:inline-flex items-center gap-4 rounded-full border border-white/30 bg-slate-950/60 px-6 py-3 backdrop-blur-md shadow-2xl">
+                    {/* BADGE LOGO DESA & YARSI DIPINDAHKAN KE KIRI ATAS */}
+                    <div className="absolute top-6 left-6 z-10 hidden sm:inline-flex items-center gap-4 rounded-full border border-white/30 bg-slate-950/60 px-6 py-3 backdrop-blur-md shadow-2xl">
                         <div className="flex items-center gap-3">
                             <div className="size-12 sm:size-14 overflow-hidden rounded-full bg-white p-1.5 shrink-0 shadow-md ring-2 ring-white/20">
                                 <img
@@ -158,20 +158,19 @@ export default function ProdukPage() {
                         </span>
                     </div>
 
-                    {/* CONTAINER GRID TEKS BANNER */}
-                    <div className="relative grid min-h-[540px] items-end gap-10 px-6 py-8 sm:px-10 sm:py-10 lg:grid-cols-[1.2fr_0.8fr] lg:px-12 lg:py-12 z-10">
-                        <div className="max-w-2xl pb-4 pt-12 lg:py-16">
-                            <div className="flex items-center gap-2 mb-4">
+                    {/* CONTAINER GRID TEKS BANNER (POSISI TEKS DIPINDAHKAN KE SEBELAH KANAN) */}
+                    <div className="relative grid min-h-[540px] items-end pb-8 sm:pb-12 px-6 sm:px-10 lg:grid-cols-2 lg:px-12 z-10">
+                        <div className="max-w-2xl lg:col-start-2 lg:justify-self-end text-left lg:text-right">
+                            <div className="flex items-center gap-2 mb-4 lg:justify-end">
                                 <span className="size-2 rounded-full bg-emerald-400 relative">
                                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                                 </span>
-                                <span className="text-xs text-emerald-400 font-bold uppercase tracking-wider">Katalog UMKM Desa</span>
+                                <span className="text-xs text-emerald-400 font-bold uppercase tracking-wider drop-shadow-md">Katalog UMKM Desa</span>
                             </div>
-                            <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl mb-3">
-                                Produk <span className="block text-emerald-300">Desa Mandalamekar</span>
+                            <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl mb-3 drop-shadow-md">
+                                Produk <span className="block text-emerald-300 drop-shadow-md">Desa Mandalamekar</span>
                             </h1>
-                            {/* 🛠️ TEKS DIKASIH JAWA BARAT DAN FORMAT RAPI PERSIS WELCOME */}
-                            <p className="mt-5 max-w-xl text-base leading-7 text-slate-100/90 sm:text-lg">
+                            <p className="mt-5 text-base leading-7 text-slate-100 sm:text-lg font-medium drop-shadow-sm ml-auto">
                                 Temukan berbagai produk olahan, kerajinan tangan, dan komoditas unggulan terbaik langsung dari para pelaku UMKM Desa Mandalamekar <span className="whitespace-nowrap">Kecamatan Cimenyan</span> <span className="whitespace-nowrap">Kabupaten Bandung</span> <span className="whitespace-nowrap">Provinsi Jawa Barat</span>.
                             </p>
                         </div>
@@ -517,7 +516,7 @@ export default function ProdukPage() {
                 </button>
             )}
 
-            {/* FOOTER HIJAU PEKAT */}
+            {/* FOOTER PEKAT */}
             <footer id="kontak" className="bg-emerald-950 text-emerald-100">
                 <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1.3fr_1fr] lg:px-8">
                     <div>

@@ -38,7 +38,7 @@ export default function Kontak() {
         <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(16,185,129,0.12)_0,_rgba(255,255,255,0)_36%),linear-gradient(180deg,#f4faf6_0%,#f8fbf8_45%,#ffffff_100%)] font-sans text-slate-900">
             <Head title="Hubungi Kami - Desa Mandalamekar" />
 
-            {/* HEADER / NAVBAR DENGAN LOGO DESA */}
+            {/* HEADER / NAVBAR DENGAN LOGO DESA (FONT DISAMAKAN) */}
             <header className="sticky top-0 z-50 border-b border-white/80 bg-white/80 backdrop-blur-xl transition-all">
                 <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
                     <Link href="/" className="flex items-center gap-3">
@@ -51,8 +51,8 @@ export default function Kontak() {
                             />
                         </div>
                         <div>
-                            <p className="text-xs font-bold uppercase tracking-wider text-emerald-600">UMKM</p>
-                            <p className="text-base font-extrabold tracking-tight text-slate-900 leading-none">Desa Mandalamekar</p>
+                            <p className="text-sm font-semibold text-emerald-700">UMKM</p>
+                            <p className="text-lg font-bold tracking-tight text-slate-900">Desa Mandalamekar</p>
                         </div>
                     </Link>
 
@@ -89,12 +89,12 @@ export default function Kontak() {
                             className="absolute inset-0 size-full object-cover object-center"
                         />
 
-                        {/* OVERLAY GRADIENT BANNER */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/60 to-transparent" />
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.3),transparent_35%),radial-gradient(circle_at_bottom_left,rgba(132,204,22,0.2),transparent_30%)]" />
+                        {/* OVERLAY GRADIENT DIPINDAHKAN KE SEBELAH KANAN */}
+                        <div className="absolute inset-0 bg-gradient-to-l from-slate-950/80 via-slate-950/40 to-transparent" />
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.15),transparent_40%)]" />
 
-                        {/* BADGE LOGO DESA & YARSI DI BANNER */}
-                        <div className="absolute top-6 right-6 z-10 hidden sm:inline-flex items-center gap-4 rounded-full border border-white/30 bg-slate-950/60 px-6 py-3 backdrop-blur-md shadow-2xl">
+                        {/* BADGE LOGO DESA & YARSI DIPINDAHKAN KE KIRI ATAS AGAR BALANS */}
+                        <div className="absolute top-6 left-6 z-10 hidden sm:inline-flex items-center gap-4 rounded-full border border-white/30 bg-slate-950/60 px-6 py-3 backdrop-blur-md shadow-2xl">
                             <div className="flex items-center gap-3">
                                 <div className="size-12 sm:size-14 overflow-hidden rounded-full bg-white p-1.5 shrink-0 shadow-md ring-2 ring-white/20">
                                     <img
@@ -118,13 +118,13 @@ export default function Kontak() {
                             </span>
                         </div>
 
-                        {/* CONTAINER GRID TEKS BANNER (min-h-[540px]) */}
-                        <div className="relative grid min-h-[540px] items-end gap-10 px-6 py-8 sm:px-10 sm:py-10 lg:grid-cols-[1.2fr_0.8fr] lg:px-12 lg:py-12 z-10">
-                            <div className="max-w-2xl pb-4 pt-12 lg:py-16">
-                                <h1 className="max-w-xl text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
-                                    Kontak <span className="block text-emerald-300">Desa Mandalamekar</span>
+                        {/* CONTAINER GRID TEKS BANNER (TEKS DIPINDAHKAN KE KANAN RATA KANAN) */}
+                        <div className="relative grid min-h-[540px] items-end pb-8 sm:pb-12 px-6 sm:px-10 lg:grid-cols-2 lg:px-12 z-10">
+                            <div className="max-w-2xl lg:col-start-2 lg:justify-self-end text-left lg:text-right">
+                                <h1 className="text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl drop-shadow-md">
+                                    Kontak <span className="block text-emerald-300 drop-shadow-md">Desa Mandalamekar</span>
                                 </h1>
-                                <p className="mt-5 max-w-xl text-base leading-7 text-slate-100/90 sm:text-lg">
+                                <p className="mt-3 text-sm sm:text-base leading-relaxed text-slate-100 font-medium drop-shadow-sm ml-auto">
                                     Koneksi langsung dengan pihak pengelola platform digital UMKM dan aparatur Desa Mandalamekar <span className="whitespace-nowrap">Kecamatan Cimenyan</span> <span className="whitespace-nowrap">Kabupaten Bandung</span> <span className="whitespace-nowrap">Provinsi Jawa Barat</span>.
                                 </p>
                             </div>
@@ -291,7 +291,7 @@ export default function Kontak() {
                 <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-4 lg:px-8">
                     <div>
                         <div className="flex items-center gap-3">
-                            <div className="flex size-10 items-center justify-center rounded-2xl bg-white p-1 border border-slate-200 shadow-xs shrink-0">
+                            <div className="flex size-10 items-center justify-center overflow-hidden rounded-2xl bg-white p-1 border border-slate-200 shadow-xs shrink-0">
                                 <img
                                     src="/images/Logo DesaMandalamekar.png"
                                     alt="Logo Desa Mandalamekar"

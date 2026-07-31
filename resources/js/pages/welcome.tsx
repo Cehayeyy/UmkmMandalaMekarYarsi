@@ -149,12 +149,12 @@ export default function Welcome() {
                                 className="absolute inset-0 size-full object-cover object-center"
                             />
 
-                            {/* OVERLAY GRADIENT */}
-                            <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/60 to-transparent" />
-                            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.3),transparent_35%),radial-gradient(circle_at_bottom_left,rgba(132,204,22,0.2),transparent_30%)]" />
+                            {/* OVERLAY DENGAN GRADIENT DARI KANAN KE KIRI */}
+                            <div className="absolute inset-0 bg-gradient-to-l from-slate-950/80 via-slate-950/40 to-transparent" />
+                            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.15),transparent_40%)]" />
 
-                            {/* BADGE LOGO DESA & YARSI */}
-                            <div className="absolute top-6 right-6 z-10 hidden sm:inline-flex items-center gap-4 rounded-full border border-white/30 bg-slate-950/60 px-6 py-3 backdrop-blur-md shadow-2xl">
+                            {/* BADGE LOGO DESA & YARSI DIPINDAHKAN KE KIRI ATAS */}
+                            <div className="absolute top-6 left-6 z-10 hidden sm:inline-flex items-center gap-4 rounded-full border border-white/30 bg-slate-950/60 px-6 py-3 backdrop-blur-md shadow-2xl">
                                 <div className="flex items-center gap-3">
                                     <div className="size-12 sm:size-14 overflow-hidden rounded-full bg-white p-1.5 shrink-0 shadow-md ring-2 ring-white/20">
                                         <img
@@ -178,18 +178,18 @@ export default function Welcome() {
                                 </span>
                             </div>
 
-                            <div className="relative grid min-h-[540px] items-end gap-10 px-6 py-8 sm:px-10 sm:py-10 lg:grid-cols-[1.2fr_0.8fr] lg:px-12 lg:py-12">
-                                <div className="max-w-2xl pb-4 pt-12 lg:py-16">
-                                    <h1 className="max-w-xl text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
-                                        UMKM <span className="block text-emerald-300">Desa Mandalamekar</span>
+                            {/* CONTAINER GRID TEKS BANNER (POSISI TEKS DI SEBELAH KANAN) */}
+                            <div className="relative grid min-h-[540px] items-end pb-8 sm:pb-12 px-6 sm:px-10 lg:grid-cols-2 lg:px-12 z-10">
+                                <div className="max-w-2xl lg:col-start-2 lg:justify-self-end text-left lg:text-right">
+                                    <h1 className="text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl drop-shadow-md">
+                                        UMKM <span className="block text-emerald-300 drop-shadow-md">Desa Mandalamekar</span>
                                     </h1>
 
-                                    {/* 🛠️ DIRAPIKAN: Frasa "Kabupaten Bandung" & "Kecamatan Cimenyan" disatukan secara rapi */}
-                                    <p className="mt-5 max-w-2xl text-base leading-7 text-slate-100/90 sm:text-lg">
+                                    <p className="mt-5 text-base leading-7 text-slate-100 sm:text-lg font-medium drop-shadow-sm ml-auto">
                                         Dukung produk lokal, majukan ekonomi desa, dan temukan berbagai produk unggulan dari UMKM Desa Mandalamekar <span className="whitespace-nowrap">Kecamatan Cimenyan</span> <span className="whitespace-nowrap">Kabupaten Bandung</span> Provinsi Jawa Barat.
                                     </p>
 
-                                    <div className="mt-8 flex flex-wrap gap-3">
+                                    <div className="mt-8 flex flex-wrap gap-3 lg:justify-end">
                                         <Link
                                             href="/produk"
                                             className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/30 transition hover:bg-emerald-400"
@@ -354,12 +354,12 @@ export default function Welcome() {
                     </section>
                 </main>
 
-                {/* FOOTER */}
+                {/* FOOTER PEKAT */}
                 <footer className="bg-emerald-950 text-emerald-100">
                     <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-4 lg:px-8">
                         <div>
                             <div className="flex items-center gap-3">
-                                <div className="flex size-10 items-center justify-center rounded-2xl bg-white p-1 border border-slate-200 shadow-xs shrink-0">
+                                <div className="flex size-10 items-center justify-center overflow-hidden rounded-2xl bg-white p-1 border border-slate-200 shadow-xs shrink-0">
                                     <img
                                         src="/images/Logo DesaMandalamekar.png"
                                         alt="Logo Desa Mandalamekar"
