@@ -259,7 +259,7 @@ export default function ProdukPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
 
                     {/* SIDEBAR FILTER KIRI */}
-                    <div className="rounded-[1.75rem] border border-slate-100 bg-white p-6 shadow-xl h-fit sticky top-28">
+                    <div className="rounded-[1.75rem] border border-slate-100 bg-white p-6 shadow-xl h-fit lg:sticky lg:top-28">
                         <h3 className="font-extrabold text-sm mb-4">Kategori</h3>
                         <div className="space-y-1.5 mb-6">
                             {categoriesData.map((cat) => {

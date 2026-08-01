@@ -3,6 +3,7 @@ import { Head, Link, useForm, usePage, router } from '@inertiajs/react';
 import {
     LayoutDashboard,
     LogOut,
+    Menu,
     Package,
     Store,
     Tag,
@@ -17,6 +18,7 @@ interface PageProps extends SharedData { produkList?: Product[]; }
 export default function ProdukSaya() {
     const { auth, produkList = [] } = usePage<PageProps>().props;
     const [isCustomCategory, setIsCustomCategory] = useState(false); // 🛠️ State untuk Kategori Kustom
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     // 🛠️ MENGAMBIL KATEGORI YANG PERNAH DIBUAT UMKM INI (Anti-Duplikat Ketat)
     const existingCategories = useMemo(() => {
@@ -61,9 +63,17 @@ export default function ProdukSaya() {
         <>
             <Head title="Produk Saya - Panel Toko" />
             <div className="flex min-h-screen bg-slate-50 text-slate-900 font-sans">
+                {isMobileMenuOpen && (
+                    <button
+                        type="button"
+                        aria-label="Tutup navigasi"
+                        className="fixed inset-0 z-30 bg-slate-950/40 lg:hidden"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                    />
+                )}
 
                 {/* SIDEBAR PANEL TOKO */}
-                <aside className="fixed inset-y-0 left-0 z-40 flex w-72 flex-col bg-emerald-950 text-emerald-100">
+                <aside className={`fixed inset-y-0 left-0 z-40 flex w-72 flex-col bg-emerald-950 text-emerald-100 transition-transform duration-300 ease-in-out lg:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                     <div className="flex items-center gap-3 px-6 py-6 border-b border-white/10">
                         {/* 🛠️ PERBAIKAN: Menampilkan Foto Toko di Sidebar */}
                         <div className="flex size-11 items-center justify-center overflow-hidden rounded-2xl bg-emerald-600 text-white shadow-md shrink-0">
@@ -109,12 +119,20 @@ export default function ProdukSaya() {
                 </aside>
 
                 {/* KONTEN UTAMA */}
-                <div className="ml-72 flex-1 flex flex-col min-h-screen">
-                    <header className="bg-white border-b border-slate-200 px-8 py-5 flex items-center justify-between sticky top-0 z-30">
+                <div className="flex min-w-0 flex-1 flex-col min-h-screen lg:ml-72">
+                    <header className="sticky top-0 z-30 flex items-center gap-3 border-b border-slate-200 bg-white px-4 py-4 sm:px-6 lg:px-8">
+                        <button
+                            type="button"
+                            className="inline-flex size-10 items-center justify-center rounded-xl border border-slate-200 text-slate-600 shadow-sm transition hover:bg-slate-50 lg:hidden"
+                            onClick={() => setIsMobileMenuOpen(true)}
+                            aria-label="Buka navigasi"
+                        >
+                            <Menu className="size-5" />
+                        </button>
                         <h1 className="text-xl font-bold text-slate-900">Produk Saya</h1>
                     </header>
 
-                    <main className="p-8 space-y-8 flex-1">
+                    <main className="min-w-0 space-y-8 flex-1 p-4 sm:p-6 lg:p-8">
                         <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm w-full">
                             <div className="border-b border-slate-100 pb-4 mb-6">
                                 <h2 className="text-base font-bold text-slate-900">Tambah Produk Baru</h2>

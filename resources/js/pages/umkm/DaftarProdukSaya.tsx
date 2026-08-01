@@ -3,6 +3,7 @@ import { Head, Link, useForm, usePage, router } from '@inertiajs/react';
 import {
     LayoutDashboard,
     LogOut,
+    Menu,
     Package,
     Store,
     Tag,
@@ -28,6 +29,7 @@ interface Product {
 export default function DaftarProdukSaya({ produkList = [] }: Readonly<{ produkList?: Product[] }>) {
     const { auth } = usePage<SharedData>().props;
     const [searchQuery, setSearchQuery] = useState('');
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     // State untuk Modal Edit
     const [editingProduct, setEditingProduct] = useState<Product | null>(null);
@@ -59,7 +61,7 @@ export default function DaftarProdukSaya({ produkList = [] }: Readonly<{ produkL
         nama_produk: '',
         kategori: '',
         harga: '',
-        deskripsi: '', 
+        deskripsi: '',
         foto: null as File | null,
     });
 
@@ -68,13 +70,13 @@ export default function DaftarProdukSaya({ produkList = [] }: Readonly<{ produkL
         if (e) e.stopPropagation();
         setEditingProduct(product);
         setIsCustomCategory(false); // Pastikan mulai dengan dropdown
-        
+
         setData({
             _method: 'PUT',
             nama_produk: product.nama_produk,
             kategori: product.kategori,
             harga: Math.floor(Number(product.harga)).toString(),
-            deskripsi: product.deskripsi || '', 
+            deskripsi: product.deskripsi || '',
             foto: null,
         });
     };
@@ -121,9 +123,17 @@ export default function DaftarProdukSaya({ produkList = [] }: Readonly<{ produkL
         <>
             <Head title="Daftar Produk Saya" />
             <div className="flex min-h-screen bg-slate-50 text-slate-900 font-sans">
+                {isMobileMenuOpen && (
+                    <button
+                        type="button"
+                        aria-label="Tutup navigasi"
+                        className="fixed inset-0 z-30 bg-slate-950/40 lg:hidden"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                    />
+                )}
 
                 {/* SIDEBAR PANEL TOKO */}
-                <aside className="fixed inset-y-0 left-0 z-40 flex w-72 flex-col bg-emerald-950 text-emerald-100">
+                <aside className={`fixed inset-y-0 left-0 z-40 flex w-72 flex-col bg-emerald-950 text-emerald-100 transition-transform duration-300 ease-in-out lg:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                     <div className="flex items-center gap-3 px-6 py-6 border-b border-white/10">
                         {/* 🛠️ PERBAIKAN: Menampilkan Foto Toko di Sidebar */}
                         <div className="flex size-11 items-center justify-center overflow-hidden rounded-2xl bg-emerald-600 text-white shadow-md shrink-0">
@@ -142,6 +152,7 @@ export default function DaftarProdukSaya({ produkList = [] }: Readonly<{ produkL
                     <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
                         <Link
                             href={route('umkm.dashboard')}
+                            onClick={() => setIsMobileMenuOpen(false)}
                             className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-emerald-100/80 hover:bg-white/5 transition"
                         >
                             <LayoutDashboard className="size-4" />
@@ -150,6 +161,7 @@ export default function DaftarProdukSaya({ produkList = [] }: Readonly<{ produkL
 
                         <Link
                             href={route('umkm.produk.index')}
+                            onClick={() => setIsMobileMenuOpen(false)}
                             className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-emerald-100/80 hover:bg-white/5 transition"
                         >
                             <Package className="size-4" />
@@ -158,6 +170,7 @@ export default function DaftarProdukSaya({ produkList = [] }: Readonly<{ produkL
 
                         <Link
                             href={route('umkm.produk.daftar')}
+                            onClick={() => setIsMobileMenuOpen(false)}
                             className="flex w-full items-center gap-3 rounded-xl bg-emerald-600 px-4 py-3 text-sm font-bold text-white shadow-md shadow-emerald-900/40"
                         >
                             <ShoppingBag className="size-4" />
@@ -166,6 +179,7 @@ export default function DaftarProdukSaya({ produkList = [] }: Readonly<{ produkL
 
                         <Link
                             href={route('umkm.profil.edit')}
+                            onClick={() => setIsMobileMenuOpen(false)}
                             className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-emerald-100/80 hover:bg-white/5 transition"
                         >
                             <Tag className="size-4" />
@@ -187,12 +201,20 @@ export default function DaftarProdukSaya({ produkList = [] }: Readonly<{ produkL
                 </aside>
 
                 {/* KONTEN UTAMA */}
-                <div className="ml-72 flex-1 flex flex-col min-h-screen">
-                    <header className="bg-white border-b border-slate-200 px-8 py-5 flex justify-between items-center sticky top-0 z-30">
+                <div className="flex min-w-0 flex-1 flex-col min-h-screen lg:ml-72">
+                    <header className="sticky top-0 z-30 flex items-center gap-3 border-b border-slate-200 bg-white px-4 py-4 sm:px-6 lg:px-8">
+                        <button
+                            type="button"
+                            className="inline-flex size-10 items-center justify-center rounded-xl border border-slate-200 text-slate-600 shadow-sm transition hover:bg-slate-50 lg:hidden"
+                            onClick={() => setIsMobileMenuOpen(true)}
+                            aria-label="Buka navigasi"
+                        >
+                            <Menu className="size-5" />
+                        </button>
                         <h1 className="text-xl font-bold text-slate-900">Daftar Produk Saya</h1>
                     </header>
 
-                    <main className="p-8 flex-1 space-y-6">
+                    <main className="min-w-0 flex-1 space-y-6 p-4 sm:p-6 lg:p-8">
                         {/* Toolbar Pencarian */}
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
                             <div className="flex items-center gap-2 text-slate-700 font-bold text-sm">

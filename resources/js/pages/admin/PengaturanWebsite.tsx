@@ -9,6 +9,7 @@ import {
     Globe,
     LayoutDashboard,
     LogOut,
+    Menu,
     Package,
     PhoneCall,
     Save,
@@ -50,6 +51,7 @@ interface SettingsData {
 export default function PengaturanWebsite({ settings = {} }: { settings?: SettingsData }) {
     const { auth } = usePage<SharedData>().props;
     const [isProfileOpen, setIsProfileOpen] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
@@ -88,8 +90,17 @@ export default function PengaturanWebsite({ settings = {} }: { settings?: Settin
             <Head title="Pengaturan Website - Admin Mandalamekar" />
 
             <div className="flex min-h-screen bg-slate-50 text-slate-900">
+                {isMobileMenuOpen && (
+                    <button
+                        type="button"
+                        aria-label="Tutup navigasi"
+                        className="fixed inset-0 z-30 bg-slate-950/40 lg:hidden"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                    />
+                )}
+
                 {/* SIDEBAR */}
-                <aside className="fixed inset-y-0 left-0 z-40 flex w-72 flex-col bg-emerald-950 text-emerald-100">
+                <aside className={`fixed inset-y-0 left-0 z-40 flex w-72 flex-col bg-emerald-950 text-emerald-100 transition-transform duration-300 ease-in-out lg:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                     <div className="flex items-center gap-3 px-6 py-6">
                         <div className="flex size-11 items-center justify-center rounded-2xl bg-emerald-600 text-white shadow-lg shadow-emerald-900/50">
                             <Settings className="size-6 animate-spin-slow" />
@@ -104,6 +115,7 @@ export default function PengaturanWebsite({ settings = {} }: { settings?: Settin
                     <nav className="flex-1 overflow-y-auto px-4 pb-4">
                         <Link
                             href="/dashboard"
+                            onClick={() => setIsMobileMenuOpen(false)}
                             className="mb-4 flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-emerald-100/90 transition hover:bg-white/5"
                         >
                             <LayoutDashboard className="size-4" />
@@ -120,6 +132,7 @@ export default function PengaturanWebsite({ settings = {} }: { settings?: Settin
                                             <Link
                                                 key={item.label}
                                                 href={item.href || '#'}
+                                                onClick={() => setIsMobileMenuOpen(false)}
                                                 className={`flex w-full items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-sm transition ${
                                                     item.active
                                                         ? 'bg-emerald-600 font-semibold text-white shadow-md shadow-emerald-900/40'
@@ -153,21 +166,31 @@ export default function PengaturanWebsite({ settings = {} }: { settings?: Settin
                 </aside>
 
                 {/* MAIN CONTENT */}
-                <div className="ml-72 flex-1">
+                <div className="flex min-w-0 flex-1 flex-col lg:ml-72">
                     {/* TOPBAR */}
-                    <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 px-8 py-5 backdrop-blur-xl">
-                        <div className="flex items-center justify-between gap-4">
-                            <div>
-                                <h1 className="text-xl font-bold tracking-tight text-slate-900">Pengaturan Sistem Website</h1>
+                    <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 px-4 py-4 backdrop-blur-xl sm:px-6 lg:px-8">
+                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                            <div className="flex items-start gap-3 sm:block">
+                                <button
+                                    type="button"
+                                    className="inline-flex size-10 items-center justify-center rounded-xl border border-slate-200 text-slate-600 shadow-sm transition hover:bg-slate-50 lg:hidden"
+                                    onClick={() => setIsMobileMenuOpen(true)}
+                                    aria-label="Buka navigasi"
+                                >
+                                    <Menu className="size-5" />
+                                </button>
+                                <div>
+                                    <h1 className="text-xl font-bold tracking-tight text-slate-900">Pengaturan Sistem Website</h1>
                                 <div className="mt-1 flex items-center gap-2 text-sm font-medium text-slate-500">
                                     Kontrol identitas dan status operasional website desa.
                                     <span className="flex items-center gap-1.5 text-xs text-emerald-700 font-semibold animate-pulse bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200/60">
                                         <span className="size-1.5 rounded-full bg-emerald-500"></span> Live Sync
                                     </span>
                                 </div>
+                                </div>
                             </div>
 
-                            <div className="flex items-center gap-4">
+                            <div className="flex items-center justify-between gap-4 sm:justify-end">
                                 <button type="button" className="relative flex size-10 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition hover:bg-slate-50">
                                     <Bell className="size-5" />
                                 </button>
@@ -208,7 +231,7 @@ export default function PengaturanWebsite({ settings = {} }: { settings?: Settin
                         </div>
                     </header>
 
-                    <main className="p-8 space-y-6 max-w-4xl">
+                    <main className="min-w-0 w-full max-w-4xl space-y-6 p-4 sm:p-6 lg:p-8">
                         {/* NOTIFIKASI BERHASIL DISIMPAN */}
                         {showSuccessMessage && (
                             <div className="flex items-center gap-3 rounded-2xl bg-emerald-600 p-4 text-white shadow-lg shadow-emerald-600/20 transition-all animate-fade-in">

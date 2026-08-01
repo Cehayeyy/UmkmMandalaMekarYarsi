@@ -1,7 +1,7 @@
 import { type SharedData } from '@/types';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import {
-    LayoutDashboard, LogOut, Package, Store, Tag, Save, User as UserIcon, ShoppingBag, ImageIcon
+    LayoutDashboard, LogOut, Menu, Package, Store, Tag, Save, User as UserIcon, ShoppingBag, ImageIcon
 } from 'lucide-react';
 import { FormEventHandler, useState } from 'react';
 
@@ -18,12 +18,13 @@ interface UserData {
 
 export default function ProfilToko({ user }: { user: UserData }) {
     const { auth } = usePage<SharedData>().props;
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     // Preview foto di area form
     const [previewUrl, setPreviewUrl] = useState<string | null>(user.foto_toko ? `/${user.foto_toko}` : null);
 
     const { data, setData, post, processing, errors } = useForm({
-        _method: 'PUT', 
+        _method: 'PUT',
         name: user.name || '',
         deskripsi_toko: user.deskripsi_toko || '',
         no_whatsapp: user.no_whatsapp || '',
@@ -52,9 +53,17 @@ export default function ProfilToko({ user }: { user: UserData }) {
         <>
             <Head title="Profil Toko" />
             <div className="flex min-h-screen bg-slate-50 text-slate-900">
+                {isMobileMenuOpen && (
+                    <button
+                        type="button"
+                        aria-label="Tutup navigasi"
+                        className="fixed inset-0 z-30 bg-slate-950/40 lg:hidden"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                    />
+                )}
 
                 {/* SIDEBAR PANEL TOKO */}
-                <aside className="fixed inset-y-0 left-0 z-40 flex w-72 flex-col bg-emerald-950 text-emerald-100">
+                <aside className={`fixed inset-y-0 left-0 z-40 flex w-72 flex-col bg-emerald-950 text-emerald-100 transition-transform duration-300 ease-in-out lg:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                     <div className="flex items-center gap-3 px-6 py-6 border-b border-white/10">
                         <div className="flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-emerald-600 text-white shadow-md">
                             {user.foto_toko ? (
@@ -63,7 +72,7 @@ export default function ProfilToko({ user }: { user: UserData }) {
                                 <Store className="size-6" />
                             )}
                         </div>
-                        
+
                         <div>
                             <p className="text-xs font-semibold text-emerald-300 uppercase tracking-wider">Panel Toko</p>
                             <p className="text-base font-bold leading-tight text-white truncate w-48">{user.name}</p>
@@ -73,6 +82,7 @@ export default function ProfilToko({ user }: { user: UserData }) {
                     <nav className="flex-1 px-4 py-6 space-y-1">
                         <Link
                             href={route('umkm.dashboard')}
+                            onClick={() => setIsMobileMenuOpen(false)}
                             className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-emerald-100/80 hover:bg-white/5 transition"
                         >
                             <LayoutDashboard className="size-4" /> Dashboard Toko
@@ -80,6 +90,7 @@ export default function ProfilToko({ user }: { user: UserData }) {
 
                         <Link
                             href={route('umkm.produk.index')}
+                            onClick={() => setIsMobileMenuOpen(false)}
                             className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-emerald-100/80 hover:bg-white/5 transition"
                         >
                             <Package className="size-4" /> Produk Saya
@@ -87,6 +98,7 @@ export default function ProfilToko({ user }: { user: UserData }) {
 
                         <Link
                             href={route('umkm.produk.daftar')}
+                            onClick={() => setIsMobileMenuOpen(false)}
                             className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-emerald-100/80 hover:bg-white/5 transition"
                         >
                             <ShoppingBag className="size-4" /> Daftar Produk Saya
@@ -94,6 +106,7 @@ export default function ProfilToko({ user }: { user: UserData }) {
 
                         <Link
                             href={route('umkm.profil.edit')}
+                            onClick={() => setIsMobileMenuOpen(false)}
                             className="flex w-full items-center gap-3 rounded-xl bg-emerald-600 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-emerald-900/40"
                         >
                             <Tag className="size-4" /> Profil Toko
@@ -113,12 +126,22 @@ export default function ProfilToko({ user }: { user: UserData }) {
                 </aside>
 
                 {/* MAIN CONTENT */}
-                <div className="ml-72 flex-1">
-                    <header className="bg-white border-b border-slate-200 px-8 py-6">
-                        <h1 className="text-xl font-bold text-slate-900">Pengaturan Profil Toko</h1>
+                <div className="flex min-w-0 flex-1 flex-col lg:ml-72">
+                    <header className="sticky top-0 z-30 bg-white border-b border-slate-200 px-4 py-4 sm:px-6 lg:px-8">
+                        <div className="flex items-center gap-3">
+                            <button
+                                type="button"
+                                className="inline-flex size-10 items-center justify-center rounded-xl border border-slate-200 text-slate-600 shadow-sm transition hover:bg-slate-50 lg:hidden"
+                                onClick={() => setIsMobileMenuOpen(true)}
+                                aria-label="Buka navigasi"
+                            >
+                                <Menu className="size-5" />
+                            </button>
+                            <h1 className="text-xl font-bold text-slate-900">Pengaturan Profil Toko</h1>
+                        </div>
                     </header>
 
-                    <main className="p-8 max-w-4xl">
+                    <main className="min-w-0 w-full max-w-4xl p-4 sm:p-6 lg:p-8">
                         <div className="rounded-[1.75rem] border border-slate-200 bg-white p-8 shadow-sm shadow-slate-200/60">
 
                             <div className="flex items-center gap-4 mb-8 pb-6 border-b border-slate-100">
@@ -132,7 +155,7 @@ export default function ProfilToko({ user }: { user: UserData }) {
                             </div>
 
                             <form onSubmit={submit} className="space-y-6" encType="multipart/form-data">
-                                
+
                                 <div className="mb-6">
                                     <label className="block text-sm font-medium text-slate-700 mb-2">Banner / Foto Toko</label>
                                     <div className="flex flex-col sm:flex-row gap-6 items-start sm:items-center">

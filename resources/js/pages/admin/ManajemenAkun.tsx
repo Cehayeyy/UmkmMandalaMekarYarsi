@@ -2,7 +2,7 @@ import { type SharedData } from '@/types';
 import { Head, Link, usePage, useForm, router } from '@inertiajs/react';
 import {
     Bell, ChevronDown, ChevronRight, LayoutDashboard, LogOut,
-    MessageCircle, Package, Search, Settings, Shield,
+    MessageCircle, Menu, Package, Search, Settings, Shield,
     Sprout, Store, Tag, Users, Plus, Edit, Trash2, X
 } from 'lucide-react';
 import { useState } from 'react';
@@ -12,7 +12,7 @@ const sidebarSections = [
         title: 'MANAJEMEN',
         items: [
            { label: 'Manajemen UMKM', icon: Store, hasSubmenu: false, href: '/admin/manajemen-umkm', active: false },
-            { label: 'Manajemen Akun', icon: Users, hasSubmenu: false, href: '/admin/manajemen-akun', active: true }, 
+            { label: 'Manajemen Akun', icon: Users, hasSubmenu: false, href: '/admin/manajemen-akun', active: true },
             { label: 'Produk', icon: Package, hasSubmenu: false, href: '/admin/produk', active: false },
         ],
     },
@@ -27,6 +27,7 @@ const sidebarSections = [
 export default function ManajemenAkun({ users = [] }: { users?: any[] }) {
     const { auth } = usePage<SharedData>().props;
     const [isProfileOpen, setIsProfileOpen] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [activeTab, setActiveTab] = useState<'admin' | 'umkm'>('admin');
 
     // STATE MODAL
@@ -102,8 +103,17 @@ export default function ManajemenAkun({ users = [] }: { users?: any[] }) {
             <Head title="Manajemen Akun - Admin Mandalamekar" />
 
             <div className="flex min-h-screen bg-slate-50 text-slate-900">
+                {isMobileMenuOpen && (
+                    <button
+                        type="button"
+                        aria-label="Tutup navigasi"
+                        className="fixed inset-0 z-30 bg-slate-950/40 lg:hidden"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                    />
+                )}
+
                 {/* --- SIDEBAR --- */}
-                <aside className="fixed inset-y-0 left-0 z-40 flex w-72 flex-col bg-emerald-950 text-emerald-100">
+                <aside className={`fixed inset-y-0 left-0 z-40 flex w-72 flex-col bg-emerald-950 text-emerald-100 transition-transform duration-300 ease-in-out lg:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                     <div className="flex items-center gap-3 px-6 py-6">
                         <div className="flex size-11 items-center justify-center rounded-2xl bg-emerald-600 text-white">
                             <Sprout className="size-6" />
@@ -115,7 +125,7 @@ export default function ManajemenAkun({ users = [] }: { users?: any[] }) {
                     </div>
 
                     <nav className="flex-1 overflow-y-auto px-4 pb-4">
-                        <Link href={route('dashboard')} className="mb-4 flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-emerald-100/80 transition hover:bg-white/5">
+                        <Link href={route('dashboard')} onClick={() => setIsMobileMenuOpen(false)} className="mb-4 flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-emerald-100/80 transition hover:bg-white/5">
                             <LayoutDashboard className="size-4" /> Dashboard
                         </Link>
 
@@ -126,7 +136,7 @@ export default function ManajemenAkun({ users = [] }: { users?: any[] }) {
                                     {section.items.map((item) => {
                                         const Icon = item.icon;
                                         return (
-                                            <Link key={item.label} href={item.href} className={`flex w-full items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-sm transition ${item.active ? 'bg-emerald-600 font-semibold text-white shadow-md shadow-emerald-900/40' : 'text-emerald-100/90 hover:bg-white/5'}`}>
+                                            <Link key={item.label} href={item.href} onClick={() => setIsMobileMenuOpen(false)} className={`flex w-full items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-sm transition ${item.active ? 'bg-emerald-600 font-semibold text-white shadow-md shadow-emerald-900/40' : 'text-emerald-100/90 hover:bg-white/5'}`}>
                                                 <span className="flex items-center gap-3"><Icon className="size-4" /> {item.label}</span>
                                                 {item.active && <ChevronRight className="size-4 text-emerald-200" />}
                                             </Link>
@@ -145,15 +155,25 @@ export default function ManajemenAkun({ users = [] }: { users?: any[] }) {
                 </aside>
 
                 {/* --- MAIN CONTENT --- */}
-                <div className="ml-72 flex-1">
-                    <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 px-8 py-5 backdrop-blur-xl">
-                        <div className="flex items-center justify-between gap-4">
-                            <div>
-                                <h1 className="text-xl font-bold tracking-tight text-slate-900">Manajemen Akun</h1>
-                                <p className="mt-1 text-sm text-slate-500">Kelola akun akses untuk Operator/Admin dan pelaku UMKM.</p>
+                <div className="flex min-w-0 flex-1 flex-col lg:ml-72">
+                    <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 px-4 py-4 backdrop-blur-xl sm:px-6 lg:px-8">
+                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                            <div className="flex items-start gap-3 sm:block">
+                                <button
+                                    type="button"
+                                    className="inline-flex size-10 items-center justify-center rounded-xl border border-slate-200 text-slate-600 shadow-sm transition hover:bg-slate-50 lg:hidden"
+                                    onClick={() => setIsMobileMenuOpen(true)}
+                                    aria-label="Buka navigasi"
+                                >
+                                    <Menu className="size-5" />
+                                </button>
+                                <div>
+                                    <h1 className="text-xl font-bold tracking-tight text-slate-900">Manajemen Akun</h1>
+                                    <p className="mt-1 text-sm text-slate-500">Kelola akun akses untuk Operator/Admin dan pelaku UMKM.</p>
+                                </div>
                             </div>
 
-                            <div className="flex items-center gap-4">
+                            <div className="flex items-center justify-between gap-4 sm:justify-end">
                                 <button className="relative flex size-10 items-center justify-center rounded-full border border-slate-200 text-slate-500 hover:bg-slate-50"><Bell className="size-5" /></button>
                                 <div className="h-8 w-px bg-slate-200" />
                                 <div className="relative">
@@ -167,9 +187,9 @@ export default function ManajemenAkun({ users = [] }: { users?: any[] }) {
                         </div>
                     </header>
 
-                    <main className="p-8">
+                    <main className="min-w-0 flex-1 p-4 sm:p-6 lg:p-8">
                         <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                            <div className="inline-flex rounded-xl bg-slate-200/60 p-1">
+                            <div className="inline-flex w-full rounded-xl bg-slate-200/60 p-1 sm:w-auto">
                                 <button onClick={() => setActiveTab('admin')} className={`flex items-center gap-2 rounded-lg px-5 py-2 text-sm font-semibold transition ${activeTab === 'admin' ? 'bg-white text-emerald-700 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}>
                                     <Shield className="size-4" /> Akun Operator
                                 </button>
@@ -185,9 +205,9 @@ export default function ManajemenAkun({ users = [] }: { users?: any[] }) {
 
                         {/* TABEL DATA ASLI DARI DATABASE */}
                         <div className="rounded-[1.5rem] border border-slate-200 bg-white shadow-sm shadow-slate-200/60 overflow-hidden">
-                            <div className="border-b border-slate-100 p-5 flex items-center justify-between">
+                            <div className="flex flex-col gap-4 border-b border-slate-100 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
                                 <h2 className="text-base font-bold text-slate-800">Daftar {activeTab === 'admin' ? 'Akun Operator & Admin' : 'Akun Pengelola UMKM'}</h2>
-                                <div className="relative"><Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" /><input type="text" placeholder="Cari username/nama..." className="rounded-xl border border-slate-200 bg-slate-50 py-2 pl-9 pr-4 text-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20" /></div>
+                                <div className="relative w-full sm:w-72"><Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" /><input type="text" placeholder="Cari username/nama..." className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 pl-9 pr-4 text-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20" /></div>
                             </div>
 
                             <div className="overflow-x-auto">
