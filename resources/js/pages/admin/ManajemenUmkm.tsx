@@ -26,7 +26,6 @@ const sidebarSections = [
         items: [
            { label: 'Manajemen UMKM', icon: Store, hasSubmenu: false, href: '/admin/manajemen-umkm', active: true },
             { label: 'Manajemen Akun', icon: Users, hasSubmenu: false, href: '/admin/manajemen-akun', active: false },
-            { label: 'Kategori Produk', icon: Tag, hasSubmenu: false, href: '/admin/kategori-produk', active: false },
             { label: 'Produk', icon: Package, hasSubmenu: false, href: '/admin/produk', active: false },
         ],
     },

@@ -176,13 +176,12 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
 
                     <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
 
-<<<<<<< HEAD
+
                         {/* 🛠️ AREA FILTER: PUTIH TRANSPARAN / GLASSMORPHISM */}
-                        <div className="relative z-40 flex flex-wrap items-center justify-between gap-4 mb-8 bg-white/80 backdrop-blur-md p-5 rounded-[2rem] border border-emerald-100/80 shadow-lg">
-=======
+                    
                         {/* AREA FILTER: PUTIH TRANSPARAN / GLASSMORPHISM */}
                         <div className="flex flex-wrap items-center justify-between gap-4 mb-8 bg-white/80 backdrop-blur-md p-5 rounded-[2rem] border border-emerald-100/80 shadow-lg">
->>>>>>> 472a3a1 (update tulisan)
+
                             <div className="flex items-center gap-3 pl-2">
                                 <div className="flex size-9 items-center justify-center rounded-xl bg-emerald-50/80 text-emerald-600 border border-emerald-200/60">
                                     <Store className="size-5" />

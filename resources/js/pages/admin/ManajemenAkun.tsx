@@ -12,8 +12,7 @@ const sidebarSections = [
         title: 'MANAJEMEN',
         items: [
            { label: 'Manajemen UMKM', icon: Store, hasSubmenu: false, href: '/admin/manajemen-umkm', active: false },
-            { label: 'Manajemen Akun', icon: Users, hasSubmenu: false, href: '/admin/manajemen-akun', active: true }, // 🛠️ Menandakan tab ini sedang aktif
-            { label: 'Kategori Produk', icon: Tag, hasSubmenu: false, href: '/admin/kategori-produk', active: false },
+            { label: 'Manajemen Akun', icon: Users, hasSubmenu: false, href: '/admin/manajemen-akun', active: true }, 
             { label: 'Produk', icon: Package, hasSubmenu: false, href: '/admin/produk', active: false },
         ],
     },
@@ -207,7 +206,7 @@ export default function ManajemenAkun({ users = [] }: { users?: any[] }) {
                                                 <tr key={u.id} className="transition hover:bg-slate-50/50">
                                                     <td className="px-6 py-4 font-medium text-slate-900">@{u.username}</td>
                                                     <td className="px-6 py-4 text-slate-600 uppercase text-xs font-bold">{u.role || 'Operator'}</td>
-                                                    
+
                                                     {/* 🛠️ PERBAIKAN: PILL BADGE STATUS DINAMIS (KUNING UNTUK PENDING, HIJAU UNTUK AKTIF) */}
                                                     <td className="px-6 py-4">
                                                         {u.status === 'pending' ? (
