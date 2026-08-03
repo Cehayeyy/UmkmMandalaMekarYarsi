@@ -91,23 +91,16 @@ export default function Welcome() {
                             ))}
                         </nav>
 
-                        {/* KANAN HEADER: TOMBOL LOGIN */}
+                        {/* KANAN HEADER: TOMBOL LOGIN & DASHBOARD DINAMIS */}
                         <div className="flex items-center gap-3">
-                            {auth.user ? (
-                                <Link
-                                    href={route('dashboard')}
-                                    className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-700"
-                                >
-                                    Dashboard <ArrowRight className="size-4" />
-                                </Link>
-                            ) : (
-                                <Link
-                                    href={route('login')}
-                                    className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-700"
-                                >
-                                    Login <ArrowRight className="size-4" />
-                                </Link>
-                            )}
+                            {/* TOMBOL LOGIN MURNI - MEMAKAI TAG <a> AGAR FULL REFRESH */}
+                            <a
+                                href="/login"
+                                className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-700"
+                            >
+                                <span>Login</span>
+                                <ArrowRight className="size-4" />
+                            </a>
 
                             <button
                                 type="button"

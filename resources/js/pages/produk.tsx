@@ -105,15 +105,11 @@ export default function ProdukPage() {
                             )}
                         </button>
 
-                        {auth.user ? (
-                            <Link href={route('dashboard')} className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg transition hover:bg-emerald-700">
-                                Dashboard <ArrowRight className="size-4" />
-                            </Link>
-                        ) : (
-                            <Link href={route('login')} className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg transition hover:bg-emerald-700">
-                                Login <ArrowRight className="size-4" />
-                            </Link>
-                        )}
+                    {/* TOMBOL LOGIN MURNI - MEMAKAI TAG <a> AGAR FULL REFRESH */}
+                        <a href="/login" className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-700">
+                            <span>Login</span>
+                            <ArrowRight className="size-4" />
+                        </a>
                     </div>
                 </div>
             </header>

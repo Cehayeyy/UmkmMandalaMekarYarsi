@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { type SharedData } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
 import {

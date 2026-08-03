@@ -99,11 +99,13 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
                                 <Link key={item.label} href={item.href} className={`text-sm transition ${item.href === '/umkm' ? 'font-semibold text-emerald-600' : 'font-medium text-slate-600 hover:text-emerald-700'}`}>{item.label}</Link>
                             ))}
                         </nav>
-                        {auth.user ? (
-                            <Link href={route('dashboard')} className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:bg-emerald-700">Dashboard <ArrowRight className="size-4" /></Link>
-                        ) : (
-                            <Link href={route('login')} className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:bg-emerald-700">Login <ArrowRight className="size-4" /></Link>
-                        )}
+                       <div className="flex items-center gap-3">
+                            {/* TOMBOL LOGIN MURNI - MEMAKAI TAG <a> AGAR FULL REFRESH */}
+                            <a href="/login" className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg transition hover:bg-emerald-700">
+                                <span>Login</span> 
+                                <ArrowRight className="size-4" />
+                            </a>
+                        </div>
                     </div>
                 </header>
 
@@ -280,7 +282,8 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
                             <div className="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-emerald-800"><Store className="size-8 text-emerald-400" /></div>
                             <div><h3 className="text-xl font-bold">Punya produk unggulan di desa?</h3><p className="text-sm text-emerald-100/80 mt-1 max-w-md">Daftarkan produk dan usaha UMKM Anda sekarang pada portal resmi desa untuk memperluas jangkauan pasar hingga ke daerah.</p></div>
                         </div>
-                        <Link href="/register" className="shrink-0 rounded-full bg-white px-6 py-3 text-sm font-bold text-emerald-900 shadow-lg transition hover:bg-emerald-50">Daftarkan UMKM Anda</Link>
+                        {/* TOMBOL REGISTER MURNI - MEMAKAI TAG <a> AGAR FULL REFRESH */}
+                        <a href="/register" className="shrink-0 rounded-full bg-white px-6 py-3 text-sm font-bold text-emerald-900 shadow-lg transition hover:bg-emerald-50">Daftarkan UMKM Anda</a>
                     </div>
                 </section>
 
