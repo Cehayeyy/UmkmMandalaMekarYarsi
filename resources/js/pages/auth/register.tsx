@@ -1,6 +1,6 @@
 import { Head, Link, useForm } from '@inertiajs/react';
-import { LoaderCircle, ArrowLeft } from 'lucide-react';
-import { FormEventHandler } from 'react';
+import { LoaderCircle, ArrowLeft, Eye, EyeOff } from 'lucide-react';
+import { FormEventHandler, useState } from 'react';
 
 import InputError from '@/components/input-error';
 
@@ -21,6 +21,10 @@ export default function Register() {
         password: '',
         password_confirmation: '',
     });
+
+    // State toggle visibilitas kata sandi
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
@@ -121,43 +125,65 @@ export default function Register() {
                         <InputError message={errors.email} />
                     </div>
 
-                    {/* 4. Password */}
+                    {/* 4. Password (Ikon mata bawaan browser disembunyikan via CSS) */}
                     <div className="grid gap-1.5">
                         <label htmlFor="password" className="text-slate-700 font-semibold text-xs uppercase tracking-wider">
                             Password
                         </label>
-                        <input
-                            id="password"
-                            type="password"
-                            required
-                            tabIndex={3}
-                            autoComplete="new-password"
-                            value={data.password}
-                            onChange={(e) => setData('password', e.target.value)}
-                            disabled={processing}
-                            placeholder="Password"
-                            className="w-full border border-slate-200 bg-slate-50/50 text-slate-800 placeholder:text-slate-400 focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-3 text-sm transition"
-                        />
+                        <div className="relative">
+                            <input
+                                id="password"
+                                type={showPassword ? 'text' : 'password'}
+                                required
+                                tabIndex={3}
+                                autoComplete="new-password"
+                                value={data.password}
+                                onChange={(e) => setData('password', e.target.value)}
+                                disabled={processing}
+                                placeholder="Password"
+                                className="w-full border border-slate-200 bg-slate-50/50 text-slate-800 placeholder:text-slate-400 focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 rounded-xl pl-4 pr-11 py-3 text-sm transition [&::-ms-reveal]:hidden [&::-ms-clear]:hidden"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-emerald-600 focus:outline-none p-1 transition-colors cursor-pointer"
+                                tabIndex={-1}
+                                aria-label="Toggle password visibility"
+                            >
+                                {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                            </button>
+                        </div>
                         <InputError message={errors.password} />
                     </div>
 
-                    {/* 5. Confirm Password */}
+                    {/* 5. Confirm Password (Ikon mata bawaan browser disembunyikan via CSS) */}
                     <div className="grid gap-1.5">
                         <label htmlFor="password_confirmation" className="text-slate-700 font-semibold text-xs uppercase tracking-wider">
                             Confirm password
                         </label>
-                        <input
-                            id="password_confirmation"
-                            type="password"
-                            required
-                            tabIndex={4}
-                            autoComplete="new-password"
-                            value={data.password_confirmation}
-                            onChange={(e) => setData('password_confirmation', e.target.value)}
-                            disabled={processing}
-                            placeholder="Confirm password"
-                            className="w-full border border-slate-200 bg-slate-50/50 text-slate-800 placeholder:text-slate-400 focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-3 text-sm transition"
-                        />
+                        <div className="relative">
+                            <input
+                                id="password_confirmation"
+                                type={showConfirmPassword ? 'text' : 'password'}
+                                required
+                                tabIndex={4}
+                                autoComplete="new-password"
+                                value={data.password_confirmation}
+                                onChange={(e) => setData('password_confirmation', e.target.value)}
+                                disabled={processing}
+                                placeholder="Confirm password"
+                                className="w-full border border-slate-200 bg-slate-50/50 text-slate-800 placeholder:text-slate-400 focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 rounded-xl pl-4 pr-11 py-3 text-sm transition [&::-ms-reveal]:hidden [&::-ms-clear]:hidden"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-emerald-600 focus:outline-none p-1 transition-colors cursor-pointer"
+                                tabIndex={-1}
+                                aria-label="Toggle confirm password visibility"
+                            >
+                                {showConfirmPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                            </button>
+                        </div>
                         <InputError message={errors.password_confirmation} />
                     </div>
 

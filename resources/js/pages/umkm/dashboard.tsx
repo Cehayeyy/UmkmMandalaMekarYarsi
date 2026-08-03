@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { type SharedData } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
 import {
@@ -24,6 +25,11 @@ export default function UmkmDashboard({ produkList = [] }: Readonly<{ produkList
     const { auth } = usePage<SharedData>().props;
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+    // Ambil foto toko dengan pengecekan properti aman
+    const fotoToko = auth?.user && typeof auth.user === 'object' && 'foto_toko' in auth.user
+        ? (auth.user as { foto_toko?: string | null }).foto_toko
+        : null;
+
     return (
         <>
             <Head title="Panel Toko - UMKM Mandalamekar" />
@@ -40,17 +46,17 @@ export default function UmkmDashboard({ produkList = [] }: Readonly<{ produkList
                 {/* SIDEBAR PANEL TOKO */}
                 <aside className={`fixed inset-y-0 left-0 z-40 flex w-72 flex-col bg-emerald-950 text-emerald-100 transition-transform duration-300 ease-in-out lg:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                     <div className="flex items-center gap-3 px-6 py-6 border-b border-white/10">
-                        {/* 🛠️ PERBAIKAN: Menampilkan Foto Toko di Sidebar */}
+                        {/* Menampilkan Foto Toko di Sidebar */}
                         <div className="flex size-11 items-center justify-center overflow-hidden rounded-2xl bg-emerald-600 text-white shadow-md shrink-0">
-                            {(auth.user as any)?.foto_toko ? (
-                                <img src={`/${(auth.user as any).foto_toko}`} alt="Logo Toko" className="h-full w-full object-cover" />
+                            {fotoToko ? (
+                                <img src={`/${fotoToko}`} alt="Logo Toko" className="h-full w-full object-cover" />
                             ) : (
                                 <Store className="size-6" />
                             )}
                         </div>
                         <div className="min-w-0 flex-1">
                             <p className="text-xs font-semibold text-emerald-300 uppercase tracking-wider">Panel Toko</p>
-                            <p className="text-base font-bold leading-tight text-white truncate">{auth.user?.name ?? 'Pemilik Toko'}</p>
+                            <p className="text-base font-bold leading-tight text-white truncate">{auth?.user?.name ?? 'Pemilik Toko'}</p>
                         </div>
                     </div>
 
@@ -124,7 +130,7 @@ export default function UmkmDashboard({ produkList = [] }: Readonly<{ produkList
                         <div className="animate-fadeIn">
                             {/* Banner Papan Ucapan Selamat Datang */}
                             <div className="rounded-[1.75rem] bg-emerald-900 p-8 text-white shadow-xl shadow-emerald-900/20 mb-8">
-                                <h1 className="text-3xl font-extrabold">Selamat Datang, {auth.user?.name}! 👋</h1>
+                                <h1 className="text-3xl font-extrabold">Selamat Datang, {auth?.user?.name ?? 'Pemilik Toko'}! 👋</h1>
                                 <p className="mt-2 text-emerald-100/80 max-w-xl">Kelola produk dan informasi toko Anda dengan mudah di sini.</p>
                             </div>
 

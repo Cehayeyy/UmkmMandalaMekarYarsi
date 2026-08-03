@@ -16,6 +16,7 @@ interface UmkmUser { id: number; name: string; username: string; foto_toko?: str
 
 export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) {
     const { auth } = usePage<SharedData>().props;
+    const isAuthenticated = Boolean(auth?.user && typeof auth.user === 'object' && 'id' in auth.user && auth.user.id);
     const [isCategoryOpen, setIsCategoryOpen] = useState(false);
 
     const [searchQuery, setSearchQuery] = useState('');
@@ -90,7 +91,7 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
                             </div>
                             <div>
                                 <p className="text-sm font-semibold text-emerald-700">UMKM</p>
-                                <p className="text-lg font-bold tracking-tight">Desa Mandalamekar</p>
+                                <p className="text-lg font-bold tracking-tight text-slate-900">Desa Mandalamekar</p>
                             </div>
                         </Link>
 
@@ -99,7 +100,7 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
                                 <Link key={item.label} href={item.href} className={`text-sm transition ${item.href === '/umkm' ? 'font-semibold text-emerald-600' : 'font-medium text-slate-600 hover:text-emerald-700'}`}>{item.label}</Link>
                             ))}
                         </nav>
-                        {auth.user ? (
+                        {isAuthenticated ? (
                             <Link href={route('dashboard')} className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:bg-emerald-700">Dashboard <ArrowRight className="size-4" /></Link>
                         ) : (
                             <Link href={route('login')} className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:bg-emerald-700">Login <ArrowRight className="size-4" /></Link>
@@ -108,11 +109,11 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
                 </header>
 
                 <main>
-                    {/* HERO BANNER UTAMA HD & CERAH */}
+                    {/* HERO BANNER UTAMA */}
                     <section id="beranda" className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 lg:px-8 lg:pt-10">
                         <div className="relative overflow-hidden rounded-[2rem] border border-white/60 bg-slate-900 text-white shadow-[0_30px_90px_rgba(15,23,42,0.22)]">
 
-                            {/* GAMBAR BANNER KUALITAS HD */}
+                            {/* GAMBAR BANNER */}
                             <img
                                 src="/images/Banner UMKM.jpg"
                                 alt="Banner UMKM Desa Mandalamekar"
@@ -120,11 +121,10 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
                                 className="absolute inset-0 size-full object-cover object-center"
                             />
 
-                            {/* OVERLAY DENGAN GRADIENT DARI KANAN KE KIRI */}
                             <div className="absolute inset-0 bg-gradient-to-l from-slate-950/80 via-slate-950/40 to-transparent" />
                             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.15),transparent_40%)]" />
 
-                            {/* BADGE LOGO DESA & YARSI DIPINDAHKAN KE KIRI ATAS */}
+                            {/* BADGE LOGO */}
                             <div className="absolute top-6 left-6 z-10 hidden sm:inline-flex items-center gap-4 rounded-full border border-white/30 bg-slate-950/60 px-6 py-3 backdrop-blur-md shadow-2xl">
                                 <div className="flex items-center gap-3">
                                     <div className="size-12 sm:size-14 overflow-hidden rounded-full bg-white p-1.5 shrink-0 shadow-md ring-2 ring-white/20">
@@ -149,8 +149,8 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
                                 </span>
                             </div>
 
-                            {/* CONTAINER GRID TEKS BANNER (POSISI TEKS DIPINDAHKAN KE SEBELAH KANAN) */}
-                            <div className="relative grid min-h-[540px] items-end pb-8 sm:pb-12 px-6 sm:px-10 lg:grid-cols-2 lg:px-12 z-10">
+                            {/* CONTAINER GRID TEKS BANNER */}
+                            <div className="relative grid min-h-[500px] items-end pb-8 sm:pb-12 px-6 sm:px-10 lg:grid-cols-2 lg:px-12 z-10">
                                 <div className="max-w-2xl lg:col-start-2 lg:justify-self-end text-left lg:text-right">
                                     <h1 className="text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl drop-shadow-md">
                                         UMKM <span className="block text-emerald-300 drop-shadow-md">Desa Mandalamekar</span>
@@ -163,69 +163,70 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
                         </div>
                     </section>
 
-                    <section className="relative z-10 mx-auto -mt-10 max-w-7xl px-4 sm:px-6 lg:px-8">
-                        <div className="grid gap-6 rounded-[1.75rem] border border-white bg-white p-6 shadow-xl sm:grid-cols-2 lg:grid-cols-4">
+                    {/* STATS SECTION (DIBERSIHKAN DARI OVERLAP) */}
+                    <section className="relative z-10 mx-auto -mt-8 max-w-7xl px-4 sm:px-6 lg:px-8">
+                        <div className="grid gap-4 rounded-[1.75rem] border border-white bg-white p-6 shadow-xl sm:grid-cols-2 lg:grid-cols-4">
                             {stats.map((stat) => (
-                                <div key={stat.label} className="flex items-center gap-3">
-                                    <div className="flex size-11 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600"><stat.icon className="size-5" /></div>
-                                    <div><p className="text-lg font-bold text-slate-900">{stat.value}</p><p className="text-sm text-slate-500">{stat.label}</p></div>
+                                <div key={stat.label} className="flex items-center gap-3.5">
+                                    <div className="flex size-11 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 shrink-0">
+                                        <stat.icon className="size-5" />
+                                    </div>
+                                    <div className="min-w-0">
+                                        <p className="text-lg font-bold text-slate-900 truncate">{stat.value}</p>
+                                        <p className="text-xs text-slate-500 truncate">{stat.label}</p>
+                                    </div>
                                 </div>
                             ))}
                         </div>
                     </section>
 
-                    <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-
-
-                        {/* 🛠️ AREA FILTER: PUTIH TRANSPARAN / GLASSMORPHISM */}
-                    
-                        {/* AREA FILTER: PUTIH TRANSPARAN / GLASSMORPHISM */}
-                        <div className="relative z-40 flex flex-wrap items-center justify-between gap-4 mb-8 bg-white/80 backdrop-blur-md p-5 rounded-[2rem] border border-emerald-100/80 shadow-lg">
-                                <div className="flex items-center gap-3 pl-2">
-                                <div className="flex size-9 items-center justify-center rounded-xl bg-emerald-50/80 text-emerald-600 border border-emerald-200/60">
+                    {/* FILTER & SEARCH BANNER */}
+                    <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+                        <div className="relative z-30 flex flex-wrap items-center justify-between gap-4 mb-8 bg-white/90 backdrop-blur-md p-5 rounded-[2rem] border border-emerald-100 shadow-md">
+                            <div className="flex items-center gap-3 pl-2">
+                                <div className="flex size-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-200/60">
                                     <Store className="size-5" />
                                 </div>
-                                <h2 className="text-2xl font-extrabold text-slate-900">
+                                <h2 className="text-xl font-extrabold text-slate-900">
                                     Semua <span className="text-emerald-600">UMKM</span>
                                 </h2>
                             </div>
 
-                            <div className="flex items-center gap-3">
+                            <div className="flex flex-wrap items-center gap-3">
                                 {/* SEARCH INPUT */}
                                 <div className="relative group">
-                                    <Search className="absolute left-4 top-3 size-4 text-emerald-600/70 group-focus-within:text-emerald-700 transition-colors z-10 pointer-events-none" />
+                                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-emerald-600/70 group-focus-within:text-emerald-700 transition-colors z-10 pointer-events-none" />
                                     <input
                                         type="text"
                                         value={searchQuery}
                                         onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
                                         placeholder="Cari nama UMKM..."
-                                        className="rounded-full border border-emerald-200/70 bg-emerald-50/40 py-2.5 pl-10 pr-4 text-sm text-slate-800 placeholder:text-slate-400 focus:bg-emerald-100/60 focus:text-emerald-950 focus:placeholder:text-emerald-700/60 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 shadow-xs transition-all duration-200"
+                                        className="rounded-full border border-emerald-200/70 bg-emerald-50/40 py-2 pl-10 pr-4 text-sm text-slate-800 placeholder:text-slate-400 focus:bg-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition"
                                     />
                                 </div>
 
-                                {/* DROPDOWN BUTTON */}
+                                {/* DROPDOWN KATEGORI */}
                                 <div className="relative">
                                     <button
                                         onClick={() => setIsCategoryOpen(!isCategoryOpen)}
-                                        className={`flex items-center gap-2 rounded-full border px-5 py-2.5 text-sm font-semibold shadow-xs transition-all duration-200 ${
+                                        className={`flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition ${
                                             isCategoryOpen
-                                                ? 'bg-emerald-600/15 text-emerald-800 border-emerald-500/40 shadow-sm'
-                                                : 'bg-emerald-50/40 text-slate-700 border-emerald-200/70 hover:bg-emerald-100/50 hover:text-emerald-800'
+                                                ? 'bg-emerald-100 text-emerald-800 border-emerald-400'
+                                                : 'bg-emerald-50/40 text-slate-700 border-emerald-200/70 hover:bg-emerald-100/50'
                                         }`}
                                     >
                                         <Store className="size-4 text-emerald-600" />
                                         <span>{selectedCategory}</span>
-                                        <ChevronDown className={`size-4 text-emerald-600 transition-transform duration-200 ${isCategoryOpen ? 'rotate-180' : ''}`} />
+                                        <ChevronDown className={`size-4 text-emerald-600 transition-transform ${isCategoryOpen ? 'rotate-180' : ''}`} />
                                     </button>
 
                                     {isCategoryOpen && (
-                                    <div className="absolute right-0 mt-2 w-56 rounded-2xl border border-emerald-100 bg-white/95 backdrop-blur-md p-2 shadow-2xl z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-                                        {/* 🛠️ MENAMPILKAN KATEGORI DINAMIS */}
-                                        {dynamicCategoryFilters.map((category) => (
+                                        <div className="absolute right-0 mt-2 w-56 rounded-2xl border border-emerald-100 bg-white p-2 shadow-2xl z-50">
+                                            {dynamicCategoryFilters.map((category) => (
                                                 <button
                                                     key={category}
                                                     onClick={() => { setSelectedCategory(category); setIsCategoryOpen(false); setCurrentPage(1); }}
-                                                    className={`w-full text-left px-4 py-2.5 text-sm rounded-xl transition ${selectedCategory === category ? 'bg-emerald-600 text-white font-bold shadow-md shadow-emerald-600/20' : 'text-slate-700 hover:bg-emerald-50/80 hover:text-emerald-800'}`}
+                                                    className={`w-full text-left px-4 py-2 text-sm rounded-xl transition ${selectedCategory === category ? 'bg-emerald-600 text-white font-bold' : 'text-slate-700 hover:bg-emerald-50'}`}
                                                 >
                                                     {category}
                                                 </button>
@@ -236,17 +237,27 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
                             </div>
                         </div>
 
+                        {/* LIST KARTU UMKM */}
                         {currentUmkmList.length > 0 ? (
                             <>
                                 <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                                     {currentUmkmList.map((umkm) => (
                                         <article key={umkm.id} className="group flex flex-col bg-white rounded-3xl border border-slate-200/80 p-4 shadow-sm transition hover:shadow-md">
                                             {umkm.foto_toko ? (
-                                                <div className="aspect-[4/3] w-full rounded-2xl overflow-hidden relative mb-4"><img src={`/${umkm.foto_toko}`} alt={umkm.name} className="h-full w-full object-cover group-hover:scale-105 transition" /></div>
+                                                <div className="aspect-[4/3] w-full rounded-2xl overflow-hidden relative mb-4">
+                                                    <img src={`/${umkm.foto_toko}`} alt={umkm.name} className="h-full w-full object-cover group-hover:scale-105 transition" />
+                                                </div>
                                             ) : (
-                                                <div className={`aspect-[4/3] w-full rounded-2xl bg-gradient-to-br ${getCardGradient(umkm.id)} flex items-center justify-center text-white/50 relative mb-4 shadow-inner`}><div className="flex size-14 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-md"><Store className="size-7 text-white" /></div></div>
+                                                <div className={`aspect-[4/3] w-full rounded-2xl bg-gradient-to-br ${getCardGradient(umkm.id)} flex items-center justify-center text-white/50 relative mb-4 shadow-inner`}>
+                                                    <div className="flex size-14 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-md">
+                                                        <Store className="size-7 text-white" />
+                                                    </div>
+                                                </div>
                                             )}
-                                            <div className="mb-2 flex items-center justify-between"><span className="inline-block bg-emerald-50 text-emerald-700 text-[11px] font-bold px-3 py-1 rounded-full">Mitra Aktif</span><span className="text-xs text-slate-400 font-medium">{umkm.products?.length || 0} Produk</span></div>
+                                            <div className="mb-2 flex items-center justify-between">
+                                                <span className="inline-block bg-emerald-50 text-emerald-700 text-[11px] font-bold px-3 py-1 rounded-full">Mitra Aktif</span>
+                                                <span className="text-xs text-slate-400 font-medium">{umkm.products?.length || 0} Produk</span>
+                                            </div>
                                             <h3 className="text-lg font-extrabold text-slate-900 line-clamp-1">{umkm.name}</h3>
                                             <p className="text-sm text-slate-500 mt-1 mb-4 line-clamp-2 min-h-[40px]">{umkm.deskripsi_toko || "Produk lokal UMKM Desa."}</p>
                                             <a href={`https://maps.google.com/?q=${encodeURIComponent((umkm.alamat_toko || 'Desa Mandalamekar') + ', Mandalamekar, Bandung')}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-xs font-semibold text-emerald-700 hover:text-emerald-500 mb-5">
@@ -269,7 +280,10 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
                                 )}
                             </>
                         ) : (
-                            <div className="py-16 text-center border-2 border-dashed rounded-[1.75rem] border-slate-200 bg-white/50 text-slate-500"><Store className="mx-auto size-12 mb-4 text-slate-300" /><p className="font-medium text-slate-700">Tidak ada UMKM yang cocok</p></div>
+                            <div className="py-16 text-center border-2 border-dashed rounded-[1.75rem] border-slate-200 bg-white/50 text-slate-500">
+                                <Store className="mx-auto size-12 mb-4 text-slate-300" />
+                                <p className="font-medium text-slate-700">Tidak ada UMKM yang cocok</p>
+                            </div>
                         )}
                     </section>
                 </main>
