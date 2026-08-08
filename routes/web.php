@@ -12,16 +12,12 @@ use Inertia\Inertia;
 // --- ROUTE PUBLIK STATIS ---
 // ==========================================
 
-// ==========================================
-// --- ROUTE PUBLIK STATIS ---
-// ==========================================
-
 Route::get('/', function () {
     $umkmCount = User::where('role', 'umkm')->count();
     $productCount = class_exists(Product::class) ? Product::count() : 0;
     $categoryCount = class_exists(Product::class) ? Product::distinct('kategori')->count('kategori') : 0;
 
-    $featuredProducts = class_exists(Product::class) 
+    $featuredProducts = class_exists(Product::class)
         ? Product::with('user:id,name,username')
             ->latest()
             ->take(4)
@@ -39,7 +35,6 @@ Route::get('/', function () {
             })
         : [];
 
-    // 🛠️ PERBAIKAN: Ambil 4 Kategori yang paling banyak digunakan dari database
     $topCategories = class_exists(Product::class)
         ? Product::select('kategori', \Illuminate\Support\Facades\DB::raw('count(*) as total'))
             ->groupBy('kategori')
@@ -51,7 +46,6 @@ Route::get('/', function () {
             })->toArray()
         : [];
 
-    // Jika database masih kosong, berikan kategori default sementara agar desain tidak rusak
     if (empty($topCategories)) {
         $topCategories = [
             ['label' => 'Makanan & Minuman', 'count' => 0],
@@ -68,7 +62,7 @@ Route::get('/', function () {
             'categories' => $categoryCount,
         ],
         'featuredProducts' => $featuredProducts,
-        'topCategories' => $topCategories // 🛠️ Kirim ke frontend
+        'topCategories' => $topCategories
     ]);
 })->name('home');
 
@@ -126,28 +120,66 @@ Route::get('/kontak', function () {
 // ==========================================
 Route::middleware(['auth'])->group(function () {
 
-    // 1. Dashboard Admin
-    Route::get('dashboard', function () {
-        $user = auth()->user();
+    // ---------------------------------------------------------
+    // DATA NOTIFIKASI GLOBAL UNTUK ADMIN
+    // ---------------------------------------------------------
+    $getAdminNotifications = function () {
+        if (!\Illuminate\Support\Facades\Schema::hasTable('admin_notifications')) return [];
 
-        if ($user->role === 'umkm') {
-            return redirect()->route('umkm.dashboard');
+        return \App\Models\AdminNotification::latest()->take(30)->get()->map(fn ($notification) => [
+            'id' => $notification->id,
+            'title' => $notification->title,
+            'message' => $notification->message,
+            'time' => $notification->created_at->diffForHumans(),
+            'read' => (bool) $notification->read_at,
+            'type' => $notification->type,
+        ])->values();
+    };
+
+    // Rute Global: Untuk Fitur "Tandai Dibaca" Notifikasi
+    Route::post('admin/notifikasi/read-all', function () {
+        if (\Illuminate\Support\Facades\Schema::hasTable('admin_notifications')) {
+            \App\Models\AdminNotification::whereNull('read_at')->update(['read_at' => now()]);
+        }
+        return back();
+    })->name('admin.notifikasi.readAll');
+
+    // 1. Dashboard Admin
+    Route::get('admin/dashboard', function () {
+        if (auth()->user()->role === 'umkm') return redirect()->route('umkm.dashboard');
+        return redirect()->route('dashboard');
+    })->name('admin.dashboard');
+
+    Route::get('dashboard', function (\Illuminate\Http\Request $request) use ($getAdminNotifications) {
+        $user = auth()->user();
+        if ($user->role === 'umkm') return redirect()->route('umkm.dashboard');
+
+        $selectedDate = $request->input('date', now()->toDateString());
+        try {
+            $selectedDate = \Illuminate\Support\Carbon::parse($selectedDate)->toDateString();
+        } catch (\Throwable $e) {
+            $selectedDate = now()->toDateString();
         }
 
-        // 🛠️ PERBAIKAN 1: Hitung statistik dengan benar
-        $totalUmkm = User::where('role', 'umkm')->count(); // Total semua pendaftar
+        $totalUmkm = User::where('role', 'umkm')->count();
         $totalAkunUmkm = User::where('role', 'umkm')->count();
         $totalProduk = class_exists(Product::class) ? Product::count() : 0;
-        
-        // Hanya hitung UMKM yang statusnya benar-benar 'aktif'
-        $umkmAktif = User::where('role', 'umkm')->where('status', 'aktif')->count();
+        $umkmAktif = User::where('role', 'umkm')->count();
+        $aktivitas = \Illuminate\Support\Facades\Schema::hasTable('visitor_activities')
+            ? \App\Models\VisitorActivity::whereDate('last_seen_at', $selectedDate)->latest('last_seen_at')->take(24)->get()->map(fn ($visit) => [
+                'name' => $visit->visitor_name,
+                'path' => $visit->path,
+                'visits' => $visit->visits,
+                'time' => $visit->last_seen_at->diffForHumans(),
+            ])->values()
+            : collect();
 
         $umkmTerbaru = User::where('role', 'umkm')->latest()->take(3)->get()->map(function ($u) {
             return [
                 'name' => $u->name ?? $u->username,
                 'category' => 'UMKM Desa',
                 'joined' => $u->created_at ? $u->created_at->translatedFormat('d M Y') : 'Baru saja',
-                'tone' => 'from-amber-700 via-amber-800 to-stone-900',
+                'tone' => 'from-emerald-700 via-emerald-800 to-stone-900',
             ];
         });
 
@@ -157,25 +189,10 @@ Route::middleware(['auth'])->group(function () {
                 'name' => $u->name ?? '-',
                 'owner' => $u->username,
                 'email' => $u->email ?? $u->username . '@mandalamekar.desa',
-                // 🛠️ PERBAIKAN 2: Ambil status asli dari database, ubah huruf awalnya jadi kapital (Aktif / Pending)
-                'status' => ucfirst($u->status ?? 'aktif'), 
+                'status' => 'Aktif',
                 'tone' => 'from-emerald-700 via-emerald-800 to-stone-900',
             ];
         });
-
-        $chartData = [
-            ['label' => 'Senin', 'value' => 10],
-            ['label' => 'Selasa', 'value' => 25],
-            ['label' => 'Rabu', 'value' => 45],
-            ['label' => 'Kamis', 'value' => 30],
-            ['label' => 'Jumat', 'value' => 60],
-            ['label' => 'Sabtu', 'value' => 75],
-            ['label' => 'Minggu', 'value' => 50],
-        ];
-
-        $aktivitas = [
-            ['icon' => 'Sprout', 'text' => 'Sistem pemantauan real-time aktif', 'by' => 'Sistem Mandalamekar', 'time' => 'Baru saja'],
-        ];
 
         return Inertia::render('admin/dashboard', [
             'statsData' => [
@@ -186,18 +203,24 @@ Route::middleware(['auth'])->group(function () {
             ],
             'umkmTerbaru' => $umkmTerbaru,
             'akunUmkm' => $akunUmkm,
-            'chartData' => $chartData,
+            'chartData' => [],
             'aktivitas' => $aktivitas,
+            'notifications' => \Illuminate\Support\Facades\Schema::hasTable('admin_notifications')
+                ? \App\Models\AdminNotification::whereDate('created_at', $selectedDate)->latest()->take(30)->get()->map(fn ($notification) => [
+                    'id' => $notification->id,
+                    'title' => $notification->title,
+                    'message' => $notification->message,
+                    'time' => $notification->created_at->diffForHumans(),
+                    'read' => (bool) $notification->read_at,
+                    'type' => $notification->type,
+                ])->values()
+                : [],
+            'selectedDate' => $selectedDate,
         ]);
     })->name('dashboard');
 
-    Route::get('admin/dashboard', function () {
-        if (auth()->user()->role === 'umkm') return redirect()->route('umkm.dashboard');
-        return redirect()->route('dashboard');
-    })->name('admin.dashboard');
-
     // 2. Manajemen UMKM Admin
-    Route::get('admin/manajemen-umkm', function () {
+    Route::get('admin/manajemen-umkm', function () use ($getAdminNotifications) {
         if (auth()->user()->role === 'umkm') return redirect()->route('umkm.dashboard');
 
         $umkms = User::where('role', 'umkm')->latest()->get()->map(function ($u) {
@@ -206,34 +229,43 @@ Route::middleware(['auth'])->group(function () {
                 'name' => $u->name ?? 'Belum ada nama toko',
                 'username' => $u->username,
                 'email' => $u->email ?? '-',
-                'status' => $u->status ?? 'aktif', // 🛠️ Mengirim status riil ('pending' / 'aktif')
+                'status' => $u->status ?? 'aktif',
                 'joined_at' => $u->created_at ? $u->created_at->translatedFormat('d M Y') : 'Baru saja',
             ];
         });
 
         return Inertia::render('admin/ManajemenUmkm', [
-            'umkms' => $umkms
+            'umkms' => $umkms,
+            'notifications' => $getAdminNotifications(),
         ]);
     })->name('admin.umkm');
 
-    // 🛠️ RUTE BARU: Menangani persetujuan aktivasi status UMKM dari Admin
+    Route::delete('admin/manajemen-umkm/{id}', function ($id) {
+        $user = \App\Models\User::find($id);
+        if ($user) $user->delete();
+        return back();
+    })->name('admin.umkm.destroy');
+
     Route::put('admin/manajemen-umkm/{id}/approve', function ($id) {
         if (auth()->user()->role === 'umkm') return abort(403);
-
         $user = User::findOrFail($id);
-        
         if ($user->role === 'umkm' && $user->status === 'pending') {
             $user->update(['status' => 'aktif']);
             return redirect()->back()->with('success', 'Akun UMKM berhasil disetujui.');
         }
-
         return redirect()->back()->with('error', 'Akun tidak valid atau sudah aktif.');
     })->name('admin.umkm.approve');
 
     // 3. Manajemen Akun Admin
-    Route::get('admin/manajemen-akun', function () {
+    Route::get('admin/manajemen-akun', function () use ($getAdminNotifications) {
         if (auth()->user()->role === 'umkm') return redirect()->route('umkm.dashboard');
-        return app(AkunController::class)->index();
+
+        $users = \App\Models\User::latest()->get();
+
+        return Inertia::render('admin/ManajemenAkun', [
+            'users' => $users,
+            'notifications' => $getAdminNotifications(),
+        ]);
     })->name('admin.akun');
 
     Route::post('admin/manajemen-akun/operator', [AkunController::class, 'storeOperator'])->name('admin.akun.storeOperator');
@@ -242,7 +274,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('admin/manajemen-akun/operator/{user}', [AkunController::class, 'destroyOperator'])->name('admin.akun.destroyOperator');
 
     // 4. Kategori Produk Admin
-    Route::get('admin/kategori-produk', function () {
+    Route::get('admin/kategori-produk', function () use ($getAdminNotifications) {
         if (auth()->user()->role === 'umkm') return redirect()->route('umkm.dashboard');
 
         $categories = (class_exists(\App\Models\Category::class) && \Illuminate\Support\Facades\Schema::hasTable('categories'))
@@ -255,7 +287,7 @@ Route::middleware(['auth'])->group(function () {
                     try {
                         $count = $c->products()->count();
                     } catch (\Exception $e) {
-                        $count = 0; 
+                        $count = 0;
                     }
                 }
 
@@ -274,12 +306,13 @@ Route::middleware(['auth'])->group(function () {
             ];
 
         return Inertia::render('admin/KategoriProduk', [
-            'categories' => $categories
+            'categories' => $categories,
+            'notifications' => $getAdminNotifications(),
         ]);
     })->name('admin.kategori');
 
     // 5. Produk Admin
-    Route::get('admin/produk', function () {
+    Route::get('admin/produk', function () use ($getAdminNotifications) {
         if (auth()->user()->role === 'umkm') return redirect()->route('umkm.dashboard');
 
         $products = class_exists(\App\Models\Product::class)
@@ -308,12 +341,13 @@ Route::middleware(['auth'])->group(function () {
             ];
 
         return Inertia::render('admin/Produk', [
-            'products' => $products
+            'products' => $products,
+            'notifications' => $getAdminNotifications(),
         ]);
     })->name('admin.produk');
 
     // 6. Pengaturan Website Admin Real-Time
-    Route::get('admin/pengaturan', function () {
+    Route::get('admin/pengaturan', function () use ($getAdminNotifications) {
         if (auth()->user()->role === 'umkm') return redirect()->route('umkm.dashboard');
 
         $webSettings = [
@@ -326,11 +360,11 @@ Route::middleware(['auth'])->group(function () {
         ];
 
         return Inertia::render('admin/PengaturanWebsite', [
-            'settings' => $webSettings
+            'settings' => $webSettings,
+            'notifications' => $getAdminNotifications(),
         ]);
     })->name('admin.pengaturan');
 });
-
 
 // ==========================================
 // --- ROUTE PANEL UMKM (HARUS DI ATAS RUTE DINAMIS) ---
@@ -338,9 +372,7 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth'])->group(function () {
 
     Route::get('umkm/dashboard', function () {
-        if (auth()->user()->role !== 'umkm') {
-            return redirect()->route('dashboard');
-        }
+        if (auth()->user()->role !== 'umkm') return redirect()->route('dashboard');
 
         $produkList = Product::where('user_id', auth()->id())->latest()->get();
 

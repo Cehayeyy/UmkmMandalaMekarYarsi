@@ -1,7 +1,9 @@
 import { type SharedData } from '@/types';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import {
+    AlertTriangle, // <-- Tambahan icon untuk peringatan
     Bell,
+    Check,
     CheckCircle,
     ChevronDown,
     ChevronRight,
@@ -16,6 +18,7 @@ import {
     Shield,
     Sprout,
     Store,
+    Trash2,
     Users,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -44,15 +47,71 @@ interface UmkmData {
     joined_at: string;
 }
 
-export default function ManajemenUmkm({ umkms = [] }: Readonly<{ umkms?: UmkmData[] }>) {
+interface NotificationData {
+    id: number;
+    title: string;
+    message: string;
+    time: string;
+    read: boolean;
+    type: string;
+}
+
+export default function ManajemenUmkm({ umkms = [], notifications = [] }: Readonly<{ umkms?: UmkmData[], notifications?: NotificationData[] }>) {
     const { auth } = usePage<SharedData>().props;
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
 
+    // ==========================================
+    // STATE NOTIFIKASI
+    // ==========================================
+    const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+    const [localNotifications, setLocalNotifications] = useState(notifications || []);
+    const [hasMarkedRead, setHasMarkedRead] = useState(false);
+
+    useEffect(() => {
+        if (!hasMarkedRead) {
+            setLocalNotifications(notifications || []);
+        }
+    }, [notifications, hasMarkedRead]);
+
+    const unreadCount = localNotifications.filter(n => !n.read).length;
+
+    const markAllAsRead = () => {
+        setHasMarkedRead(true);
+        setLocalNotifications(localNotifications.map(n => ({ ...n, read: true })));
+        router.post('/admin/notifikasi/read-all', {}, { preserveScroll: true, preserveState: true });
+    };
+
+    // ==========================================
+    // STATE CUSTOM MODAL HAPUS
+    // ==========================================
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [umkmToDelete, setUmkmToDelete] = useState<{ id: number, name: string } | null>(null);
+
+    // Fungsi untuk memunculkan modal
+    const confirmDelete = (id: number, name: string) => {
+        setUmkmToDelete({ id, name });
+        setIsDeleteModalOpen(true);
+    };
+
+    // Fungsi untuk mengeksekusi penghapusan ke database
+    const executeDelete = () => {
+        if (!umkmToDelete) return;
+
+        router.delete(`/admin/manajemen-umkm/${umkmToDelete.id}`, {
+            preserveScroll: true,
+            onSuccess: () => {
+                setIsDeleteModalOpen(false); // Tutup modal
+                setUmkmToDelete(null); // Bersihkan state
+            },
+        });
+    };
+    // ==========================================
+
     useEffect(() => {
         const interval = setInterval(() => {
-            router.reload({ only: ['umkms'] });
+            router.reload({ only: ['umkms', 'notifications'] });
         }, 15000);
 
         return () => clearInterval(interval);
@@ -175,17 +234,81 @@ export default function ManajemenUmkm({ umkms = [] }: Readonly<{ umkms?: UmkmDat
                             </div>
 
                             <div className="flex items-center justify-between gap-4 sm:justify-end">
-                                <button type="button" className="relative flex size-10 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition hover:bg-slate-50">
-                                    <Bell className="size-5" />
-                                </button>
+                                <div className="relative">
+                                    <button
+                                        type="button"
+                                        onClick={() => { setIsNotificationOpen(!isNotificationOpen); setIsProfileOpen(false); }}
+                                        className={`relative flex size-10 items-center justify-center rounded-full border transition ${isNotificationOpen ? 'bg-emerald-50 border-emerald-200 text-emerald-600' : 'border-slate-200 text-slate-500 hover:bg-slate-50'}`}
+                                    >
+                                        <Bell className="size-5" />
+                                        {unreadCount > 0 && (
+                                            <span className="absolute -right-0.5 -top-0.5 flex size-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white shadow-sm border-2 border-white">
+                                                {unreadCount}
+                                            </span>
+                                        )}
+                                    </button>
+
+                                    {isNotificationOpen && (
+                                        <>
+                                            <div className="fixed inset-0 z-10" onClick={() => setIsNotificationOpen(false)} />
+                                            <div className="absolute right-0 z-20 mt-3 w-[300px] sm:w-80 lg:w-96 overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-xl shadow-slate-200/70 origin-top-right animate-fade-in">
+                                                <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50/80 px-4 py-3">
+                                                    <h3 className="font-bold text-slate-800 text-sm">Notifikasi</h3>
+                                                    {unreadCount > 0 && (
+                                                        <button onClick={markAllAsRead} className="flex items-center gap-1 text-[11px] font-semibold text-emerald-600 hover:text-emerald-700 transition">
+                                                            <Check className="size-3" /> Tandai dibaca
+                                                        </button>
+                                                    )}
+                                                </div>
+
+                                                <div className="max-h-80 overflow-y-auto">
+                                                    {localNotifications.length > 0 ? (
+                                                        <div className="divide-y divide-slate-50">
+                                                            {localNotifications.map((notif) => (
+                                                                <div key={notif.id} className={`flex items-start gap-3 p-4 transition hover:bg-slate-50 ${!notif.read ? 'bg-emerald-50/30' : ''}`}>
+                                                                    <div className={`mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full ${notif.type === 'user' ? 'bg-blue-100 text-blue-600' : notif.type === 'product' ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-600'}`}>
+                                                                        {notif.type === 'user' ? <Users className="size-4" /> : notif.type === 'product' ? <Package className="size-4" /> : <Settings className="size-4" />}
+                                                                    </div>
+                                                                    <div className="flex-1 space-y-1">
+                                                                        <p className={`text-sm leading-tight ${!notif.read ? 'font-bold text-slate-900' : 'font-semibold text-slate-600'}`}>{notif.title}</p>
+                                                                        <p className="text-xs text-slate-500 line-clamp-2">{notif.message}</p>
+                                                                        <p className="text-[10px] font-medium text-slate-400 pt-1">{notif.time}</p>
+                                                                    </div>
+                                                                    {!notif.read && <div className="size-2 shrink-0 rounded-full bg-emerald-500 mt-1.5 shadow-sm" />}
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    ) : (
+                                                        <div className="p-8 text-center">
+                                                            <Bell className="size-10 mx-auto mb-3 text-slate-200" />
+                                                            <p className="text-sm font-semibold text-slate-600">Semua Kosong</p>
+                                                            <p className="text-xs text-slate-400 mt-1">Belum ada notifikasi baru untukmu.</p>
+                                                        </div>
+                                                    )}
+                                                </div>
+
+                                                <div className="border-t border-slate-100 p-2 text-center bg-slate-50/80">
+                                                    <button className="text-xs font-semibold text-emerald-600 hover:text-emerald-700 w-full py-1.5 rounded-lg hover:bg-emerald-100/50 transition">
+                                                        Lihat Semua Notifikasi
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </>
+                                    )}
+                                </div>
+
                                 <div className="h-8 w-px bg-slate-200" />
 
                                 <div className="relative">
-                                    <button type="button" onClick={() => setIsProfileOpen((value) => !value)} className="flex items-center gap-3 cursor-pointer">
+                                    <button
+                                        type="button"
+                                        onClick={() => { setIsProfileOpen(!isProfileOpen); setIsNotificationOpen(false); }}
+                                        className="flex items-center gap-3 cursor-pointer"
+                                    >
                                         <div className="flex size-10 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
                                             <Shield className="size-5" />
                                         </div>
-                                        <div className="text-left">
+                                        <div className="text-left hidden md:block">
                                             <p className="text-sm font-semibold text-slate-900">{auth.user?.name ?? 'Admin Desa'}</p>
                                             <p className="text-xs text-slate-500 uppercase">{auth.user?.role ?? 'Super Admin'}</p>
                                         </div>
@@ -285,10 +408,11 @@ export default function ManajemenUmkm({ umkms = [] }: Readonly<{ umkms?: UmkmDat
                                                             )}
                                                             <button
                                                                 type="button"
-                                                                className="inline-flex size-8 items-center justify-center rounded-lg border border-slate-200 text-slate-400 transition hover:bg-slate-100 hover:text-emerald-600"
-                                                                title="Detail UMKM"
+                                                                onClick={() => confirmDelete(u.id, u.name)}
+                                                                className="inline-flex size-8 items-center justify-center rounded-lg border border-slate-200 text-slate-400 transition hover:bg-red-50 hover:text-red-600 hover:border-red-200"
+                                                                title="Hapus UMKM"
                                                             >
-                                                                <MoreHorizontal className="size-4" />
+                                                                <Trash2 className="size-4" />
                                                             </button>
                                                         </div>
                                                     </td>
@@ -312,6 +436,50 @@ export default function ManajemenUmkm({ umkms = [] }: Readonly<{ umkms?: UmkmDat
                     </main>
                 </div>
             </div>
+
+            {/* ========================================== */}
+            {/* POP-UP CUSTOM UNTUK KONFIRMASI HAPUS */}
+            {/* ========================================== */}
+            {isDeleteModalOpen && umkmToDelete && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm animate-fade-in">
+                    <div className="w-full max-w-md rounded-[1.5rem] bg-white p-6 shadow-2xl relative overflow-hidden">
+
+                        {/* Aksen Latar Blur Merah */}
+                        <div className="absolute -top-10 -right-10 size-32 rounded-full bg-red-50/50 blur-2xl"></div>
+
+                        <div className="relative">
+                            <div className="flex items-center gap-4 mb-4">
+                                <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-red-100 text-red-600 border border-red-200/60 shadow-sm">
+                                    <AlertTriangle className="size-6" />
+                                </div>
+                                <div>
+                                    <h3 className="text-lg font-bold text-slate-900 leading-tight">Hapus Data UMKM</h3>
+                                    <p className="text-xs font-semibold text-red-600 mt-0.5">Tindakan ini tidak dapat dibatalkan</p>
+                                </div>
+                            </div>
+
+                            <p className="text-sm text-slate-600 mb-6 leading-relaxed">
+                                Apakah Anda yakin ingin menghapus seluruh data dan profil toko <strong className="text-slate-900 font-bold">"{umkmToDelete.name}"</strong> secara permanen? Semua produk yang terkait juga mungkin akan terhapus.
+                            </p>
+
+                            <div className="flex items-center justify-end gap-3 pt-2">
+                                <button
+                                    onClick={() => setIsDeleteModalOpen(false)}
+                                    className="rounded-xl px-5 py-2.5 text-sm font-bold text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition"
+                                >
+                                    Batal
+                                </button>
+                                <button
+                                    onClick={executeDelete}
+                                    className="inline-flex items-center gap-2 rounded-xl bg-red-600 px-5 py-2.5 text-sm font-bold text-white shadow-md shadow-red-600/20 hover:bg-red-700 transition active:scale-[0.98]"
+                                >
+                                    <Trash2 className="size-4" /> Ya, Hapus Data
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     );
 }

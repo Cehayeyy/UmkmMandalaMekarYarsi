@@ -1,7 +1,7 @@
 import { type SharedData } from '@/types';
+import { PublicMobileNav } from '@/components/PublicMobileNav';
 import { Head, Link, usePage } from '@inertiajs/react';
-import { ArrowRight, Facebook, Instagram, Leaf, Menu, MessageCircle, Sprout, Store, Trees, UtensilsCrossed, X, Package, MapPin, Phone } from 'lucide-react';
-import { useState } from 'react';
+import { ArrowRight, Facebook, Instagram, Leaf, MessageCircle, Sprout, Store, Trees, UtensilsCrossed, Package, MapPin, Phone } from 'lucide-react';
 
 const navItems = [
     { label: 'Beranda', href: '/' },
@@ -31,7 +31,6 @@ interface WelcomeProps extends SharedData {
 
 export default function Welcome() {
     const { auth, statsData, featuredProducts, topCategories = [] } = usePage<WelcomeProps>().props;
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const getCardGradient = (id: number) => {
         const gradients = [
@@ -93,6 +92,7 @@ export default function Welcome() {
 
                         {/* KANAN HEADER: TOMBOL LOGIN & DASHBOARD DINAMIS */}
                         <div className="flex items-center gap-3">
+                            <PublicMobileNav activeHref="/" />
                             {/* TOMBOL LOGIN MURNI - MEMAKAI TAG <a> AGAR FULL REFRESH */}
                             <a
                                 href="/login"
@@ -101,32 +101,8 @@ export default function Welcome() {
                                 <span>Login</span>
                                 <ArrowRight className="size-4" />
                             </a>
-
-                            <button
-                                type="button"
-                                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                                className="inline-flex size-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-sm lg:hidden"
-                            >
-                                {isMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
-                            </button>
                         </div>
                     </div>
-
-                    {isMenuOpen && (
-                        <div className="border-t border-slate-200/70 bg-white px-4 py-4 lg:hidden">
-                            <nav className="mx-auto flex max-w-7xl flex-col gap-3">
-                                {navItems.map((item) => (
-                                    <Link
-                                        key={item.label}
-                                        href={item.href}
-                                        className={`rounded-2xl px-3 py-2 text-sm transition ${item.href === '/' ? 'font-semibold bg-emerald-50 text-emerald-700' : 'font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-700'}`}
-                                    >
-                                        {item.label}
-                                    </Link>
-                                ))}
-                            </nav>
-                        </div>
-                    )}
                 </header>
 
                 <main>
@@ -139,11 +115,11 @@ export default function Welcome() {
                                 src="/images/Banner Welcome.jpg"
                                 alt="Banner Desa Mandalamekar"
                                 style={{ imageRendering: '-webkit-optimize-contrast' }}
-                                className="absolute inset-0 size-full object-cover object-center"
+                            className="absolute inset-0 size-full object-cover object-[60%_center] sm:object-center"
                             />
 
                             {/* OVERLAY DENGAN GRADIENT DARI KANAN KE KIRI */}
-                            <div className="absolute inset-0 bg-gradient-to-l from-slate-950/80 via-slate-950/40 to-transparent" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/35 to-transparent sm:bg-gradient-to-l sm:from-slate-950/80 sm:via-slate-950/40" />
                             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.15),transparent_40%)]" />
 
                             {/* BADGE LOGO DESA & YARSI DIPINDAHKAN KE KIRI ATAS */}
@@ -172,7 +148,7 @@ export default function Welcome() {
                             </div>
 
                             {/* CONTAINER GRID TEKS BANNER (POSISI TEKS DI SEBELAH KANAN) */}
-                            <div className="relative grid min-h-[540px] items-end pb-8 sm:pb-12 px-6 sm:px-10 lg:grid-cols-2 lg:px-12 z-10">
+                        <div className="relative grid min-h-[460px] items-end pb-8 sm:min-h-[540px] sm:pb-12 px-6 sm:px-10 lg:grid-cols-2 lg:px-12 z-10">
                                 <div className="max-w-2xl lg:col-start-2 lg:justify-self-end text-left lg:text-right">
                                     <h1 className="text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl drop-shadow-md">
                                         UMKM <span className="block text-emerald-300 drop-shadow-md">Desa Mandalamekar</span>

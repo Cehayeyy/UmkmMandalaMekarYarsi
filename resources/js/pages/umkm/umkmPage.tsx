@@ -1,4 +1,5 @@
 import { type SharedData } from '@/types';
+import { PublicMobileNav } from '@/components/PublicMobileNav';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight, LayoutGrid, MapPin, Search, ShoppingBag, Sprout, Store, Users, Facebook, Instagram, Phone } from 'lucide-react';
 import { useState, useMemo } from 'react';
@@ -101,6 +102,7 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
                             ))}
                         </nav>
                         <div className="flex items-center gap-3">
+                            <PublicMobileNav activeHref="/umkm" />
                             {/* TOMBOL LOGIN MURNI - MEMAKAI TAG <a> AGAR FULL REFRESH */}
                             <a href="/login" className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg transition hover:bg-emerald-700">
                                 <span>Login</span> 
@@ -120,10 +122,10 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
                                 src="/images/Banner UMKM.jpg"
                                 alt="Banner UMKM Desa Mandalamekar"
                                 style={{ imageRendering: '-webkit-optimize-contrast' }}
-                                className="absolute inset-0 size-full object-cover object-center"
+                                className="absolute inset-0 size-full object-cover object-[60%_center] sm:object-center"
                             />
 
-                            <div className="absolute inset-0 bg-gradient-to-l from-slate-950/80 via-slate-950/40 to-transparent" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/35 to-transparent sm:bg-gradient-to-l sm:from-slate-950/80 sm:via-slate-950/40" />
                             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.15),transparent_40%)]" />
 
                             {/* BADGE LOGO */}
@@ -152,7 +154,7 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
                             </div>
 
                             {/* CONTAINER GRID TEKS BANNER */}
-                            <div className="relative grid min-h-[500px] items-end pb-8 sm:pb-12 px-6 sm:px-10 lg:grid-cols-2 lg:px-12 z-10">
+                            <div className="relative grid min-h-[460px] items-end pb-8 sm:min-h-[500px] sm:pb-12 px-6 sm:px-10 lg:grid-cols-2 lg:px-12 z-10">
                                 <div className="max-w-2xl lg:col-start-2 lg:justify-self-end text-left lg:text-right">
                                     <h1 className="text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl drop-shadow-md">
                                         UMKM <span className="block text-emerald-300 drop-shadow-md">Desa Mandalamekar</span>

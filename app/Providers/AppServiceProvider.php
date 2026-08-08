@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Product;
+use App\Models\User;
+use App\Observers\AdminChangeObserver;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\ServiceProvider;
 
@@ -20,6 +23,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Product::observe(AdminChangeObserver::class);
+        User::observe(AdminChangeObserver::class);
+
         if ($this->app->environment('production')) {
             $hotFile = public_path('hot');
 

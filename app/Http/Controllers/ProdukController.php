@@ -9,9 +9,13 @@ use Inertia\Inertia;
 class ProdukController extends Controller
 {
     // 1. Menampilkan Form Tambah Produk (Murni hanya render Form)
-    public function index()
+    public function index(Request $request)
     {
-        return Inertia::render('umkm/ProdukSaya');
+        return Inertia::render('umkm/ProdukSaya', [
+            // Kategori buatan sebelumnya tetap tersedia di dropdown.
+            'produkList' => Product::where('user_id', $request->user()->id)
+                ->get(['kategori']),
+        ]);
     }
 
     // 2. Menampilkan Halaman Daftar Produk Saya (Mengambil data dari DB)

@@ -1,4 +1,5 @@
 import { type SharedData } from '@/types';
+import { CategoryDropdown } from '@/components/CategoryDropdown';
 import { Head, Link, useForm, usePage, router } from '@inertiajs/react';
 import {
     LayoutDashboard,
@@ -26,6 +27,14 @@ interface Product {
     foto: string | null;
 }
 
+const defaultCategories = [
+    'Makanan & Minuman',
+    'Fashion & Aksesoris',
+    'Kerajinan Tangan',
+    'Pertanian & Perkebunan',
+    'Aneka Ragam Lainnya',
+];
+
 export default function DaftarProdukSaya({ produkList = [] }: Readonly<{ produkList?: Product[] }>) {
     const { auth } = usePage<SharedData>().props;
     const [searchQuery, setSearchQuery] = useState('');
@@ -39,8 +48,11 @@ export default function DaftarProdukSaya({ produkList = [] }: Readonly<{ produkL
     const [deletingProduct, setDeletingProduct] = useState<Product | null>(null);
 
     // 🛠️ LOGIKA KATEGORI DINAMIS: Mengekstrak kategori dari produk (Anti-Duplikat Ketat)
-    const existingCategories = useMemo(() => {
+    const categoryOptions = useMemo(() => {
         const catMap = new Map<string, string>();
+
+        defaultCategories.forEach((category) => catMap.set(category.toLowerCase(), category));
+
         if (produkList && produkList.length > 0) {
             produkList.forEach(p => {
                 if (p.kategori) {
@@ -339,7 +351,17 @@ export default function DaftarProdukSaya({ produkList = [] }: Readonly<{ produkL
                                 <div>
                                     <label htmlFor="edit-kategori" className="block text-xs font-bold uppercase text-slate-500 mb-1">Kategori</label>
                                     {!isCustomCategory ? (
-                                        <select
+                                        <>
+                                        <CategoryDropdown
+                                            value={data.kategori}
+                                            options={categoryOptions}
+                                            onChange={(category) => setData('kategori', category)}
+                                            onAddCategory={() => {
+                                                setIsCustomCategory(true);
+                                                setData('kategori', '');
+                                            }}
+                                        />
+                                        {/* <select
                                             id="edit-kategori"
                                             className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm text-slate-900 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
                                             value={data.kategori}
@@ -354,11 +376,12 @@ export default function DaftarProdukSaya({ produkList = [] }: Readonly<{ produkL
                                             required
                                         >
                                             <option value="" disabled hidden>Pilih Kategori</option>
-                                            {existingCategories.map((cat) => (
+                                            {categoryOptions.map((cat) => (
                                                 <option key={cat} value={cat}>{cat}</option>
                                             ))}
                                             <option value="custom" className="font-bold text-emerald-600">➕ Kategori Lain...</option>
-                                        </select>
+                                        </select> */}
+                                        </>
                                     ) : (
                                         <div className="flex items-center gap-1.5">
                                             <input

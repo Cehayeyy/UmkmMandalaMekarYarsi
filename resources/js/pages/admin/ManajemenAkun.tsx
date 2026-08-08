@@ -1,11 +1,11 @@
 import { type SharedData } from '@/types';
 import { Head, Link, usePage, useForm, router } from '@inertiajs/react';
 import {
-    Bell, ChevronDown, ChevronRight, LayoutDashboard, LogOut,
+    Bell, Check, ChevronDown, ChevronRight, LayoutDashboard, LogOut,
     MessageCircle, Menu, Package, Search, Settings, Shield,
-    Sprout, Store, Tag, Users, Plus, Edit, Trash2, X
+    Sprout, Store, Tag, Users, Plus, Edit, Trash2, X, AlertTriangle
 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const sidebarSections = [
     {
@@ -24,15 +24,56 @@ const sidebarSections = [
     },
 ];
 
-export default function ManajemenAkun({ users = [] }: { users?: any[] }) {
+// Interface Data Notifikasi
+interface NotificationData {
+    id: number;
+    title: string;
+    message: string;
+    time: string;
+    read: boolean;
+    type: string;
+}
+
+export default function ManajemenAkun({ users = [], notifications = [] }: { users?: any[], notifications?: NotificationData[] }) {
     const { auth } = usePage<SharedData>().props;
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [activeTab, setActiveTab] = useState<'admin' | 'umkm'>('admin');
 
+    // ==========================================
+    // STATE NOTIFIKASI REAL-TIME
+    // ==========================================
+    const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+    const [localNotifications, setLocalNotifications] = useState(notifications || []);
+    const [hasMarkedRead, setHasMarkedRead] = useState(false);
+
+    useEffect(() => {
+        if (!hasMarkedRead) {
+            setLocalNotifications(notifications || []);
+        }
+    }, [notifications, hasMarkedRead]);
+
+    const unreadCount = localNotifications.filter(n => !n.read).length;
+
+    const markAllAsRead = () => {
+        setHasMarkedRead(true);
+        setLocalNotifications(localNotifications.map(n => ({ ...n, read: true })));
+        router.post('/admin/notifikasi/read-all', {}, { preserveScroll: true, preserveState: true });
+    };
+
+    // Auto Polling Data (Memperbarui Akun & Notifikasi setiap 15 detik)
+    useEffect(() => {
+        const interval = setInterval(() => {
+            router.reload({ only: ['users', 'notifications'] });
+        }, 15000);
+        return () => clearInterval(interval);
+    }, []);
+    // ==========================================
+
     // STATE MODAL
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState<any>(null);
 
     // FORM TAMBAH AKUN (Hanya Username & Password)
@@ -87,9 +128,18 @@ export default function ManajemenAkun({ users = [] }: { users?: any[] }) {
 
     // FUNGSI DELETE
     const handleDelete = (user: any) => {
-        if (confirm(`Yakin ingin menghapus akun @${user.username}?`)) {
-            router.delete(route('admin.akun.destroyOperator', user.id));
-        }
+        setSelectedUser(user);
+        setIsDeleteModalOpen(true);
+    };
+
+    const confirmDelete = () => {
+        if (!selectedUser) return;
+        router.delete(route('admin.akun.destroyOperator', selectedUser.id), {
+            onSuccess: () => {
+                setIsDeleteModalOpen(false);
+                setSelectedUser(null);
+            },
+        });
     };
 
     // Filter data berdasarkan Tab
@@ -174,14 +224,88 @@ export default function ManajemenAkun({ users = [] }: { users?: any[] }) {
                             </div>
 
                             <div className="flex items-center justify-between gap-4 sm:justify-end">
-                                <button className="relative flex size-10 items-center justify-center rounded-full border border-slate-200 text-slate-500 hover:bg-slate-50"><Bell className="size-5" /></button>
-                                <div className="h-8 w-px bg-slate-200" />
+
+                                {/* --- AREA TOMBOL & POPUP NOTIFIKASI --- */}
                                 <div className="relative">
-                                    <button onClick={() => setIsProfileOpen(!isProfileOpen)} className="flex items-center gap-3">
-                                        <div className="flex size-10 items-center justify-center rounded-full bg-emerald-100 text-emerald-700"><Shield className="size-5" /></div>
-                                        <div className="text-left"><p className="text-sm font-semibold text-slate-900">{auth.user?.name ?? 'Admin'}</p><p className="text-xs text-slate-500">Super Admin</p></div>
-                                        <ChevronDown className="size-4 text-slate-400" />
+                                    <button
+                                        type="button"
+                                        onClick={() => { setIsNotificationOpen(!isNotificationOpen); setIsProfileOpen(false); }}
+                                        className={`relative flex size-10 items-center justify-center rounded-full border transition ${isNotificationOpen ? 'bg-emerald-50 border-emerald-200 text-emerald-600' : 'border-slate-200 text-slate-500 hover:bg-slate-50'}`}
+                                    >
+                                        <Bell className="size-5" />
+                                        {unreadCount > 0 && (
+                                            <span className="absolute -right-0.5 -top-0.5 flex size-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white shadow-sm border-2 border-white">
+                                                {unreadCount}
+                                            </span>
+                                        )}
                                     </button>
+
+                                    {isNotificationOpen && (
+                                        <>
+                                            <div className="fixed inset-0 z-10" onClick={() => setIsNotificationOpen(false)} />
+                                            <div className="absolute right-0 z-20 mt-3 w-[300px] sm:w-80 lg:w-96 overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-xl shadow-slate-200/70 origin-top-right animate-fade-in">
+                                                <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50/80 px-4 py-3">
+                                                    <h3 className="font-bold text-slate-800 text-sm">Notifikasi</h3>
+                                                    {unreadCount > 0 && (
+                                                        <button onClick={markAllAsRead} className="flex items-center gap-1 text-[11px] font-semibold text-emerald-600 hover:text-emerald-700 transition">
+                                                            <Check className="size-3" /> Tandai dibaca
+                                                        </button>
+                                                    )}
+                                                </div>
+
+                                                <div className="max-h-80 overflow-y-auto">
+                                                    {localNotifications.length > 0 ? (
+                                                        <div className="divide-y divide-slate-50">
+                                                            {localNotifications.map((notif) => (
+                                                                <div key={notif.id} className={`flex items-start gap-3 p-4 transition hover:bg-slate-50 ${!notif.read ? 'bg-emerald-50/30' : ''}`}>
+                                                                    <div className={`mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full ${notif.type === 'user' ? 'bg-blue-100 text-blue-600' : notif.type === 'product' ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-600'}`}>
+                                                                        {notif.type === 'user' ? <Users className="size-4" /> : notif.type === 'product' ? <Package className="size-4" /> : <Settings className="size-4" />}
+                                                                    </div>
+                                                                    <div className="flex-1 space-y-1">
+                                                                        <p className={`text-sm leading-tight ${!notif.read ? 'font-bold text-slate-900' : 'font-semibold text-slate-600'}`}>{notif.title}</p>
+                                                                        <p className="text-xs text-slate-500 line-clamp-2">{notif.message}</p>
+                                                                        <p className="text-[10px] font-medium text-slate-400 pt-1">{notif.time}</p>
+                                                                    </div>
+                                                                    {!notif.read && <div className="size-2 shrink-0 rounded-full bg-emerald-500 mt-1.5 shadow-sm" />}
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    ) : (
+                                                        <div className="p-8 text-center">
+                                                            <Bell className="size-10 mx-auto mb-3 text-slate-200" />
+                                                            <p className="text-sm font-semibold text-slate-600">Semua Kosong</p>
+                                                            <p className="text-xs text-slate-400 mt-1">Belum ada notifikasi baru untukmu.</p>
+                                                        </div>
+                                                    )}
+                                                </div>
+
+                                                <div className="border-t border-slate-100 p-2 text-center bg-slate-50/80">
+                                                    <button className="text-xs font-semibold text-emerald-600 hover:text-emerald-700 w-full py-1.5 rounded-lg hover:bg-emerald-100/50 transition">
+                                                        Lihat Semua Notifikasi
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </>
+                                    )}
+                                </div>
+                                <div className="h-8 w-px bg-slate-200" />
+
+                                <div className="relative">
+                                    <button onClick={() => { setIsProfileOpen(!isProfileOpen); setIsNotificationOpen(false); }} className="flex items-center gap-3">
+                                        <div className="flex size-10 items-center justify-center rounded-full bg-emerald-100 text-emerald-700"><Shield className="size-5" /></div>
+                                        <div className="text-left hidden sm:block"><p className="text-sm font-semibold text-slate-900">{auth.user?.name ?? 'Admin'}</p><p className="text-xs text-slate-500">Super Admin</p></div>
+                                        <ChevronDown className={`size-4 text-slate-400 transition-transform ${isProfileOpen ? 'rotate-180' : ''}`} />
+                                    </button>
+
+                                    {isProfileOpen && (
+                                        <>
+                                            <div className="fixed inset-0 z-10" onClick={() => setIsProfileOpen(false)} />
+                                            <div className="absolute right-0 z-20 mt-3 w-48 overflow-hidden rounded-2xl border border-slate-100 bg-white py-2 shadow-xl shadow-slate-200/70">
+                                                <Link href="/profile" className="block px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50">Profil Saya</Link>
+                                                <Link href={route('logout')} method="post" as="button" className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm text-red-600 hover:bg-red-50"><LogOut className="size-4" /> Keluar</Link>
+                                            </div>
+                                        </>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -226,8 +350,6 @@ export default function ManajemenAkun({ users = [] }: { users?: any[] }) {
                                                 <tr key={u.id} className="transition hover:bg-slate-50/50">
                                                     <td className="px-6 py-4 font-medium text-slate-900">@{u.username}</td>
                                                     <td className="px-6 py-4 text-slate-600 uppercase text-xs font-bold">{u.role || 'Operator'}</td>
-
-                                                    {/* 🛠️ PERBAIKAN: PILL BADGE STATUS DINAMIS (KUNING UNTUK PENDING, HIJAU UNTUK AKTIF) */}
                                                     <td className="px-6 py-4">
                                                         {u.status === 'pending' ? (
                                                             <span className="inline-flex rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700 border border-amber-200/60">
@@ -270,7 +392,6 @@ export default function ManajemenAkun({ users = [] }: { users?: any[] }) {
                             <button onClick={() => setIsAddModalOpen(false)} className="rounded-full p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700"><X className="size-5" /></button>
                         </div>
                         <form className="space-y-4" onSubmit={submitAdd}>
-                            {/* BLOK INI WAJIB DITAMBAHKAN UNTUK AKUN UMKM */}
                             {activeTab === 'umkm' && (
                                 <div>
                                     <label className="mb-1.5 block text-sm font-bold text-slate-700">Nama Toko / UMKM</label>
@@ -285,7 +406,6 @@ export default function ManajemenAkun({ users = [] }: { users?: any[] }) {
                                     {errors.name && <span className="text-xs text-red-500">{errors.name}</span>}
                                 </div>
                             )}
-                            {/* ------------------------------------------- */}
 
                             <div>
                                 <label className="mb-1.5 block text-sm font-bold text-slate-700">Username Login</label>
@@ -361,6 +481,28 @@ export default function ManajemenAkun({ users = [] }: { users?: any[] }) {
                                 <button type="submit" disabled={editForm.processing} className="flex-1 rounded-xl bg-emerald-600 py-3 text-sm font-bold text-white shadow-lg shadow-emerald-600/20 hover:bg-emerald-700 transition disabled:opacity-50">{editForm.processing ? 'Menyimpan...' : 'Update Akun'}</button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            )}
+
+            {/* --- MODAL KONFIRMASI HAPUS AKUN --- */}
+            {isDeleteModalOpen && selectedUser && (
+                <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/55 p-4 backdrop-blur-sm animate-fade-in">
+                    <div className="relative w-full max-w-md overflow-hidden rounded-[2rem] bg-white p-6 text-center shadow-2xl sm:p-8">
+                        <div className="absolute -right-10 -top-10 size-32 rounded-full bg-rose-50 blur-2xl" />
+                        <div className="relative">
+                            <div className="mx-auto mb-5 flex size-14 items-center justify-center rounded-2xl bg-rose-50 text-rose-600 ring-8 ring-rose-50/60">
+                                <AlertTriangle className="size-7" />
+                            </div>
+                            <h2 className="text-xl font-bold text-slate-900">Hapus akun ini?</h2>
+                            <p className="mt-3 text-sm leading-6 text-slate-500">
+                                Akun <span className="font-bold text-slate-800">@{selectedUser.username}</span> akan dihapus secara permanen. Tindakan ini tidak dapat dibatalkan.
+                            </p>
+                            <div className="mt-7 flex gap-3">
+                                <button type="button" onClick={() => { setIsDeleteModalOpen(false); setSelectedUser(null); }} className="flex-1 rounded-xl border border-slate-200 bg-white py-3 text-sm font-bold text-slate-600 transition hover:bg-slate-50">Batal</button>
+                                <button type="button" onClick={confirmDelete} className="flex-1 rounded-xl bg-rose-600 py-3 text-sm font-bold text-white shadow-lg shadow-rose-600/25 transition hover:bg-rose-700">Ya, Hapus</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             )}

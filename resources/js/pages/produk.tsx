@@ -1,9 +1,11 @@
 import { useState, useMemo, useEffect } from 'react';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { type SharedData } from '@/types';
+import { CategoryDropdown } from '@/components/CategoryDropdown';
+import { PublicMobileNav } from '@/components/PublicMobileNav';
 import { useCart } from '@/context/CartContext';
 import {
-    Search, Store, ChevronRight, ChevronDown, RotateCcw, MapPin, Sprout, ArrowRight, MessageCircle, Facebook, Instagram, Check, Package, Plus, ShoppingBag, Minus, Trash2, X, Phone
+    Search, Store, ChevronRight, RotateCcw, MapPin, Sprout, ArrowRight, MessageCircle, Facebook, Instagram, Check, Package, Plus, ShoppingBag, Minus, Trash2, X, Phone
 } from 'lucide-react';
 
 interface Product { id: number; nama_produk: string; harga: number; kategori: string; foto: string | null; deskripsi: string; umkm_id: number; seller: string; seller_username: string; no_whatsapp: string | null; }
@@ -84,7 +86,7 @@ export default function ProdukPage() {
                         </div>
                     </Link>
 
-                    <nav className="hidden items-center gap-8 md:flex">
+                    <nav className="hidden items-center gap-8 lg:flex">
                         <Link href="/" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Beranda</Link>
                         <Link href="/umkm" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">UMKM</Link>
                         <Link href="/produk" className="text-sm font-semibold text-emerald-600">Produk</Link>
@@ -92,7 +94,8 @@ export default function ProdukPage() {
                         <Link href="/kontak" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Kontak</Link>
                     </nav>
 
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2 sm:gap-4">
+                        <PublicMobileNav activeHref="/produk" />
                         <button
                             onClick={() => setIsCartOpen(true)}
                             className="relative flex size-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition cursor-pointer shadow-xs"
@@ -122,11 +125,11 @@ export default function ProdukPage() {
                         src="/images/Banner Produk.jpg"
                         alt="Banner Produk Desa Mandalamekar"
                         style={{ imageRendering: '-webkit-optimize-contrast' }}
-                        className="absolute inset-0 size-full object-cover object-center"
+                        className="absolute inset-0 size-full object-cover object-[60%_center] sm:object-center"
                     />
 
                     {/* OVERLAY DENGAN GRADIENT DARI KANAN KE KIRI */}
-                    <div className="absolute inset-0 bg-gradient-to-l from-slate-950/80 via-slate-950/40 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/35 to-transparent sm:bg-gradient-to-l sm:from-slate-950/80 sm:via-slate-950/40" />
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.15),transparent_40%)]" />
 
                     {/* BADGE LOGO DESA & YARSI DIPINDAHKAN KE KIRI ATAS */}
@@ -155,7 +158,7 @@ export default function ProdukPage() {
                     </div>
 
                     {/* CONTAINER GRID TEKS BANNER (POSISI TEKS DIPINDAHKAN KE SEBELAH KANAN) */}
-                    <div className="relative grid min-h-[540px] items-end pb-8 sm:pb-12 px-6 sm:px-10 lg:grid-cols-2 lg:px-12 z-10">
+                    <div className="relative grid min-h-[460px] items-end pb-8 sm:min-h-[540px] sm:pb-12 px-6 sm:px-10 lg:grid-cols-2 lg:px-12 z-10">
                         <div className="max-w-2xl lg:col-start-2 lg:justify-self-end text-left lg:text-right">
                             <div className="flex items-center gap-2 mb-4 lg:justify-end">
                                 <span className="size-2 rounded-full bg-emerald-400 relative">
@@ -184,18 +187,16 @@ export default function ProdukPage() {
                             <p className="text-sm font-bold text-slate-900">Filter Etalase Berdasarkan Toko UMKM</p>
                         </div>
 
-                        <div className="relative min-w-[260px]">
-                            <select
+                        <div className="min-w-[260px]">
+                            <CategoryDropdown
                                 value={selectedUmkm}
-                                onChange={(e) => setSelectedUmkm(e.target.value)}
-                                className="w-full appearance-none rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 pr-10 text-xs sm:text-sm font-semibold text-slate-700 transition focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 cursor-pointer"
-                            >
-                                <option value="semua">Semua UMKM ({products.length} Produk)</option>
-                                {umkmList.map((u) => (
-                                    <option key={u.id} value={u.id.toString()}>{u.name}</option>
-                                ))}
-                            </select>
-                            <ChevronDown className="pointer-events-none absolute right-3.5 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+                                options={[
+                                    { value: 'semua', label: `Semua UMKM (${products.length} Produk)` },
+                                    ...umkmList.map((u) => ({ value: u.id.toString(), label: u.name })),
+                                ]}
+                                onChange={setSelectedUmkm}
+                                placeholder="Pilih UMKM"
+                            />
                         </div>
                     </div>
 
@@ -236,17 +237,16 @@ export default function ProdukPage() {
                     </div>
                     <div className="flex w-full sm:w-auto items-center justify-end gap-3 shrink-0">
                         <span className="text-xs font-semibold text-slate-500">Urutkan:</span>
-                        <div className="relative min-w-[170px]">
-                            <select
+                        <div className="min-w-[170px]">
+                            <CategoryDropdown
                                 value={sortBy}
-                                onChange={(e) => setSortBy(e.target.value)}
-                                className="w-full appearance-none rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 pr-8 text-xs font-semibold text-slate-700 cursor-pointer focus:outline-none focus:border-emerald-500"
-                            >
-                                <option value="terbaru">Terbaru</option>
-                                <option value="termurah">Harga: Rendah ke Tinggi</option>
-                                <option value="termahal">Harga: Tinggi ke Rendah</option>
-                            </select>
-                            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 size-3.5 -translate-y-1/2 text-slate-400" />
+                                options={[
+                                    { value: 'terbaru', label: 'Terbaru' },
+                                    { value: 'termurah', label: 'Harga: Rendah ke Tinggi' },
+                                    { value: 'termahal', label: 'Harga: Tinggi ke Rendah' },
+                                ]}
+                                onChange={setSortBy}
+                            />
                         </div>
                     </div>
                 </div>

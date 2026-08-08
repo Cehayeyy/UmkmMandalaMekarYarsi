@@ -2,15 +2,15 @@ import { type SharedData } from '@/types';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import {
     Bell,
+    Check, // <-- Tambahan icon Check
     ChevronDown,
     ChevronRight,
-    Info, // <-- Tambahan icon Info
+    Info,
     LayoutDashboard,
     LayoutGrid,
     List,
     LogOut,
     Menu,
-    MoreHorizontal,
     Package,
     Plus,
     Search,
@@ -29,7 +29,6 @@ const sidebarSections = [
         items: [
             { label: 'Manajemen UMKM', icon: Store, hasSubmenu: false, href: '/admin/manajemen-umkm', active: false },
             { label: 'Manajemen Akun', icon: Users, hasSubmenu: false, href: '/admin/manajemen-akun', active: false },
-            { label: 'Kategori Produk', icon: Tag, hasSubmenu: false, href: '/admin/kategori-produk', active: false },
             { label: 'Produk', icon: Package, hasSubmenu: true, href: '/admin/produk', active: true },
         ],
     },
@@ -70,7 +69,17 @@ interface PaginatedProducts {
     per_page: number;
 }
 
-export default function Produk({ products }: { products?: PaginatedProducts | ProductData[] }) {
+// Interface Notifikasi
+interface NotificationData {
+    id: number;
+    title: string;
+    message: string;
+    time: string;
+    read: boolean;
+    type: string;
+}
+
+export default function Produk({ products, notifications = [] }: { products?: PaginatedProducts | ProductData[], notifications?: NotificationData[] }) {
     const { auth } = usePage<SharedData>().props;
 
     // STATES
@@ -81,13 +90,35 @@ export default function Produk({ products }: { products?: PaginatedProducts | Pr
     const [activeCategory, setActiveCategory] = useState<string | null>(null);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-    // STATE UNTUK CUSTOM POP-UP (MODAL)
+    // STATE UNTUK CUSTOM POP-UP (MODAL INFO)
     const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+
+    // ==========================================
+    // STATE NOTIFIKASI REAL-TIME
+    // ==========================================
+    const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+    const [localNotifications, setLocalNotifications] = useState(notifications || []);
+    const [hasMarkedRead, setHasMarkedRead] = useState(false);
+
+    useEffect(() => {
+        if (!hasMarkedRead) {
+            setLocalNotifications(notifications || []);
+        }
+    }, [notifications, hasMarkedRead]);
+
+    const unreadCount = localNotifications.filter(n => !n.read).length;
+
+    const markAllAsRead = () => {
+        setHasMarkedRead(true);
+        setLocalNotifications(localNotifications.map(n => ({ ...n, read: true })));
+        router.post('/admin/notifikasi/read-all', {}, { preserveScroll: true, preserveState: true });
+    };
 
     // FITUR REAL-TIME AUTO-POLLING (15 Detik)
     useEffect(() => {
         const interval = setInterval(() => {
-            router.reload({ only: ['products'] });
+            // Tambahkan polling untuk notifikasi juga
+            router.reload({ only: ['products', 'notifications'] });
         }, 15000);
         return () => clearInterval(interval);
     }, []);
@@ -124,7 +155,17 @@ export default function Produk({ products }: { products?: PaginatedProducts | Pr
     const getImageUrl = (imagePath?: string | null) => {
         if (!imagePath) return null;
         if (imagePath.startsWith('http')) return imagePath;
-        return `/storage/${imagePath.replace(/^\//, '')}`;
+
+        const normalizedPath = imagePath.replace(/^\//, '');
+
+        // Foto produk dari panel UMKM disimpan di public/uploads/produk,
+        // sehingga harus diakses langsung dari root aplikasi, bukan /storage.
+        if (normalizedPath.startsWith('uploads/')) return `/${normalizedPath}`;
+
+        // Tetap mendukung gambar lama yang disimpan memakai disk public Laravel.
+        return normalizedPath.startsWith('storage/')
+            ? `/${normalizedPath}`
+            : `/storage/${normalizedPath}`;
     };
 
     const getStockValue = (p: ProductData) => {
@@ -231,10 +272,70 @@ export default function Produk({ products }: { products?: PaginatedProducts | Pr
                             </div>
 
                             <div className="flex items-center gap-2 lg:gap-4">
-                                <button type="button" className="relative hidden sm:flex size-10 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition hover:bg-slate-50">
-                                    <Bell className="size-5" />
-                                    <span className="absolute -right-0.5 -top-0.5 flex size-4 items-center justify-center rounded-full bg-emerald-600 text-[10px] font-bold text-white">{displayedTotal}</span>
-                                </button>
+                                {/* TOMBOL NOTIFIKASI REAL-TIME */}
+                                <div className="relative">
+                                    <button
+                                        type="button"
+                                        onClick={() => { setIsNotificationOpen(!isNotificationOpen); setIsProfileOpen(false); }}
+                                        className={`relative flex size-10 items-center justify-center rounded-full border transition ${isNotificationOpen ? 'bg-emerald-50 border-emerald-200 text-emerald-600' : 'border-slate-200 text-slate-500 hover:bg-slate-50'}`}
+                                    >
+                                        <Bell className="size-5" />
+                                        {unreadCount > 0 && (
+                                            <span className="absolute -right-0.5 -top-0.5 flex size-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white shadow-sm border-2 border-white">
+                                                {unreadCount}
+                                            </span>
+                                        )}
+                                    </button>
+
+                                    {isNotificationOpen && (
+                                        <>
+                                            <div className="fixed inset-0 z-10" onClick={() => setIsNotificationOpen(false)} />
+                                            <div className="absolute right-0 z-20 mt-3 w-[300px] sm:w-80 lg:w-96 overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-xl shadow-slate-200/70 origin-top-right animate-fade-in">
+                                                <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50/80 px-4 py-3">
+                                                    <h3 className="font-bold text-slate-800 text-sm">Notifikasi</h3>
+                                                    {unreadCount > 0 && (
+                                                        <button onClick={markAllAsRead} className="flex items-center gap-1 text-[11px] font-semibold text-emerald-600 hover:text-emerald-700 transition">
+                                                            <Check className="size-3" /> Tandai dibaca
+                                                        </button>
+                                                    )}
+                                                </div>
+
+                                                <div className="max-h-80 overflow-y-auto">
+                                                    {localNotifications.length > 0 ? (
+                                                        <div className="divide-y divide-slate-50">
+                                                            {localNotifications.map((notif) => (
+                                                                <div key={notif.id} className={`flex items-start gap-3 p-4 transition hover:bg-slate-50 ${!notif.read ? 'bg-emerald-50/30' : ''}`}>
+                                                                    <div className={`mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full ${notif.type === 'user' ? 'bg-blue-100 text-blue-600' : notif.type === 'product' ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-600'}`}>
+                                                                        {notif.type === 'user' ? <Users className="size-4" /> : notif.type === 'product' ? <Package className="size-4" /> : <Settings className="size-4" />}
+                                                                    </div>
+                                                                    <div className="flex-1 space-y-1">
+                                                                        <p className={`text-sm leading-tight ${!notif.read ? 'font-bold text-slate-900' : 'font-semibold text-slate-600'}`}>{notif.title}</p>
+                                                                        <p className="text-xs text-slate-500 line-clamp-2">{notif.message}</p>
+                                                                        <p className="text-[10px] font-medium text-slate-400 pt-1">{notif.time}</p>
+                                                                    </div>
+                                                                    {!notif.read && <div className="size-2 shrink-0 rounded-full bg-emerald-500 mt-1.5 shadow-sm" />}
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    ) : (
+                                                        <div className="p-8 text-center">
+                                                            <Bell className="size-10 mx-auto mb-3 text-slate-200" />
+                                                            <p className="text-sm font-semibold text-slate-600">Semua Kosong</p>
+                                                            <p className="text-xs text-slate-400 mt-1">Belum ada notifikasi baru untukmu.</p>
+                                                        </div>
+                                                    )}
+                                                </div>
+
+                                                <div className="border-t border-slate-100 p-2 text-center bg-slate-50/80">
+                                                    <button className="text-xs font-semibold text-emerald-600 hover:text-emerald-700 w-full py-1.5 rounded-lg hover:bg-emerald-100/50 transition">
+                                                        Lihat Semua Notifikasi
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </>
+                                    )}
+                                </div>
+
                                 <div className="hidden sm:block h-8 w-px bg-slate-200" />
 
                                 <div className="relative">
@@ -303,7 +404,6 @@ export default function Produk({ products }: { products?: PaginatedProducts | Pr
                                         />
                                     </div>
 
-                                    {/* MENGUBAH EVENT ONCLICK AGAR MEMBUKA CUSTOM MODAL */}
                                     <button onClick={() => setIsInfoModalOpen(true)} className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-emerald-600/20 transition hover:bg-emerald-700 shrink-0">
                                         <Plus className="size-4" /> Tambah
                                     </button>
@@ -313,7 +413,7 @@ export default function Produk({ products }: { products?: PaginatedProducts | Pr
                             {/* TABEL ATAU KARTU */}
                             {viewMode === 'details' ? (
                                 <div className="overflow-x-auto w-full">
-                                    <table className="w-full text-left text-sm min-w-[800px]">
+                                    <table className="w-full text-left text-sm min-w-[700px]">
                                         <thead className="bg-white text-slate-500 border-b border-slate-100">
                                             <tr>
                                                 <th className="px-4 lg:px-6 py-4 font-semibold">Nama Produk</th>
@@ -322,7 +422,7 @@ export default function Produk({ products }: { products?: PaginatedProducts | Pr
                                                 <th className="px-4 lg:px-6 py-4 font-semibold">Harga</th>
                                                 <th className="px-4 lg:px-6 py-4 font-semibold text-center">Stok</th>
                                                 <th className="px-4 lg:px-6 py-4 font-semibold">Status</th>
-                                                <th className="px-4 lg:px-6 py-4 font-semibold text-right">Aksi</th>
+                                                {/* Kolom Aksi dihilangkan */}
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y divide-slate-100">
@@ -356,15 +456,13 @@ export default function Produk({ products }: { products?: PaginatedProducts | Pr
                                                             <td className="px-4 lg:px-6 py-3 lg:py-4">
                                                                 <span className={`inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-xs font-semibold whitespace-nowrap ${p.status === 'Aktif' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/60' : 'bg-red-50 text-red-600 border border-red-200/60'}`}><span className={`size-1.5 rounded-full ${p.status === 'Aktif' ? 'bg-emerald-500' : 'bg-red-500'}`}></span> {p.status || 'Nonaktif'}</span>
                                                             </td>
-                                                            <td className="px-4 lg:px-6 py-3 lg:py-4 text-right">
-                                                                <button className="inline-flex size-8 items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-100 hover:text-emerald-600 transition"><MoreHorizontal className="size-4" /></button>
-                                                            </td>
+                                                            {/* Kolom Aksi dihilangkan */}
                                                         </tr>
                                                     );
                                                 })
                                             ) : (
                                                 <tr>
-                                                    <td colSpan={7} className="py-12 text-center">
+                                                    <td colSpan={6} className="py-12 text-center">
                                                         <div className="flex flex-col items-center justify-center text-slate-400"><Package className="size-10 mb-3 opacity-20" /><p className="text-base font-medium text-slate-600">Produk tidak ditemukan</p></div>
                                                     </td>
                                                 </tr>
@@ -401,7 +499,7 @@ export default function Produk({ products }: { products?: PaginatedProducts | Pr
                                                                 <p className="text-[10px] text-slate-400 uppercase font-bold">Harga</p>
                                                                 <p className="text-sm font-extrabold text-emerald-700">{formatRupiah(p.price)}</p>
                                                             </div>
-                                                            <button type="button" className="inline-flex items-center justify-center rounded-xl bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-emerald-600 hover:text-white transition shadow-sm">Kelola</button>
+                                                            {/* Tombol Kelola/Aksi dihilangkan dari Grid Mode */}
                                                         </div>
                                                     </div>
                                                 );
