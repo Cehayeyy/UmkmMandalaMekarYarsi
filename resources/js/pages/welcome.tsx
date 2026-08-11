@@ -54,6 +54,7 @@ export default function Welcome() {
     return (
         <>
             <Head title="UMKM Desa Mandalamekar" />
+            <link rel="icon" href="/images/Logo DesaMandalamekar.png" />
 
             <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(16,185,129,0.16)_0,_rgba(255,255,255,0)_36%),linear-gradient(180deg,#f4faf6_0%,#f8fbf8_45%,#ffffff_100%)] text-slate-900 font-sans">
 
