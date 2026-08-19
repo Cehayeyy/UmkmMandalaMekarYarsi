@@ -15,7 +15,7 @@ interface LoginForm {
     password: string;
     remember: boolean;
     login_type: 'operator' | 'umkm';
-    [key: string]: any; 
+    [key: string]: any;
 }
 
 interface LoginProps {
@@ -49,8 +49,8 @@ export default function Login({ status, canResetPassword }: LoginProps) {
     return (
         <div className="relative min-h-screen">
             {/* 🛠️ TOMBOL KEMBALI KE BERANDA (FLOATING) */}
-            <Link 
-                href="/" 
+            <Link
+                href="/"
                 className="absolute left-6 top-6 z-50 flex items-center gap-2 rounded-full bg-white/80 px-4 py-2.5 text-sm font-bold text-emerald-700 shadow-sm backdrop-blur-md transition-all hover:-translate-x-1 hover:bg-white hover:text-emerald-800 hover:shadow-md"
             >
                 <ArrowLeft className="size-4" />
@@ -105,11 +105,6 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                         <div className="grid gap-2">
                             <div className="flex items-center justify-between">
                                 <Label htmlFor="password" className="text-slate-700 font-bold">Kata Sandi</Label>
-                                {canResetPassword && (
-                                    <TextLink href={route('password.request')} className="text-xs font-semibold text-emerald-600">
-                                        Lupa kata sandi?
-                                    </TextLink>
-                                )}
                             </div>
                             <Input
                                 id="password"
