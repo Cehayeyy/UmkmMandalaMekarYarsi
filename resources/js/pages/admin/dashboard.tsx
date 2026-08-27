@@ -17,7 +17,8 @@ import {
     TrendingUp,
     Users,
     X,
-    Activity
+    Activity,
+    Mail
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
@@ -29,6 +30,7 @@ const sidebarSections = [
             { label: 'Manajemen UMKM', icon: Store, href: '/admin/manajemen-umkm', active: false },
             { label: 'Manajemen Akun', icon: Users, href: '/admin/manajemen-akun', active: false },
             { label: 'Produk', icon: Package, href: '/admin/produk', active: false },
+            { label: 'Pesan Masuk', icon: Mail, href: '/dashboard/pesan-masuk', active: false },
         ],
     },
     {

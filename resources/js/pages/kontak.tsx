@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, useForm } from '@inertiajs/react';
 import { PublicMobileNav } from '@/components/PublicMobileNav';
 import {
     Sprout,
@@ -16,23 +16,30 @@ import {
 
 export default function Kontak() {
     const [formSubmitted, setFormSubmitted] = useState(false);
-    const [formData, setFormData] = useState({
+    
+    // 🛠️ MENGGUNAKAN useForm DARI INERTIA (Bukan useState lagi)
+    const { data, setData, post, processing, reset } = useForm({
         nama: '',
         email: '',
-        nohp: '', // Menyimpan data No. Handphone/WA
+        nohp: '',
         subjek: '',
         pesan: ''
     });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // Simulasi pengiriman pesan
-        setFormSubmitted(true);
-        setTimeout(() => {
-            setFormSubmitted(false);
-            // Reset semua field termasuk nohp setelah terkirim
-            setFormData({ nama: '', email: '', nohp: '', subjek: '', pesan: '' });
-        }, 4000);
+        
+        // 🛠️ MENGIRIM DATA KE ROUTE LARAVEL (kontak.store)
+        post(route('kontak.store'), {
+            preserveScroll: true,
+            onSuccess: () => {
+                setFormSubmitted(true);
+                reset(); // Reset form otomatis jika berhasil tersimpan ke database
+                setTimeout(() => {
+                    setFormSubmitted(false);
+                }, 4000);
+            },
+        });
     };
 
     return (
@@ -91,11 +98,11 @@ export default function Kontak() {
                             className="absolute inset-0 size-full object-cover object-[60%_center] sm:object-center"
                         />
 
-                        {/* OVERLAY GRADIENT DIPINDAHKAN KE SEBELAH KANAN */}
+                        {/* OVERLAY GRADIENT */}
                         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/35 to-transparent sm:bg-gradient-to-l sm:from-slate-950/80 sm:via-slate-950/40" />
                         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.15),transparent_40%)]" />
 
-                        {/* BADGE LOGO DESA & YARSI DIPINDAHKAN KE KIRI ATAS AGAR BALANS */}
+                        {/* BADGE LOGO DESA & YARSI */}
                         <div className="absolute top-6 left-6 z-10 hidden sm:inline-flex items-center gap-4 rounded-full border border-white/30 bg-slate-950/60 px-6 py-3 backdrop-blur-md shadow-2xl">
                             <div className="flex items-center gap-3">
                                 <div className="size-12 sm:size-14 overflow-hidden rounded-full bg-white p-1.5 shrink-0 shadow-md ring-2 ring-white/20">
@@ -108,7 +115,7 @@ export default function Kontak() {
                                 </div>
                                 <div className="size-12 sm:size-14 overflow-hidden rounded-full bg-white p-1.5 shrink-0 shadow-md ring-2 ring-white/20">
                                     <img
-                                        src="/images/Logo universitas-yarsi.png"
+                                        src="/images/logo-universitas-yarsi.png"
                                         alt="Logo Yarsi"
                                         style={{ imageRendering: '-webkit-optimize-contrast' }}
                                         className="size-full object-contain"
@@ -120,7 +127,7 @@ export default function Kontak() {
                             </span>
                         </div>
 
-                        {/* CONTAINER GRID TEKS BANNER (TEKS DIPINDAHKAN KE KANAN RATA KANAN) */}
+                        {/* TEKS BANNER */}
                         <div className="relative grid min-h-[460px] items-end pb-8 sm:min-h-[540px] sm:pb-12 px-6 sm:px-10 lg:grid-cols-2 lg:px-12 z-10">
                             <div className="max-w-2xl lg:col-start-2 lg:justify-self-end text-left lg:text-right">
                                 <h1 className="text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl drop-shadow-md">
@@ -138,7 +145,7 @@ export default function Kontak() {
                 <section className="mx-auto max-w-7xl px-4 pt-16 sm:px-6 lg:px-8">
                     <div className="grid gap-12 lg:grid-cols-12 lg:items-start">
 
-                        {/* KIRI: INFORMASI KONTAK LENGKAP (5 Kolom) */}
+                        {/* KIRI: INFORMASI KONTAK */}
                         <div className="lg:col-span-5 space-y-6">
                             <div>
                                 <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
@@ -149,7 +156,6 @@ export default function Kontak() {
                                 </p>
                             </div>
 
-                            {/* List Kartu Kontak */}
                             <div className="space-y-4">
                                 <div className="flex gap-4 rounded-2xl border border-slate-100 bg-white p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition duration-300">
                                     <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
@@ -193,7 +199,7 @@ export default function Kontak() {
                             </div>
                         </div>
 
-                        {/* KANAN: FORMULIR KIRIM PESAN INTERAKTIF (7 Kolom) */}
+                        {/* KANAN: FORMULIR KIRIM PESAN */}
                         <div className="lg:col-span-7">
                             <div className="rounded-[2rem] border border-slate-100 bg-white p-6 shadow-xl shadow-slate-200/40 sm:p-8">
                                 <h3 className="text-xl font-bold text-slate-900 mb-2">Kirim Pesan</h3>
@@ -205,78 +211,72 @@ export default function Kontak() {
                                     </div>
                                 ) : (
                                     <form onSubmit={handleSubmit} className="space-y-5">
-
-                                        {/* 1. Input Nama Lengkap */}
                                         <div>
                                             <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Nama Lengkap</label>
                                             <input
                                                 type="text"
                                                 required
-                                                value={formData.nama}
-                                                onChange={(e) => setFormData({...formData, nama: e.target.value})}
+                                                value={data.nama} // 🛠️ Diubah
+                                                onChange={(e) => setData('nama', e.target.value)} // 🛠️ Diubah
                                                 placeholder="Nama"
                                                 className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-sm focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 transition"
                                             />
                                         </div>
 
-                                        {/* 2. Input Email */}
                                         <div>
                                             <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Email Aktif</label>
                                             <input
                                                 type="email"
                                                 required
-                                                value={formData.email}
-                                                onChange={(e) => setFormData({...formData, email: e.target.value})}
+                                                value={data.email} // 🛠️ Diubah
+                                                onChange={(e) => setData('email', e.target.value)} // 🛠️ Diubah
                                                 placeholder="Email"
                                                 className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-sm focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 transition"
                                             />
                                         </div>
 
-                                        {/* 3. Input Nomor Handphone / WA */}
                                         <div>
                                             <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">No. Handphone / WhatsApp</label>
                                             <input
                                                 type="tel"
                                                 required
-                                                value={formData.nohp}
-                                                onChange={(e) => setFormData({...formData, nohp: e.target.value})}
+                                                value={data.nohp} // 🛠️ Diubah
+                                                onChange={(e) => setData('nohp', e.target.value)} // 🛠️ Diubah
                                                 placeholder="No handphone"
                                                 className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-sm focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 transition"
                                             />
                                         </div>
 
-                                        {/* 4. Input Subjek */}
                                         <div>
                                             <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Subjek Pesan</label>
                                             <input
                                                 type="text"
                                                 required
-                                                value={formData.subjek}
-                                                onChange={(e) => setFormData({...formData, subjek: e.target.value})}
+                                                value={data.subjek} // 🛠️ Diubah
+                                                onChange={(e) => setData('subjek', e.target.value)} // 🛠️ Diubah
                                                 placeholder="Pesan"
                                                 className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-sm focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 transition"
                                             />
                                         </div>
 
-                                        {/* 5. Input Isi Pesan */}
                                         <div>
                                             <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Isi Pesan</label>
                                             <textarea
                                                 rows={5}
                                                 required
-                                                value={formData.pesan}
-                                                onChange={(e) => setFormData({...formData, pesan: e.target.value})}
+                                                value={data.pesan} // 🛠️ Diubah
+                                                onChange={(e) => setData('pesan', e.target.value)} // 🛠️ Diubah
                                                 placeholder="Tuliskan detail maksud dan tujuan pesan Anda di sini..."
                                                 className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-sm focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 transition resize-none"
                                             ></textarea>
                                         </div>
 
-                                        {/* Tombol Kirim */}
                                         <button
                                             type="submit"
-                                            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-emerald-600/20 hover:bg-emerald-700 transition"
+                                            disabled={processing} // 🛠️ Mencegah klik berulang saat loading
+                                            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-emerald-600/20 hover:bg-emerald-700 transition disabled:opacity-70 disabled:cursor-not-allowed"
                                         >
-                                            <span>Kirim Sekarang</span>
+                                            <span>{processing ? 'Mengirim...' : 'Kirim Sekarang'}</span>
                                             <Send className="size-4" />
                                         </button>
                                     </form>

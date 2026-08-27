@@ -44,7 +44,14 @@ class ProdukController extends Controller
         if ($request->hasFile('foto')) {
             $foto = $request->file('foto');
             $namaFoto = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '', $foto->getClientOriginalName());
-            $foto->move(public_path('uploads/produk'), $namaFoto);
+            
+            // Simpan secara absolut ke public_html/uploads/produk/
+            $destinationPath = '/home/manb5952/public_html/uploads/produk';
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0755, true);
+            }
+            
+            $foto->move($destinationPath, $namaFoto);
             $fotoPath = 'uploads/produk/' . $namaFoto;
         }
 
@@ -57,52 +64,55 @@ class ProdukController extends Controller
             'foto'        => $fotoPath,
         ]);
 
-        // Redirect langsung ke route Daftar Produk Saya
         return redirect()->route('umkm.produk.daftar')->with('success', 'Produk berhasil ditambahkan!');
-
     }
     // 🛠️ TAMBAHKAN DUA METHOD INI DI PRODUKCONTROLLER:
 
 // Update data produk
-public function update(Request $request, Product $product)
-{
-    // Cek agar user lain tidak bisa mengubah produk milik toko orang lain
-    if ($product->user_id !== $request->user()->id) {
-        abort(403);
-    }
-
-    $request->validate([
-        'nama_produk' => 'required|string|max:255',
-        'kategori'    => 'required|string',
-        'harga'       => 'required|numeric|min:0',
-        'deskripsi'   => 'nullable|string',
-        'foto'        => 'nullable|image|mimes:jpeg,png,jpg,webp,jfif|max:2048',
-    ]);
-
-    $fotoPath = $product->foto; // Pertahankan foto lama jika tidak diganti
-
-    if ($request->hasFile('foto')) {
-        // Hapus foto lama jika ada di server
-        if ($product->foto && file_exists(public_path($product->foto))) {
-            unlink(public_path($product->foto));
+    public function update(Request $request, Product $product)
+    {
+        if ($product->user_id !== $request->user()->id) {
+            abort(403);
         }
 
-        $foto = $request->file('foto');
-        $namaFoto = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '', $foto->getClientOriginalName());
-        $foto->move(public_path('uploads/produk'), $namaFoto);
-        $fotoPath = 'uploads/produk/' . $namaFoto;
+        $request->validate([
+            'nama_produk' => 'required|string|max:255',
+            'kategori'    => 'required|string',
+            'harga'       => 'required|numeric|min:0',
+            'deskripsi'   => 'nullable|string',
+            'foto'        => 'nullable|image|mimes:jpeg,png,jpg,webp,jfif|max:2048',
+        ]);
+
+        $fotoPath = $product->foto;
+
+        if ($request->hasFile('foto')) {
+            // Hapus foto lama jika ada di public_html
+            if ($product->foto && file_exists('/home/manb5952/public_html/' . $product->foto)) {
+                @unlink('/home/manb5952/public_html/' . $product->foto);
+            }
+
+            $foto = $request->file('foto');
+            $namaFoto = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '', $foto->getClientOriginalName());
+            
+            $destinationPath = '/home/manb5952/public_html/uploads/produk';
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0755, true);
+            }
+
+            $foto->move($destinationPath, $namaFoto);
+            $fotoPath = 'uploads/produk/' . $namaFoto;
+        }
+
+        $product->update([
+            'nama_produk' => $request->nama_produk,
+            'deskripsi'   => $request->deskripsi,
+            'harga'       => $request->harga,
+            'kategori'    => $request->kategori,
+            'foto'        => $fotoPath,
+        ]);
+
+        return redirect()->back();
     }
-
-    $product->update([
-        'nama_produk' => $request->nama_produk,
-        'deskripsi'   => $request->deskripsi,
-        'harga'       => $request->harga,
-        'kategori'    => $request->kategori,
-        'foto'        => $fotoPath,
-    ]);
-
-    return redirect()->back();
-}
 
 // Hapus produk
 public function destroy(Request $request, Product $product)

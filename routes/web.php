@@ -3,6 +3,7 @@
 use App\Http\Controllers\AkunController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\UmkmController;
+use App\Http\Controllers\KontakController;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
@@ -114,6 +115,7 @@ Route::get('/kontak', function () {
     return Inertia::render('kontak');
 })->name('kontak');
 
+Route::post('/kontak/kirim', [KontakController::class, 'store'])->name('kontak.store');
 
 // ==========================================
 // --- ROUTE ADMIN & OPERATOR ---
@@ -364,6 +366,8 @@ Route::middleware(['auth'])->group(function () {
             'notifications' => $getAdminNotifications(),
         ]);
     })->name('admin.pengaturan');
+
+    Route::get('/dashboard/pesan-masuk', [KontakController::class, 'indexAdmin'])->name('admin.pesan');
 });
 
 // ==========================================
@@ -382,7 +386,7 @@ Route::middleware(['auth'])->group(function () {
     })->name('umkm.dashboard');
 
     Route::get('umkm/profil', [UmkmController::class, 'edit'])->name('umkm.profil.edit');
-    Route::put('umkm/profil', [UmkmController::class, 'update'])->name('umkm.profil.update');
+    Route::post('umkm/profil', [UmkmController::class, 'update'])->name('umkm.profil.update');
 
     Route::get('umkm/produk', [ProdukController::class, 'index'])->name('umkm.produk.index');
     Route::get('umkm/produk/daftar', [ProdukController::class, 'daftar'])->name('umkm.produk.daftar');

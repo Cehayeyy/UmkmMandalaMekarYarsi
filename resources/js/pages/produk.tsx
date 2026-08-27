@@ -145,7 +145,7 @@ export default function ProdukPage() {
                             </div>
                             <div className="size-12 sm:size-14 overflow-hidden rounded-full bg-white p-1.5 shrink-0 shadow-md ring-2 ring-white/20">
                                 <img
-                                    src="/images/Logo universitas-yarsi.png"
+                                    src="/images/logo-universitas-yarsi.png"
                                     alt="Logo Yarsi"
                                     style={{ imageRendering: '-webkit-optimize-contrast' }}
                                     className="size-full object-contain"

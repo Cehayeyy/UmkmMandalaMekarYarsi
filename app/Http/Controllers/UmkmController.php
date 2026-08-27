@@ -36,27 +36,30 @@ class UmkmController extends Controller
         ]);
 
         $user = \App\Models\User::findOrFail(auth()->id());
-        $fotoPath = $user->foto_toko; // Simpan rute foto lama sebagai default
+        $fotoPath = $user->foto_toko; 
 
-        // 🛠️ LOGIKA UPLOAD FOTO YANG BENAR
         if ($request->hasFile('foto_toko')) {
             
-            // 1. Hapus foto lama dari folder jika ada (menghemat ruang penyimpanan)
-            if ($fotoPath && File::exists(public_path($fotoPath))) {
-                File::delete(public_path($fotoPath));
+            // Hapus foto lama jika ada di public_html
+            if ($fotoPath && file_exists('/home/manb5952/public_html/' . $fotoPath)) {
+                @unlink('/home/manb5952/public_html/' . $fotoPath);
             }
 
-            // 2. Ambil file yang baru diunggah
             $file = $request->file('foto_toko');
-            
-            // 3. Buat nama file unik agar tidak bentrok (Waktu saat ini + Nama asli file)
             $filename = time() . '_' . preg_replace('/\s+/', '_', $file->getClientOriginalName());
             
-            // 4. Pindahkan file tersebut ke folder public/uploads/toko/
-            $file->move(public_path('uploads/toko'), $filename);
+            // Simpan langsung secara absolut ke folder public_html/uploads/
+            $destinationPath = '/home/manb5952/public_html/uploads';
             
-            // 5. Perbarui variabel $fotoPath untuk disimpan ke dalam database
-            $fotoPath = 'uploads/toko/' . $filename;
+            // Pastikan folder tujuan ada
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0755, true);
+            }
+            
+            $file->move($destinationPath, $filename);
+            
+            // Path yang disimpan ke database
+            $fotoPath = 'uploads/' . $filename;
         }
 
         $user->update([
@@ -64,7 +67,7 @@ class UmkmController extends Controller
             'deskripsi_toko' => $request->deskripsi_toko,
             'no_whatsapp' => $request->no_whatsapp,
             'alamat_toko' => $request->alamat_toko,
-            'foto_toko' => $fotoPath, // 🛠️ Simpan rute foto ke tabel users
+            'foto_toko' => $fotoPath,
         ]);
 
         return redirect()->back()->with('success', 'Profil berhasil diperbarui!');

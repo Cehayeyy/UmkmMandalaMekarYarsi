@@ -24,7 +24,6 @@ export default function ProfilToko({ user }: { user: UserData }) {
     const [previewUrl, setPreviewUrl] = useState<string | null>(user.foto_toko ? `/${user.foto_toko}` : null);
 
     const { data, setData, post, processing, errors } = useForm({
-        _method: 'PUT',
         name: user.name || '',
         deskripsi_toko: user.deskripsi_toko || '',
         no_whatsapp: user.no_whatsapp || '',
