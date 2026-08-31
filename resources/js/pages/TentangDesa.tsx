@@ -12,7 +12,7 @@ export default function TentangDesa() {
             <header className="sticky top-0 z-50 border-b border-white/80 bg-white/80 backdrop-blur-xl transition-all">
                 <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
                     {/* LOGO DESA DI HEADER (UKURAN FONT DISAMAKAN DENGAN HALAMAN LAIN) */}
-                    <Link href="/" className="flex items-center gap-3">
+                    <Link href={route('home')} className="flex items-center gap-3">
                         <div className="flex size-11 items-center justify-center overflow-hidden rounded-2xl bg-white p-1 shadow-md border border-slate-100 shrink-0">
                             <img
                                 src="/images/Logo DesaMandalamekar.png"
@@ -23,32 +23,32 @@ export default function TentangDesa() {
                         </div>
                         <div>
                             <p className="text-sm font-semibold text-emerald-700">UMKM</p>
-                            <p className="text-lg font-bold tracking-tight text-slate-900">Desa Mandalamekar</p>
+                            <p className="text-sm font-bold tracking-tight text-slate-900">Desa Mandalamekar, Kabupaten Bandung</p>
                         </div>
                     </Link>
 
                     <nav className="hidden items-center gap-8 lg:flex">
-                        <Link href="/" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">
+                        <Link href={route('home')} className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">
                             Beranda
                         </Link>
-                        <Link href="/umkm" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">
+                        <Link href={route('umkm.umkmPage')} className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">
                             UMKM
                         </Link>
-                        <Link href="/produk" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">
+                        <Link href={route('produk')} className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">
                             Produk
                         </Link>
-                        <Link href="/tentangdesa" className="text-sm font-semibold text-emerald-600">
+                        <Link href={route('tentangdesa')} className="text-sm font-semibold text-emerald-600">
                             Tentang Desa
                         </Link>
-                        <Link href="/kontak" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">
+                        <Link href={route('kontak')} className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">
                             Kontak
                         </Link>
                     </nav>
 
                     <div className="flex items-center gap-3">
-                        <PublicMobileNav activeHref="/tentangdesa" />
+                        <PublicMobileNav activeRouteName="tentangdesa" />
                         <Link
-                            href="/login"
+                            href={route('login')}
                             className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-700"
                         >
                             <span>Login</span>
@@ -242,7 +242,7 @@ export default function TentangDesa() {
                                 <p className="text-xs text-emerald-700/90 mt-0.5">Silakan cek maps lokasi resmi di bagian menu kontak paling bawah.</p>
                             </div>
                             <a
-                                href="/kontak"
+                                href={route('kontak')}
                                 className="inline-flex items-center justify-center rounded-full bg-emerald-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-emerald-700 whitespace-nowrap shadow-sm"
                             >
                                 Hubungi Kami

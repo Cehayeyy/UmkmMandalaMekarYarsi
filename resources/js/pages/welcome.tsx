@@ -4,11 +4,11 @@ import { Head, Link, usePage } from '@inertiajs/react';
 import { ArrowRight, Facebook, Instagram, Leaf, MessageCircle, Sprout, Store, Trees, UtensilsCrossed, Package, MapPin, Phone } from 'lucide-react';
 
 const navItems = [
-    { label: 'Beranda', href: '/' },
-    { label: 'UMKM', href: '/umkm' },
-    { label: 'Produk', href: '/produk' },
-    { label: 'Tentang Desa', href: '/tentangdesa' },
-    { label: 'Kontak', href: '/kontak' },
+    { label: 'Beranda', routeName: 'home' },
+    { label: 'UMKM', routeName: 'umkm.umkmPage' },
+    { label: 'Produk', routeName: 'produk' },
+    { label: 'Tentang Desa', routeName: 'tentangdesa' },
+    { label: 'Kontak', routeName: 'kontak' },
 ];
 
 interface WelcomeProps extends SharedData {
@@ -74,7 +74,7 @@ export default function Welcome() {
                             </div>
                             <div>
                                 <p className="text-sm font-semibold text-emerald-700">UMKM</p>
-                                <p className="text-lg font-bold tracking-tight text-slate-900">Desa Mandalamekar</p>
+                                <p className="text-sm font-bold tracking-tight text-slate-900">Desa Mandalamekar, Kabupaten Bandung</p>
                             </div>
                         </Link>
 
@@ -83,8 +83,8 @@ export default function Welcome() {
                             {navItems.map((item) => (
                                 <Link
                                     key={item.label}
-                                    href={item.href}
-                                    className={`text-sm transition ${item.href === '/' ? 'font-semibold text-emerald-600' : 'font-medium text-slate-600 hover:text-emerald-700'}`}
+                                    href={route(item.routeName)}
+                                    className={`text-sm transition ${item.routeName === 'home' ? 'font-semibold text-emerald-600' : 'font-medium text-slate-600 hover:text-emerald-700'}`}
                                 >
                                     {item.label}
                                 </Link>
@@ -93,10 +93,10 @@ export default function Welcome() {
 
                         {/* KANAN HEADER: TOMBOL LOGIN & DASHBOARD DINAMIS */}
                         <div className="flex items-center gap-3">
-                            <PublicMobileNav activeHref="/" />
+                            <PublicMobileNav activeRouteName="home" />
                             {/* TOMBOL LOGIN MURNI - MEMAKAI TAG <a> AGAR FULL REFRESH */}
                             <a
-                                href="/login"
+                                href={route('login')}
                                 className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-700"
                             >
                                 <span>Login</span>
@@ -161,13 +161,13 @@ export default function Welcome() {
 
                                     <div className="mt-8 flex flex-wrap gap-3 lg:justify-end">
                                         <Link
-                                            href="/produk"
+                                            href={route('produk')}
                                             className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/30 transition hover:bg-emerald-400"
                                         >
                                             Lihat Produk <ArrowRight className="size-4" />
                                         </Link>
                                         <Link
-                                            href="/umkm"
+                                            href={route('umkm.umkmPage')}
                                             className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur-md transition hover:bg-white/15"
                                         >
                                             Lihat UMKM
@@ -217,7 +217,7 @@ export default function Welcome() {
                                         return (
                                             <Link
                                                 key={category.label}
-                                                href="/produk"
+                                                href={route('produk')}
                                                 className="flex flex-col items-center gap-3 rounded-[1.5rem] border border-slate-200 bg-slate-50 px-4 py-6 text-center transition hover:-translate-y-1 hover:bg-emerald-50 hover:border-emerald-200 group"
                                             >
                                                 <div className="flex size-14 items-center justify-center rounded-2xl bg-white text-emerald-600 shadow-sm group-hover:scale-110 transition-transform">
@@ -245,7 +245,7 @@ export default function Welcome() {
                                 <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-600">Produk Terbaru</p>
                                 <h2 className="mt-2 text-3xl font-bold tracking-tight">Pilihan segar dari pelaku UMKM desa</h2>
                             </div>
-                            <Link href="/produk" className="hidden text-sm font-semibold text-emerald-700 hover:text-emerald-800 sm:inline-flex">
+                            <Link href={route('produk')} className="hidden text-sm font-semibold text-emerald-700 hover:text-emerald-800 sm:inline-flex">
                                 Lihat Semua
                             </Link>
                         </div>
@@ -301,7 +301,7 @@ export default function Welcome() {
                                         Desa Mandalamekar adalah desa yang terletak di <span className="whitespace-nowrap">Kecamatan Cimenyan</span> <span className="whitespace-nowrap">Kabupaten Bandung</span>. Melalui portal ini, masyarakat dapat menemukan produk unggulan, mengenal pelaku usaha lokal, dan mendukung ekonomi desa secara langsung.
                                     </p>
                                     <div className="mt-8 flex flex-wrap gap-3">
-                                        <Link href="/tentangdesa" className="rounded-full bg-white px-5 py-3 text-sm font-semibold text-emerald-900 transition hover:bg-emerald-50">
+                                        <Link href={route('tentangdesa')} className="rounded-full bg-white px-5 py-3 text-sm font-semibold text-emerald-900 transition hover:bg-emerald-50">
                                             Selengkapnya
                                         </Link>
                                     </div>
@@ -351,7 +351,7 @@ export default function Welcome() {
                             <ul className="mt-4 space-y-2 text-sm text-emerald-200/80">
                                 {navItems.map((item) => (
                                     <li key={item.label}>
-                                        <Link href={item.href} className="hover:text-white transition">
+                                        <Link href={route(item.routeName)} className="hover:text-white transition">
                                             {item.label}
                                         </Link>
                                     </li>

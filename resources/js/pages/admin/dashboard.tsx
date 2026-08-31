@@ -2,6 +2,7 @@ import { type SharedData } from '@/types';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import {
     Bell,
+    CalendarDays,
     Check,
     ChevronDown,
     ChevronRight,
@@ -47,6 +48,17 @@ interface DashboardProps extends SharedData {
     umkmTerbaru?: any[];
     akunUmkm?: any[];
     aktivitas?: any[];
+    history?: Array<{
+        id: number;
+        title: string;
+        message: string;
+        time: string;
+        actor: string;
+        actorRole?: string | null;
+        changedFields?: string[];
+        event: string;
+        type: string;
+    }>;
     selectedDate?: string;
     notifications?: Array<{
         id: number;
@@ -58,7 +70,7 @@ interface DashboardProps extends SharedData {
     }>;
 }
 
-export default function Dashboard({ statsData, umkmTerbaru = [], aktivitas = [], notifications = [], selectedDate }: DashboardProps) {
+export default function Dashboard({ statsData, umkmTerbaru = [], aktivitas = [], history = [], notifications = [], selectedDate }: DashboardProps) {
     const { auth } = usePage<SharedData>().props;
 
     // STATES RESPONSIVE & LAYOUT
@@ -131,7 +143,7 @@ export default function Dashboard({ statsData, umkmTerbaru = [], aktivitas = [],
     // FITUR REAL-TIME AUTO-POLLING DATA: 15 detik
     useEffect(() => {
         const interval = setInterval(() => {
-            router.reload({ only: ['statsData', 'umkmTerbaru', 'akunUmkm', 'aktivitas', 'notifications'] });
+            router.reload({ only: ['statsData', 'umkmTerbaru', 'akunUmkm', 'aktivitas', 'history', 'notifications'] });
         }, 15000);
         return () => clearInterval(interval);
     }, []);
@@ -312,10 +324,6 @@ export default function Dashboard({ statsData, umkmTerbaru = [], aktivitas = [],
 
                         {/* TANGGAL & JAM */}
                         <div className="flex flex-wrap justify-end gap-2">
-                            <label className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 shadow-sm">
-                                <span>Riwayat tanggal</span>
-                                <input type="date" value={activeDate} max={new Date().toISOString().slice(0, 10)} onChange={(event) => changeHistoryDate(event.target.value)} className="cursor-pointer bg-transparent text-xs font-semibold text-emerald-700 outline-none" />
-                            </label>
                             <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50/60 px-4 py-2 text-xs lg:text-sm font-semibold text-emerald-800 shadow-sm">
                                 <span className="size-2 rounded-full bg-emerald-500 animate-pulse"></span>
                                 {currentDateTime || 'Memuat...'}
@@ -413,6 +421,45 @@ export default function Dashboard({ statsData, umkmTerbaru = [], aktivitas = [],
                                 </div>
                             </div>
                         </div>
+
+                        <section id="riwayat" className="rounded-2xl lg:rounded-[1.5rem] border border-slate-200 bg-white p-4 lg:p-6 shadow-sm shadow-slate-200/60">
+                            <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                                <div>
+                                    <h2 className="flex items-center gap-2 text-sm lg:text-base font-bold text-slate-900"><Activity className="size-5 text-emerald-600" /> Riwayat Perubahan</h2>
+                                    <p className="mt-1 text-xs text-slate-500">Semua perubahan pada akun, UMKM, produk, kategori, dan pesan pada tanggal yang dipilih.</p>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <label className="inline-flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50/60 px-3 py-2 text-xs font-semibold text-slate-600 shadow-sm">
+                                        <CalendarDays className="size-4 text-emerald-600" />
+                                        <span className="sr-only">Pilih tanggal riwayat perubahan</span>
+                                        <input
+                                            type="date"
+                                            value={activeDate}
+                                            max={new Date().toISOString().slice(0, 10)}
+                                            onChange={(event) => changeHistoryDate(event.target.value)}
+                                            className="cursor-pointer bg-transparent font-semibold text-emerald-700 outline-none"
+                                            aria-label="Pilih tanggal riwayat perubahan"
+                                        />
+                                    </label>
+                                    <span className="rounded-full bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700">{history.length} aktivitas</span>
+                                </div>
+                            </div>
+                            <div className="divide-y divide-slate-100">
+                                {history.length ? history.map((entry) => (
+                                    <div key={entry.id} className="flex items-start gap-3 py-3">
+                                        <div className={`mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full ${entry.event === 'delete' ? 'bg-red-100 text-red-600' : entry.event === 'create' ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-100 text-blue-700'}`}>
+                                            {entry.type === 'product' ? <Package className="size-4" /> : entry.type === 'user' ? <Users className="size-4" /> : <Activity className="size-4" />}
+                                        </div>
+                                        <div className="min-w-0 flex-1">
+                                            <p className="text-sm font-semibold text-slate-800">{entry.title}</p>
+                                            <p className="text-xs text-slate-500">{entry.message}</p>
+                                            <p className="mt-1 text-[11px] text-slate-400">Oleh {entry.actor}{entry.actorRole ? ` · ${entry.actorRole}` : ''}{entry.changedFields?.length ? ` · Diubah: ${entry.changedFields.join(', ')}` : ''}</p>
+                                        </div>
+                                        <span className="shrink-0 text-[11px] font-medium text-slate-400">{entry.time}</span>
+                                    </div>
+                                )) : <p className="py-8 text-center text-sm text-slate-400">Belum ada riwayat perubahan pada tanggal ini.</p>}
+                            </div>
+                        </section>
 
                         <section id="notifikasi" className="rounded-2xl lg:rounded-[1.5rem] border border-slate-200 bg-white p-4 lg:p-6 shadow-sm shadow-slate-200/60">
                             <div className="mb-4 flex items-center justify-between gap-3">

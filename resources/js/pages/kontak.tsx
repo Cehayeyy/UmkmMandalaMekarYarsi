@@ -16,7 +16,7 @@ import {
 
 export default function Kontak() {
     const [formSubmitted, setFormSubmitted] = useState(false);
-    
+
     // 🛠️ MENGGUNAKAN useForm DARI INERTIA (Bukan useState lagi)
     const { data, setData, post, processing, reset } = useForm({
         nama: '',
@@ -28,7 +28,7 @@ export default function Kontak() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         // 🛠️ MENGIRIM DATA KE ROUTE LARAVEL (kontak.store)
         post(route('kontak.store'), {
             preserveScroll: true,
@@ -49,7 +49,7 @@ export default function Kontak() {
             {/* HEADER / NAVBAR DENGAN LOGO DESA (FONT DISAMAKAN) */}
             <header className="sticky top-0 z-50 border-b border-white/80 bg-white/80 backdrop-blur-xl transition-all">
                 <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-                    <Link href="/" className="flex items-center gap-3">
+                    <Link href={route('home')} className="flex items-center gap-3">
                         <div className="flex size-11 items-center justify-center overflow-hidden rounded-2xl bg-white p-1 shadow-md border border-slate-100 shrink-0">
                             <img
                                 src="/images/Logo DesaMandalamekar.png"
@@ -60,22 +60,22 @@ export default function Kontak() {
                         </div>
                         <div>
                             <p className="text-sm font-semibold text-emerald-700">UMKM</p>
-                            <p className="text-lg font-bold tracking-tight text-slate-900">Desa Mandalamekar</p>
+                            <p className="text-sm font-bold tracking-tight text-slate-900">Desa Mandalamekar, Kabupaten Bandung</p>
                         </div>
                     </Link>
 
                     <nav className="hidden items-center gap-8 lg:flex">
-                        <Link href="/" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Beranda</Link>
-                        <Link href="/umkm" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">UMKM</Link>
-                        <Link href="/produk" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Produk</Link>
-                        <Link href="/tentangdesa" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Tentang Desa</Link>
-                        <Link href="/kontak" className="text-sm font-semibold text-emerald-600">Kontak</Link>
+                        <Link href={route('home')} className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Beranda</Link>
+                        <Link href={route('umkm.umkmPage')} className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">UMKM</Link>
+                        <Link href={route('produk')} className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Produk</Link>
+                        <Link href={route('tentangdesa')} className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Tentang Desa</Link>
+                        <Link href={route('kontak')} className="text-sm font-semibold text-emerald-600">Kontak</Link>
                     </nav>
 
                     <div className="flex items-center gap-3">
-                        <PublicMobileNav activeHref="/kontak" />
+                        <PublicMobileNav activeRouteName="kontak" />
                         <Link
-                            href="/login"
+                            href={route('login')}
                             className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-700"
                         >
                             <span>Login</span>
@@ -169,31 +169,11 @@ export default function Kontak() {
 
                                 <div className="flex gap-4 rounded-2xl border border-slate-100 bg-white p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition duration-300">
                                     <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
-                                        <Phone className="size-5" />
-                                    </div>
-                                    <div>
-                                        <h4 className="font-bold text-slate-900 text-sm">Telepon / WhatsApp</h4>
-                                        <p className="mt-0.5 text-xs text-slate-500">0812-3456-7890 (Sekretariat Desa)</p>
-                                    </div>
-                                </div>
-
-                                <div className="flex gap-4 rounded-2xl border border-slate-100 bg-white p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition duration-300">
-                                    <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
                                         <Mail className="size-5" />
                                     </div>
                                     <div>
                                         <h4 className="font-bold text-slate-900 text-sm">Surat Elektronik (Email)</h4>
                                         <p className="mt-0.5 text-xs text-slate-500">info@mandalamekar.desa.id</p>
-                                    </div>
-                                </div>
-
-                                <div className="flex gap-4 rounded-2xl border border-slate-100 bg-white p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition duration-300">
-                                    <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
-                                        <MessageCircle className="size-5" />
-                                    </div>
-                                    <div>
-                                        <h4 className="font-bold text-slate-900 text-sm">Jam Operasional Layanan</h4>
-                                        <p className="mt-0.5 text-xs text-slate-500">Senin - Jumat | 08:00 - 15:00 WIB</p>
                                     </div>
                                 </div>
                             </div>
@@ -308,10 +288,10 @@ export default function Kontak() {
                     <div>
                         <p className="font-semibold text-white">Menu</p>
                         <ul className="mt-4 space-y-2 text-sm text-emerald-200/80">
-                            <li><Link href="/" className="hover:text-white transition">Beranda</Link></li>
-                            <li><Link href="/umkm" className="hover:text-white transition">UMKM</Link></li>
-                            <li><Link href="/produk" className="hover:text-white transition">Produk</Link></li>
-                            <li><Link href="/tentangdesa" className="hover:text-white transition">Tentang Desa</Link></li>
+                            <li><Link href={route('home')} className="hover:text-white transition">Beranda</Link></li>
+                            <li><Link href={route('umkm.umkmPage')} className="hover:text-white transition">UMKM</Link></li>
+                            <li><Link href={route('produk')} className="hover:text-white transition">Produk</Link></li>
+                            <li><Link href={route('tentangdesa')} className="hover:text-white transition">Tentang Desa</Link></li>
                         </ul>
                     </div>
                     <div>

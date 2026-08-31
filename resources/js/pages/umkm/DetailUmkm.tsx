@@ -92,22 +92,22 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
                 {/* HEADER / NAVBAR PUBLIK */}
                 <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/90 backdrop-blur-xl">
                     <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-                        <Link href="/" className="flex items-center gap-3">
+                        <Link href={route('home')} className="flex items-center gap-3">
                             <div className="flex size-11 items-center justify-center rounded-2xl bg-emerald-600 text-white shadow-sm">
                                 <Sprout className="size-6" />
                             </div>
                             <div>
                                 <p className="text-sm font-semibold text-emerald-700">UMKM</p>
-                                <p className="text-lg font-bold tracking-tight">Desa Mandalamekar</p>
+                                <p className="text-sm font-bold tracking-tight">Desa Mandalamekar, Kabupaten Bandung</p>
                             </div>
                         </Link>
 
                         <nav className="hidden items-center gap-8 lg:flex">
-                            <Link href="/" className="text-sm font-medium text-slate-600 hover:text-emerald-700 transition">Beranda</Link>
-                            <Link href="/umkm" className="text-sm font-bold text-emerald-600">UMKM</Link>
-                            <Link href="/produk" className="text-sm font-medium text-slate-600 hover:text-emerald-700 transition">Produk</Link>
-                            <Link href="/tentangdesa" className="text-sm font-medium text-slate-600 hover:text-emerald-700 transition">Tentang Desa</Link>
-                            <Link href="/kontak" className="text-sm font-medium text-slate-600 hover:text-emerald-700 transition">Kontak</Link>
+                            <Link href={route('home')} className="text-sm font-medium text-slate-600 hover:text-emerald-700 transition">Beranda</Link>
+                            <Link href={route('umkm.umkmPage')} className="text-sm font-bold text-emerald-600">UMKM</Link>
+                            <Link href={route('produk')} className="text-sm font-medium text-slate-600 hover:text-emerald-700 transition">Produk</Link>
+                            <Link href={route('tentangdesa')} className="text-sm font-medium text-slate-600 hover:text-emerald-700 transition">Tentang Desa</Link>
+                            <Link href={route('kontak')} className="text-sm font-medium text-slate-600 hover:text-emerald-700 transition">Kontak</Link>
                         </nav>
 
                         <div className="flex items-center gap-4">
@@ -129,7 +129,7 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
                                     Dashboard <ArrowRight className="size-4" />
                                 </Link>
                             ) : (
-                                <Link href="/login" className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700 shadow-sm">
+                                <Link href={route('login')} className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700 shadow-sm">
                                     Login <ArrowRight className="size-4" />
                                 </Link>
                             )}
@@ -140,7 +140,7 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
                 <main className="pb-20">
                     {/* BANNER TOKO (CARD LEBAR) */}
                     <section className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 lg:px-8">
-                        <Link href="/umkm" className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-emerald-600 mb-6 transition">
+                        <Link href={route('umkm.umkmPage')} className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-emerald-600 mb-6 transition">
                             <ChevronLeft className="size-4" /> Kembali ke Daftar UMKM
                         </Link>
 

@@ -63,6 +63,42 @@ export default function ProdukPage() {
         setMaxPrice(absoluteMaxPrice);
     };
 
+    const cartByStore = useMemo(() => {
+        const stores = new Map<string, { name: string; phone: string | null; items: typeof cartItems }>();
+
+        cartItems.forEach((item) => {
+            const name = item.seller || 'Toko tidak diketahui';
+            const phone = item.no_whatsapp || null;
+            const key = `${name}-${phone ?? 'no-phone'}`;
+            const store = stores.get(key) ?? { name, phone, items: [] };
+            store.items.push(item);
+            stores.set(key, store);
+        });
+
+        return Array.from(stores.values());
+    }, [cartItems]);
+
+    const orderStoreViaWhatsApp = (store: { name: string; phone: string | null; items: typeof cartItems }) => {
+        if (!store.phone) {
+            alert(`Mohon maaf, ${store.name} belum mengatur nomor WhatsApp.`);
+            return;
+        }
+
+        let phone = store.phone.replace(/\D/g, '');
+        if (phone.startsWith('0')) phone = `62${phone.substring(1)}`;
+        else if (!phone.startsWith('62')) phone = `62${phone}`;
+
+        const subtotal = store.items.reduce((sum, item) => sum + item.harga * item.quantity, 0);
+        let message = `Halo *${store.name}*, saya ingin memesan produk berikut:\n\n`;
+        store.items.forEach((item, index) => {
+            message += `${index + 1}. ${item.nama_produk} (${item.quantity}x) - Rp ${(item.harga * item.quantity).toLocaleString('id-ID')}\n`;
+        });
+        message += `\n*Total Pesanan: Rp ${subtotal.toLocaleString('id-ID')}*`;
+        message += '\n\nMohon informasi ketersediaan, ongkos kirim, dan cara pembayarannya. Terima kasih!';
+
+        window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+    };
+
     return (
         <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(16,185,129,0.12)_0,_rgba(255,255,255,0)_36%),linear-gradient(180deg,#f4faf6_0%,#f8fbf8_45%,#ffffff_100%)] font-sans text-slate-900 relative">
             <Head title="Katalog Produk - Desa Mandalamekar" />
@@ -71,7 +107,7 @@ export default function ProdukPage() {
             <header className="sticky top-0 z-40 border-b border-white/80 bg-white/80 backdrop-blur-xl transition-all">
                 <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
                     {/* LOGO DESA DI HEADER (UKURAN FONT DISAMAKAN DENGAN UMKM INDEX) */}
-                    <Link href="/" className="flex items-center gap-3">
+                    <Link href={route('home')} className="flex items-center gap-3">
                         <div className="flex size-11 items-center justify-center overflow-hidden rounded-2xl bg-white p-1 shadow-md border border-slate-100 shrink-0">
                             <img
                                 src="/images/Logo DesaMandalamekar.png"
@@ -82,23 +118,24 @@ export default function ProdukPage() {
                         </div>
                         <div>
                             <p className="text-sm font-semibold text-emerald-700">UMKM</p>
-                            <p className="text-lg font-bold tracking-tight text-slate-900">Desa Mandalamekar</p>
+                            <p className="text-sm font-bold tracking-tight text-slate-900">Desa Mandalamekar, Kabupaten Bandung</p>
                         </div>
                     </Link>
 
                     <nav className="hidden items-center gap-8 lg:flex">
-                        <Link href="/" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Beranda</Link>
-                        <Link href="/umkm" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">UMKM</Link>
-                        <Link href="/produk" className="text-sm font-semibold text-emerald-600">Produk</Link>
-                        <Link href="/tentangdesa" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Tentang Desa</Link>
-                        <Link href="/kontak" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Kontak</Link>
+                        <Link href={route('home')} className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Beranda</Link>
+                        <Link href={route('umkm.umkmPage')} className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">UMKM</Link>
+                        <Link href={route('produk')} className="text-sm font-semibold text-emerald-600">Produk</Link>
+                        <Link href={route('tentangdesa')} className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Tentang Desa</Link>
+                        <Link href={route('kontak')} className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Kontak</Link>
                     </nav>
 
                     <div className="flex items-center gap-2 sm:gap-4">
-                        <PublicMobileNav activeHref="/produk" />
+                        <PublicMobileNav activeRouteName="produk" />
                         <button
                             onClick={() => setIsCartOpen(true)}
                             className="relative flex size-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition cursor-pointer shadow-xs"
+                            title="Buka Keranjang"
                         >
                             <ShoppingBag className="size-5" />
                             {totalItems > 0 && (
@@ -109,7 +146,7 @@ export default function ProdukPage() {
                         </button>
 
                     {/* TOMBOL LOGIN MURNI - MEMAKAI TAG <a> AGAR FULL REFRESH */}
-                        <a href="/login" className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-700">
+                        <a href={route('login')} className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-700">
                             <span>Login</span>
                             <ArrowRight className="size-4" />
                         </a>
@@ -421,7 +458,20 @@ export default function ProdukPage() {
 
                             <div className="flex-1 overflow-y-auto p-6 space-y-4">
                                 {cartItems.length > 0 ? (
-                                    cartItems.map((item) => (
+                                    cartByStore.map((store) => {
+                                        const storeSubtotal = store.items.reduce((sum, item) => sum + item.harga * item.quantity, 0);
+
+                                        return (
+                                        <section key={`${store.name}-${store.phone ?? 'no-phone'}`} className="overflow-hidden rounded-2xl border border-emerald-100 bg-emerald-50/30">
+                                            <div className="flex items-center justify-between gap-3 border-b border-emerald-100 bg-emerald-50 px-4 py-3">
+                                                <div className="min-w-0">
+                                                    <p className="text-[11px] font-semibold uppercase tracking-wide text-emerald-700">Pesanan dari</p>
+                                                    <h3 className="truncate text-sm font-bold text-slate-900">{store.name}</h3>
+                                                </div>
+                                                <span className="shrink-0 text-xs font-semibold text-emerald-700">{store.items.reduce((sum, item) => sum + item.quantity, 0)} produk</span>
+                                            </div>
+                                            <div className="space-y-3 p-3">
+                                            {store.items.map((item) => (
                                         <div key={item.id} className="flex gap-4 items-center border border-slate-100 p-3 rounded-2xl bg-white shadow-xs">
                                             <div className="size-16 rounded-xl bg-slate-100 overflow-hidden shrink-0 flex items-center justify-center text-slate-300">
                                                 {item.foto ? <img src={`/${item.foto}`} alt={item.nama_produk} className="w-full h-full object-cover" /> : <Package className="size-6" />}
@@ -451,7 +501,20 @@ export default function ProdukPage() {
                                                 <button onClick={() => removeFromCart(item.id)} className="text-slate-400 hover:text-rose-500 p-1 transition cursor-pointer" title="Hapus"><Trash2 className="size-3.5" /></button>
                                             </div>
                                         </div>
-                                    ))
+                                            ))}
+                                            </div>
+                                            <div className="border-t border-emerald-100 bg-white px-4 py-3">
+                                                <div className="mb-3 flex items-center justify-between text-xs">
+                                                    <span className="font-semibold text-slate-500">Subtotal {store.name}</span>
+                                                    <span className="font-extrabold text-emerald-700">Rp {storeSubtotal.toLocaleString('id-ID')}</span>
+                                                </div>
+                                                <button onClick={() => orderStoreViaWhatsApp(store)} className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 py-2.5 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-700">
+                                                    Pesan ke {store.name} <ArrowRight className="size-4" />
+                                                </button>
+                                            </div>
+                                        </section>
+                                        );
+                                    })
                                 ) : (
                                     <div className="h-full flex flex-col items-center justify-center text-slate-400 py-12">
                                         <ShoppingBag className="size-12 text-slate-200 mb-2" />
@@ -466,35 +529,7 @@ export default function ProdukPage() {
                                     <span className="text-xl font-black text-emerald-700">Rp {totalPrice.toLocaleString('id-ID')}</span>
                                 </div>
 
-                                {cartItems.length > 0 ? (
-                                    <button
-                                        onClick={() => {
-                                            const targetPhone = cartItems[0]?.no_whatsapp;
-                                            if (!targetPhone) {
-                                                alert('Mohon maaf, toko produk ini belum mengatur nomor WhatsApp.');
-                                                return;
-                                            }
-                                            let phoneAdmin = targetPhone.replace(/\D/g, '');
-                                            if (phoneAdmin.startsWith('0')) phoneAdmin = '62' + phoneAdmin.substring(1);
-                                            else if (!phoneAdmin.startsWith('62')) phoneAdmin = '62' + phoneAdmin;
-
-                                            let pesan = `Halo, saya ingin memesan produk dari etalase desa:\n\n`;
-                                            cartItems.forEach((item, index) => {
-                                                pesan += `${index + 1}. ${item.nama_produk} (${item.quantity}x) - Rp ${(item.harga * item.quantity).toLocaleString('id-ID')}\n`;
-                                            });
-                                            pesan += `\n*Total Belanja: Rp ${totalPrice.toLocaleString('id-ID')}*`;
-                                            window.open(`https://wa.me/${phoneAdmin}?text=${encodeURIComponent(pesan)}`, '_blank');
-                                        }}
-                                        className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3.5 text-sm font-bold text-white shadow-lg shadow-emerald-600/20 hover:bg-emerald-700 transition cursor-pointer"
-                                    >
-                                        <span>Pesan via WhatsApp</span>
-                                        <ArrowRight className="size-4" />
-                                    </button>
-                                ) : (
-                                    <button disabled className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-slate-200 py-3.5 text-sm font-bold text-slate-400 transition cursor-not-allowed">
-                                        Pesan via WhatsApp <ArrowRight className="size-4" />
-                                    </button>
-                                )}
+                                {cartItems.length > 0 && <p className="text-center text-xs leading-relaxed text-slate-500">Pesan setiap toko melalui tombol WhatsApp pada bagian toko masing-masing.</p>}
                             </div>
                         </div>
                     </div>

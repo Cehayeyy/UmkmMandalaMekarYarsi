@@ -5,11 +5,11 @@ import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight, LayoutGrid, MapPin,
 import { useState, useMemo } from 'react';
 
 const navItems = [
-    { label: 'Beranda', href: '/' },
-    { label: 'UMKM', href: '/umkm' },
-    { label: 'Produk', href: '/produk' },
-    { label: 'Tentang Desa', href: '/tentangdesa' },
-    { label: 'Kontak', href: '/kontak' },
+    { label: 'Beranda', routeName: 'home' },
+    { label: 'UMKM', routeName: 'umkm.umkmPage' },
+    { label: 'Produk', routeName: 'produk' },
+    { label: 'Tentang Desa', routeName: 'tentangdesa' },
+    { label: 'Kontak', routeName: 'kontak' },
 ];
 
 interface Product { id: number; nama_produk: string; kategori: string; harga: number; }
@@ -92,19 +92,19 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
                             </div>
                             <div>
                                 <p className="text-sm font-semibold text-emerald-700">UMKM</p>
-                                <p className="text-lg font-bold tracking-tight text-slate-900">Desa Mandalamekar</p>
+                                <p className="text-sm font-bold tracking-tight text-slate-900">Desa Mandalamekar, Kabupaten Bandung</p>
                             </div>
                         </Link>
 
                         <nav className="hidden items-center gap-8 lg:flex">
                             {navItems.map((item) => (
-                                <Link key={item.label} href={item.href} className={`text-sm transition ${item.href === '/umkm' ? 'font-semibold text-emerald-600' : 'font-medium text-slate-600 hover:text-emerald-700'}`}>{item.label}</Link>
+                                <Link key={item.label} href={route(item.routeName)} className={`text-sm transition ${item.routeName === 'umkm.umkmPage' ? 'font-semibold text-emerald-600' : 'font-medium text-slate-600 hover:text-emerald-700'}`}>{item.label}</Link>
                             ))}
                         </nav>
                         <div className="flex items-center gap-3">
-                            <PublicMobileNav activeHref="/umkm" />
+                            <PublicMobileNav activeRouteName="umkm.umkmPage" />
                             {/* TOMBOL LOGIN MURNI - MEMAKAI TAG <a> AGAR FULL REFRESH */}
-                            <a href="/login" className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg transition hover:bg-emerald-700">
+                            <a href={route('login')} className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg transition hover:bg-emerald-700">
                                 <span>Login</span> 
                                 <ArrowRight className="size-4" />
                             </a>
@@ -299,7 +299,7 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
                             <div><h3 className="text-xl font-bold">Punya produk unggulan di desa?</h3><p className="text-sm text-emerald-100/80 mt-1 max-w-md">Daftarkan produk dan usaha UMKM Anda sekarang pada portal resmi desa untuk memperluas jangkauan pasar hingga ke daerah.</p></div>
                         </div>
                         {/* TOMBOL REGISTER MURNI - MEMAKAI TAG <a> AGAR FULL REFRESH */}
-                        <a href="/register" className="shrink-0 rounded-full bg-white px-6 py-3 text-sm font-bold text-emerald-900 shadow-lg transition hover:bg-emerald-50">Daftarkan UMKM Anda</a>
+                        <a href={route('register')} className="shrink-0 rounded-full bg-white px-6 py-3 text-sm font-bold text-emerald-900 shadow-lg transition hover:bg-emerald-50">Daftarkan UMKM Anda</a>
                     </div>
                 </section>
 
@@ -325,7 +325,7 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
                         <div>
                             <p className="font-semibold text-white">Menu</p>
                             <ul className="mt-4 space-y-2 text-sm text-emerald-200/80">
-                                {navItems.map(item => <li key={item.label}><Link href={item.href} className="hover:text-white">{item.label}</Link></li>)}
+                                {navItems.map(item => <li key={item.label}><Link href={route(item.routeName)} className="hover:text-white">{item.label}</Link></li>)}
                             </ul>
                         </div>
                         <div>

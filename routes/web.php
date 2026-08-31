@@ -196,6 +196,20 @@ Route::middleware(['auth'])->group(function () {
             ];
         });
 
+        $history = \Illuminate\Support\Facades\Schema::hasTable('admin_notifications')
+            ? \App\Models\AdminNotification::whereDate('created_at', $selectedDate)->latest()->take(50)->get()->map(fn ($entry) => [
+                'id' => $entry->id,
+                'title' => $entry->title,
+                'message' => $entry->message,
+                'time' => $entry->created_at->translatedFormat('H:i'),
+                'actor' => data_get($entry->data, 'actor_name', 'Sistem'),
+                'actorRole' => data_get($entry->data, 'actor_role'),
+                'changedFields' => data_get($entry->data, 'changed_fields', []),
+                'event' => data_get($entry->data, 'event', 'update'),
+                'type' => $entry->type,
+            ])->values()
+            : collect();
+
         return Inertia::render('admin/dashboard', [
             'statsData' => [
                 'totalUmkm' => $totalUmkm,
@@ -207,6 +221,7 @@ Route::middleware(['auth'])->group(function () {
             'akunUmkm' => $akunUmkm,
             'chartData' => [],
             'aktivitas' => $aktivitas,
+            'history' => $history,
             'notifications' => \Illuminate\Support\Facades\Schema::hasTable('admin_notifications')
                 ? \App\Models\AdminNotification::whereDate('created_at', $selectedDate)->latest()->take(30)->get()->map(fn ($notification) => [
                     'id' => $notification->id,
