@@ -81,8 +81,8 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
                     <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
 
                         {/* KIRI HEADER: LOGO DESA */}
-                        <Link href="/" className="flex items-center gap-3">
-                            <div className="flex size-11 items-center justify-center overflow-hidden rounded-2xl bg-white p-1 shadow-md border border-slate-100 shrink-0">
+                        <Link href="/" className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                            <div className="flex size-10 sm:size-11 items-center justify-center overflow-hidden rounded-2xl bg-white p-1 shadow-md border border-slate-100 shrink-0">
                                 <img
                                     src="/images/Logo DesaMandalamekar.png"
                                     alt="Logo Desa Mandalamekar"
@@ -90,9 +90,11 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
                                     className="size-full object-contain drop-shadow-xs"
                                 />
                             </div>
-                            <div>
-                                <p className="text-sm font-semibold text-emerald-700">UMKM</p>
-                                <p className="text-sm font-bold tracking-tight text-slate-900">Desa Mandalamekar, Kabupaten Bandung</p>
+                            <div className="min-w-0">
+                                <p className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-emerald-700">UMKM</p>
+                                <p className="text-xs sm:text-sm font-bold tracking-tight text-slate-900 truncate">
+                                    <span className="hidden sm:inline">Desa Mandalamekar, </span>Kab. Bandung
+                                </p>
                             </div>
                         </Link>
 
@@ -101,12 +103,12 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
                                 <Link key={item.label} href={route(item.routeName)} className={`text-sm transition ${item.routeName === 'umkm.umkmPage' ? 'font-semibold text-emerald-600' : 'font-medium text-slate-600 hover:text-emerald-700'}`}>{item.label}</Link>
                             ))}
                         </nav>
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
                             <PublicMobileNav activeRouteName="umkm.umkmPage" />
                             {/* TOMBOL LOGIN MURNI - MEMAKAI TAG <a> AGAR FULL REFRESH */}
-                            <a href={route('login')} className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg transition hover:bg-emerald-700">
+                            <a href={route('login')} className="inline-flex items-center gap-1.5 sm:gap-2 rounded-xl bg-emerald-600 px-3.5 py-2 sm:px-5 sm:py-2.5 text-xs font-semibold text-white shadow-lg transition hover:bg-emerald-700">
                                 <span>Login</span> 
-                                <ArrowRight className="size-4" />
+                                <ArrowRight className="size-3.5 sm:size-4" />
                             </a>
                         </div>
                     </div>
@@ -186,9 +188,9 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
 
                     {/* FILTER & SEARCH BANNER */}
                     <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-                        <div className="relative z-30 flex flex-wrap items-center justify-between gap-4 mb-8 bg-white/90 backdrop-blur-md p-5 rounded-[2rem] border border-emerald-100 shadow-md">
-                            <div className="flex items-center gap-3 pl-2">
-                                <div className="flex size-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-200/60">
+                        <div className="relative z-30 flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 bg-white/90 backdrop-blur-md p-4 sm:p-5 rounded-[2rem] border border-emerald-100 shadow-md">
+                            <div className="flex items-center gap-3 pl-1 sm:pl-2">
+                                <div className="flex size-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-200/60 shrink-0">
                                     <Store className="size-5" />
                                 </div>
                                 <h2 className="text-xl font-extrabold text-slate-900">
@@ -196,16 +198,16 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
                                 </h2>
                             </div>
 
-                            <div className="flex flex-wrap items-center gap-3">
+                            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                                 {/* SEARCH INPUT */}
-                                <div className="relative group">
+                                <div className="relative group w-full sm:w-auto">
                                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-emerald-600/70 group-focus-within:text-emerald-700 transition-colors z-10 pointer-events-none" />
                                     <input
                                         type="text"
                                         value={searchQuery}
                                         onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
                                         placeholder="Cari nama UMKM..."
-                                        className="rounded-full border border-emerald-200/70 bg-emerald-50/40 py-2 pl-10 pr-4 text-sm text-slate-800 placeholder:text-slate-400 focus:bg-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition"
+                                        className="w-full sm:w-64 rounded-full border border-emerald-200/70 bg-emerald-50/40 py-2 pl-10 pr-4 text-sm text-slate-800 placeholder:text-slate-400 focus:bg-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition"
                                     />
                                 </div>
 
@@ -213,19 +215,21 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
                                 <div className="relative">
                                     <button
                                         onClick={() => setIsCategoryOpen(!isCategoryOpen)}
-                                        className={`flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition ${
+                                        className={`flex w-full sm:w-auto items-center justify-between sm:justify-start gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition ${
                                             isCategoryOpen
                                                 ? 'bg-emerald-100 text-emerald-800 border-emerald-400'
                                                 : 'bg-emerald-50/40 text-slate-700 border-emerald-200/70 hover:bg-emerald-100/50'
                                         }`}
                                     >
-                                        <Store className="size-4 text-emerald-600" />
-                                        <span>{selectedCategory}</span>
-                                        <ChevronDown className={`size-4 text-emerald-600 transition-transform ${isCategoryOpen ? 'rotate-180' : ''}`} />
+                                        <div className="flex items-center gap-2 truncate">
+                                            <Store className="size-4 text-emerald-600 shrink-0" />
+                                            <span className="truncate">{selectedCategory}</span>
+                                        </div>
+                                        <ChevronDown className={`size-4 text-emerald-600 shrink-0 transition-transform ${isCategoryOpen ? 'rotate-180' : ''}`} />
                                     </button>
 
                                     {isCategoryOpen && (
-                                        <div className="absolute right-0 mt-2 w-56 rounded-2xl border border-emerald-100 bg-white p-2 shadow-2xl z-50">
+                                        <div className="absolute left-0 sm:left-auto sm:right-0 mt-2 w-full sm:w-56 rounded-2xl border border-emerald-100 bg-white p-2 shadow-2xl z-50 max-h-60 overflow-y-auto">
                                             {dynamicCategoryFilters.map((category) => (
                                                 <button
                                                     key={category}
@@ -274,12 +278,12 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
                                     ))}
                                 </div>
                                 {totalPages > 1 && (
-                                    <div className="mt-12 flex items-center justify-center gap-2">
-                                        <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1} className="flex size-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-sm hover:bg-slate-50 disabled:opacity-40"><ChevronLeft className="size-4" /></button>
+                                    <div className="mt-12 flex flex-wrap items-center justify-center gap-1.5 sm:gap-2">
+                                        <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1} className="flex size-9 sm:size-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-sm hover:bg-slate-50 disabled:opacity-40"><ChevronLeft className="size-4" /></button>
                                         {Array.from({ length: totalPages }, (_, i) => (
-                                            <button key={i + 1} onClick={() => setCurrentPage(i + 1)} className={`flex size-10 items-center justify-center rounded-full text-sm font-bold transition-all shadow-sm ${i + 1 === currentPage ? 'bg-emerald-600 text-white shadow-emerald-600/20' : 'border border-slate-200 bg-white text-slate-600 hover:bg-slate-50'}`}>{i + 1}</button>
+                                            <button key={i + 1} onClick={() => setCurrentPage(i + 1)} className={`flex size-9 sm:size-10 items-center justify-center rounded-full text-xs sm:text-sm font-bold transition-all shadow-sm ${i + 1 === currentPage ? 'bg-emerald-600 text-white shadow-emerald-600/20' : 'border border-slate-200 bg-white text-slate-600 hover:bg-slate-50'}`}>{i + 1}</button>
                                         ))}
-                                        <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages} className="flex size-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-sm hover:bg-slate-50 disabled:opacity-40"><ChevronRight className="size-4" /></button>
+                                        <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages} className="flex size-9 sm:size-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-sm hover:bg-slate-50 disabled:opacity-40"><ChevronRight className="size-4" /></button>
                                     </div>
                                 )}
                             </>
@@ -292,14 +296,17 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
                     </section>
                 </main>
 
-                <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-                    <div className="flex flex-col md:flex-row items-center justify-between gap-6 rounded-[2rem] bg-emerald-900 p-8 text-white shadow-xl">
-                        <div className="flex items-center gap-4">
-                            <div className="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-emerald-800"><Store className="size-8 text-emerald-400" /></div>
-                            <div><h3 className="text-xl font-bold">Punya produk unggulan di desa?</h3><p className="text-sm text-emerald-100/80 mt-1 max-w-md">Daftarkan produk dan usaha UMKM Anda sekarang pada portal resmi desa untuk memperluas jangkauan pasar hingga ke daerah.</p></div>
+                <section className="mx-auto max-w-7xl px-4 py-8 sm:py-12 sm:px-6 lg:px-8">
+                    <div className="flex flex-col md:flex-row items-center justify-between gap-6 rounded-[2rem] bg-emerald-900 p-6 sm:p-8 text-white shadow-xl text-center md:text-left">
+                        <div className="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
+                            <div className="flex size-14 sm:size-16 shrink-0 items-center justify-center rounded-2xl bg-emerald-800"><Store className="size-7 sm:size-8 text-emerald-400" /></div>
+                            <div>
+                                <h3 className="text-lg sm:text-xl font-bold">Punya produk unggulan di desa?</h3>
+                                <p className="text-xs sm:text-sm text-emerald-100/80 mt-1 max-w-md">Daftarkan produk dan usaha UMKM Anda sekarang pada portal resmi desa untuk memperluas jangkauan pasar hingga ke daerah.</p>
+                            </div>
                         </div>
                         {/* TOMBOL REGISTER MURNI - MEMAKAI TAG <a> AGAR FULL REFRESH */}
-                        <a href={route('register')} className="shrink-0 rounded-full bg-white px-6 py-3 text-sm font-bold text-emerald-900 shadow-lg transition hover:bg-emerald-50">Daftarkan UMKM Anda</a>
+                        <a href={route('register')} className="w-full sm:w-auto text-center shrink-0 rounded-full bg-white px-6 py-3 text-sm font-bold text-emerald-900 shadow-lg transition hover:bg-emerald-50">Daftarkan UMKM Anda</a>
                     </div>
                 </section>
 

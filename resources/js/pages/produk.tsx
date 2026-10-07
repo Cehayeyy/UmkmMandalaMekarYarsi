@@ -107,8 +107,8 @@ export default function ProdukPage() {
             <header className="sticky top-0 z-40 border-b border-white/80 bg-white/80 backdrop-blur-xl transition-all">
                 <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
                     {/* LOGO DESA DI HEADER (UKURAN FONT DISAMAKAN DENGAN UMKM INDEX) */}
-                    <Link href={route('home')} className="flex items-center gap-3">
-                        <div className="flex size-11 items-center justify-center overflow-hidden rounded-2xl bg-white p-1 shadow-md border border-slate-100 shrink-0">
+                    <Link href={route('home')} className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                        <div className="flex size-10 sm:size-11 items-center justify-center overflow-hidden rounded-2xl bg-white p-1 shadow-md border border-slate-100 shrink-0">
                             <img
                                 src="/images/Logo DesaMandalamekar.png"
                                 alt="Logo Desa Mandalamekar"
@@ -116,9 +116,11 @@ export default function ProdukPage() {
                                 className="size-full object-contain drop-shadow-xs"
                             />
                         </div>
-                        <div>
-                            <p className="text-sm font-semibold text-emerald-700">UMKM</p>
-                            <p className="text-sm font-bold tracking-tight text-slate-900">Desa Mandalamekar, Kabupaten Bandung</p>
+                        <div className="min-w-0">
+                            <p className="text-xs sm:text-sm font-semibold text-emerald-700">UMKM</p>
+                            <p className="text-xs sm:text-sm font-bold tracking-tight text-slate-900 truncate">
+                                <span className="hidden sm:inline">Desa Mandalamekar, </span>Kab. Bandung
+                            </p>
                         </div>
                     </Link>
 
@@ -130,25 +132,25 @@ export default function ProdukPage() {
                         <Link href={route('kontak')} className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">Kontak</Link>
                     </nav>
 
-                    <div className="flex items-center gap-2 sm:gap-4">
+                    <div className="flex items-center gap-2 sm:gap-3 shrink-0">
                         <PublicMobileNav activeRouteName="produk" />
                         <button
                             onClick={() => setIsCartOpen(true)}
-                            className="relative flex size-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition cursor-pointer shadow-xs"
+                            className="relative flex size-9 sm:size-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition cursor-pointer shadow-xs"
                             title="Buka Keranjang"
                         >
-                            <ShoppingBag className="size-5" />
+                            <ShoppingBag className="size-4.5 sm:size-5" />
                             {totalItems > 0 && (
-                                <span className="absolute -top-1.5 -right-1.5 flex size-5 items-center justify-center rounded-full bg-rose-500 text-[10px] font-extrabold text-white animate-bounce">
+                                <span className="absolute -top-1.5 -right-1.5 flex size-4.5 sm:size-5 items-center justify-center rounded-full bg-rose-500 text-[10px] font-extrabold text-white animate-bounce">
                                     {totalItems}
                                 </span>
                             )}
                         </button>
 
-                    {/* TOMBOL LOGIN MURNI - MEMAKAI TAG <a> AGAR FULL REFRESH */}
-                        <a href={route('login')} className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-700">
+                        {/* TOMBOL LOGIN MURNI - MEMAKAI TAG <a> AGAR FULL REFRESH */}
+                        <a href={route('login')} className="inline-flex items-center gap-1.5 sm:gap-2 rounded-xl bg-emerald-600 px-3.5 sm:px-5 py-2 sm:py-2.5 text-xs font-semibold text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-700">
                             <span>Login</span>
-                            <ArrowRight className="size-4" />
+                            <ArrowRight className="size-3.5 sm:size-4" />
                         </a>
                     </div>
                 </div>
@@ -443,20 +445,20 @@ export default function ProdukPage() {
             {isCartOpen && (
                 <div className="fixed inset-0 z-50 overflow-hidden">
                     <div onClick={() => setIsCartOpen(false)} className="absolute inset-0 bg-slate-900/40 backdrop-blur-xs transition-opacity" />
-                    <div className="absolute inset-y-0 right-0 flex max-w-full pl-10">
-                        <div className="w-screen max-w-md transform bg-white shadow-2xl transition-all duration-300 flex flex-col h-full border-l border-slate-100 rounded-l-[2rem]">
+                    <div className="absolute inset-y-0 right-0 flex max-w-full pl-3 sm:pl-10">
+                        <div className="w-screen max-w-md transform bg-white shadow-2xl transition-all duration-300 flex flex-col h-full border-l border-slate-100 rounded-l-[1.5rem] sm:rounded-l-[2rem]">
 
-                            <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 rounded-tl-[2rem]">
+                            <div className="px-5 sm:px-6 py-4 sm:py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 rounded-tl-[1.5rem] sm:rounded-tl-[2rem]">
                                 <div className="flex items-center gap-2">
                                     <ShoppingBag className="size-5 text-emerald-600" />
-                                    <h2 className="text-lg font-bold text-slate-900">Keranjang Belanja ({totalItems})</h2>
+                                    <h2 className="text-base sm:text-lg font-bold text-slate-900">Keranjang Belanja ({totalItems})</h2>
                                 </div>
                                 <button onClick={() => setIsCartOpen(false)} className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition cursor-pointer">
                                     <X className="size-5" />
                                 </button>
                             </div>
 
-                            <div className="flex-1 overflow-y-auto p-6 space-y-4">
+                            <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3 sm:space-y-4">
                                 {cartItems.length > 0 ? (
                                     cartByStore.map((store) => {
                                         const storeSubtotal = store.items.reduce((sum, item) => sum + item.harga * item.quantity, 0);
@@ -472,16 +474,16 @@ export default function ProdukPage() {
                                             </div>
                                             <div className="space-y-3 p-3">
                                             {store.items.map((item) => (
-                                        <div key={item.id} className="flex gap-4 items-center border border-slate-100 p-3 rounded-2xl bg-white shadow-xs">
-                                            <div className="size-16 rounded-xl bg-slate-100 overflow-hidden shrink-0 flex items-center justify-center text-slate-300">
+                                        <div key={item.id} className="flex gap-3 sm:gap-4 items-center border border-slate-100 p-3 rounded-2xl bg-white shadow-xs">
+                                            <div className="size-14 sm:size-16 rounded-xl bg-slate-100 overflow-hidden shrink-0 flex items-center justify-center text-slate-300">
                                                 {item.foto ? <img src={`/${item.foto}`} alt={item.nama_produk} className="w-full h-full object-cover" /> : <Package className="size-6" />}
                                             </div>
                                             <div className="flex-1 min-w-0">
-                                                <h4 className="font-bold text-slate-900 text-sm truncate">{item.nama_produk}</h4>
-                                                <p className="text-xs text-slate-400 font-medium mb-1.5">{item.seller || item.kategori}</p>
-                                                <p className="text-sm font-extrabold text-emerald-600">Rp {(item.harga * item.quantity).toLocaleString('id-ID')}</p>
+                                                <h4 className="font-bold text-slate-900 text-xs sm:text-sm truncate">{item.nama_produk}</h4>
+                                                <p className="text-[11px] text-slate-400 font-medium mb-1 truncate">{item.seller || item.kategori}</p>
+                                                <p className="text-xs sm:text-sm font-extrabold text-emerald-600">Rp {(item.harga * item.quantity).toLocaleString('id-ID')}</p>
                                             </div>
-                                            <div className="flex flex-col items-center gap-1">
+                                            <div className="flex flex-col items-center gap-1 shrink-0">
                                                 <div className="flex items-center border border-slate-200 rounded-lg p-0.5 bg-slate-50 shadow-inner">
                                                     <button
                                                         onClick={() => {
@@ -495,7 +497,7 @@ export default function ProdukPage() {
                                                     >
                                                         <Minus className="size-3" />
                                                     </button>
-                                                    <span className="px-2 text-xs font-bold text-slate-800">{item.quantity}</span>
+                                                    <span className="px-1.5 text-xs font-bold text-slate-800">{item.quantity}</span>
                                                     <button onClick={() => updateQuantity(item.id, 1)} className="p-1 hover:text-emerald-600 transition cursor-pointer"><Plus className="size-3" /></button>
                                                 </div>
                                                 <button onClick={() => removeFromCart(item.id)} className="text-slate-400 hover:text-rose-500 p-1 transition cursor-pointer" title="Hapus"><Trash2 className="size-3.5" /></button>
@@ -523,10 +525,10 @@ export default function ProdukPage() {
                                 )}
                             </div>
 
-                            <div className="border-t border-slate-100 p-6 bg-slate-50/50 rounded-bl-[2rem] space-y-4">
+                            <div className="border-t border-slate-100 p-4 sm:p-6 bg-slate-50/50 rounded-bl-[1.5rem] sm:rounded-bl-[2rem] space-y-3 sm:space-y-4">
                                 <div className="flex items-center justify-between text-slate-900">
-                                    <span className="text-sm font-semibold text-slate-500">Total Pembayaran:</span>
-                                    <span className="text-xl font-black text-emerald-700">Rp {totalPrice.toLocaleString('id-ID')}</span>
+                                    <span className="text-xs sm:text-sm font-semibold text-slate-500">Total Pembayaran:</span>
+                                    <span className="text-lg sm:text-xl font-black text-emerald-700">Rp {totalPrice.toLocaleString('id-ID')}</span>
                                 </div>
 
                                 {cartItems.length > 0 && <p className="text-center text-xs leading-relaxed text-slate-500">Pesan setiap toko melalui tombol WhatsApp pada bagian toko masing-masing.</p>}
@@ -540,10 +542,10 @@ export default function ProdukPage() {
             {totalItems > 0 && !isCartOpen && (
                 <button
                     onClick={() => setIsCartOpen(true)}
-                    className="fixed bottom-6 right-6 z-40 flex items-center gap-2 rounded-full bg-emerald-600 px-5 py-4 text-white shadow-xl shadow-emerald-600/30 hover:bg-emerald-700 hover:scale-105 transition-all duration-300 animate-bounce cursor-pointer"
+                    className="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-40 flex items-center gap-2 rounded-full bg-emerald-600 px-4 py-3 sm:px-5 sm:py-4 text-white shadow-xl shadow-emerald-600/30 hover:bg-emerald-700 hover:scale-105 transition-all duration-300 animate-bounce cursor-pointer"
                 >
-                    <ShoppingBag className="size-5" />
-                    <span className="text-sm font-bold">Keranjang ({totalItems})</span>
+                    <ShoppingBag className="size-4.5 sm:size-5" />
+                    <span className="text-xs sm:text-sm font-bold">Keranjang ({totalItems})</span>
                 </button>
             )}
 

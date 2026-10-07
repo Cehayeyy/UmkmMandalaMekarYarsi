@@ -34,20 +34,20 @@ export default function Register() {
     };
 
     return (
-        <div className="relative flex min-h-screen flex-col items-center justify-center bg-[radial-gradient(circle_at_top,_rgba(16,185,129,0.12)_0,_rgba(255,255,255,0)_36%),linear-gradient(180deg,#f4faf6_0%,#f8fbf8_45%,#ffffff_100%)] p-6 font-sans text-slate-900">
+        <div className="relative flex min-h-screen flex-col items-center justify-center bg-[radial-gradient(circle_at_top,_rgba(16,185,129,0.12)_0,_rgba(255,255,255,0)_36%),linear-gradient(180deg,#f4faf6_0%,#f8fbf8_45%,#ffffff_100%)] px-4 py-16 sm:p-6 font-sans text-slate-900">
             <Head title="Create an account - UMKM Desa Mandalamekar" />
 
             {/* TOMBOL KEMBALI KE BERANDA */}
             <Link
                 href="/"
-                className="absolute left-6 top-6 z-50 flex items-center gap-2 rounded-full bg-white/90 px-4 py-2.5 text-sm font-bold text-emerald-700 shadow-md backdrop-blur-md transition-all hover:-translate-x-1 hover:bg-white hover:text-emerald-800"
+                className="absolute left-3.5 top-3.5 sm:left-6 sm:top-6 z-50 flex items-center gap-1.5 sm:gap-2 rounded-full bg-white/90 px-3 py-1.5 sm:px-4 sm:py-2.5 text-xs sm:text-sm font-bold text-emerald-700 shadow-md backdrop-blur-md transition-all hover:-translate-x-1 hover:bg-white hover:text-emerald-800"
             >
-                <ArrowLeft className="size-4" />
+                <ArrowLeft className="size-3.5 sm:size-4" />
                 Kembali ke Beranda
             </Link>
 
             {/* KARTU FORMULIR REGISTER */}
-            <div className="w-full max-w-md overflow-hidden rounded-[2rem] border border-slate-100 bg-white p-8 shadow-xl shadow-slate-200/60">
+            <div className="w-full max-w-md overflow-hidden rounded-[2rem] border border-slate-100 bg-white p-5 sm:p-8 shadow-xl shadow-slate-200/60">
 
                 {/* HEADER LOGO DESA MANDALAMEKAR */}
                 <div className="flex flex-col items-center text-center mb-6">

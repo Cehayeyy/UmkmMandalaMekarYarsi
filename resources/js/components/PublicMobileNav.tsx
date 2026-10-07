@@ -29,30 +29,38 @@ export function PublicMobileNav({
             </button>
 
             {isOpen && (
-                <nav className="absolute right-0 top-[calc(100%+0.75rem)] z-[60] w-60 rounded-2xl border border-emerald-100 bg-white p-2 shadow-xl shadow-slate-900/15">
-                    {links.map((link) => {
-                        const targetUrl = route(link.routeName);
-                        const isActive =
-                            activeRouteName === link.routeName ||
-                            (activeHref && activeHref.includes(link.routeName)) ||
-                            (typeof route().current === 'function' && route().current(link.routeName));
+                <>
+                    {/* Backdrop klik luar untuk menutup menu */}
+                    <div
+                        className="fixed inset-0 z-40 bg-slate-900/30 backdrop-blur-xs lg:hidden"
+                        onClick={() => setIsOpen(false)}
+                        aria-hidden="true"
+                    />
+                    <nav className="absolute right-0 top-[calc(100%+0.75rem)] z-50 w-60 max-w-[calc(100vw-2rem)] rounded-2xl border border-emerald-100 bg-white p-2 shadow-xl shadow-slate-900/15 animate-in fade-in zoom-in-95 duration-150">
+                        {links.map((link) => {
+                            const targetUrl = route(link.routeName);
+                            const isActive =
+                                activeRouteName === link.routeName ||
+                                (activeHref && activeHref.includes(link.routeName)) ||
+                                (typeof route().current === 'function' && route().current(link.routeName));
 
-                        return (
-                            <Link
-                                key={link.routeName}
-                                href={targetUrl}
-                                onClick={() => setIsOpen(false)}
-                                className={`block rounded-xl px-4 py-3 text-sm transition ${
-                                    isActive
-                                        ? 'bg-emerald-600 font-semibold text-white shadow-sm'
-                                        : 'font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-700'
-                                }`}
-                            >
-                                {link.label}
-                            </Link>
-                        );
-                    })}
-                </nav>
+                            return (
+                                <Link
+                                    key={link.routeName}
+                                    href={targetUrl}
+                                    onClick={() => setIsOpen(false)}
+                                    className={`block rounded-xl px-4 py-3 text-sm transition ${
+                                        isActive
+                                            ? 'bg-emerald-600 font-semibold text-white shadow-sm'
+                                            : 'font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-700'
+                                    }`}
+                                >
+                                    {link.label}
+                                </Link>
+                            );
+                        })}
+                    </nav>
+                </>
             )}
         </div>
     );

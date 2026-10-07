@@ -145,7 +145,7 @@ export default function ProdukSaya() {
                     </header>
 
                     <main className="min-w-0 space-y-8 flex-1 p-4 sm:p-6 lg:p-8">
-                        <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm w-full">
+                        <div className="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200 shadow-sm w-full">
                             <div className="border-b border-slate-100 pb-4 mb-6">
                                 <h2 className="text-base font-bold text-slate-900">Tambah Produk Baru</h2>
                                 <p className="text-xs text-slate-500 mt-0.5">Lengkapi formulir di bawah ini untuk menambahkan produk ke toko Anda.</p>

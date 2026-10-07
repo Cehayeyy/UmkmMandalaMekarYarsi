@@ -243,7 +243,7 @@ export default function ManajemenAkun({ users = [], notifications = [] }: { user
                                     {isNotificationOpen && (
                                         <>
                                             <div className="fixed inset-0 z-10" onClick={() => setIsNotificationOpen(false)} />
-                                            <div className="absolute right-0 z-20 mt-3 w-[300px] sm:w-80 lg:w-96 overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-xl shadow-slate-200/70 origin-top-right animate-fade-in">
+                                            <div className="absolute right-0 z-20 mt-3 w-[calc(100vw-2rem)] sm:w-80 lg:w-96 max-w-sm overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-xl shadow-slate-200/70 origin-top-right animate-fade-in">
                                                 <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50/80 px-4 py-3">
                                                     <h3 className="font-bold text-slate-800 text-sm">Notifikasi</h3>
                                                     {unreadCount > 0 && (

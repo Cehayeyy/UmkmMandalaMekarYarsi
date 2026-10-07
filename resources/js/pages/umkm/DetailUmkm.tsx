@@ -18,6 +18,7 @@ import {
     X
 } from 'lucide-react';
 import { useState, useMemo } from 'react';
+import { PublicMobileNav } from '@/components/PublicMobileNav';
 
 interface Product {
     id: number;
@@ -91,14 +92,16 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
 
                 {/* HEADER / NAVBAR PUBLIK */}
                 <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/90 backdrop-blur-xl">
-                    <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-                        <Link href={route('home')} className="flex items-center gap-3">
-                            <div className="flex size-11 items-center justify-center rounded-2xl bg-emerald-600 text-white shadow-sm">
-                                <Sprout className="size-6" />
+                    <div className="mx-auto flex max-w-7xl items-center justify-between px-3.5 py-3 sm:px-6 sm:py-4 lg:px-8">
+                        <Link href={route('home')} className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                            <div className="flex size-10 sm:size-11 items-center justify-center rounded-2xl bg-emerald-600 text-white shadow-sm shrink-0">
+                                <Sprout className="size-5 sm:size-6" />
                             </div>
-                            <div>
-                                <p className="text-sm font-semibold text-emerald-700">UMKM</p>
-                                <p className="text-sm font-bold tracking-tight">Desa Mandalamekar, Kabupaten Bandung</p>
+                            <div className="min-w-0">
+                                <p className="text-xs sm:text-sm font-semibold text-emerald-700">UMKM</p>
+                                <p className="text-xs sm:text-sm font-bold tracking-tight text-slate-900 truncate">
+                                    <span className="hidden sm:inline">Desa Mandalamekar, </span>Kab. Bandung
+                                </p>
                             </div>
                         </Link>
 
@@ -110,27 +113,31 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
                             <Link href={route('kontak')} className="text-sm font-medium text-slate-600 hover:text-emerald-700 transition">Kontak</Link>
                         </nav>
 
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+                            <PublicMobileNav activeRouteName="umkm.umkmPage" />
+
                             <button
                                 onClick={() => setIsCartOpen(true)}
-                                className="relative flex size-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition cursor-pointer shadow-xs"
+                                className="relative flex size-9 sm:size-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition cursor-pointer shadow-xs"
                                 title="Buka Keranjang"
                             >
-                                <ShoppingBag className="size-5" />
+                                <ShoppingBag className="size-4.5 sm:size-5" />
                                 {totalItems > 0 && (
-                                    <span className="absolute -top-1.5 -right-1.5 flex size-5 items-center justify-center rounded-full bg-rose-500 text-[10px] font-extrabold text-white animate-bounce">
+                                    <span className="absolute -top-1.5 -right-1.5 flex size-4.5 sm:size-5 items-center justify-center rounded-full bg-rose-500 text-[10px] font-extrabold text-white animate-bounce">
                                         {totalItems}
                                     </span>
                                 )}
                             </button>
 
                             {auth.user ? (
-                                <Link href={route('dashboard')} className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700 shadow-sm">
-                                    Dashboard <ArrowRight className="size-4" />
+                                <Link href={route('dashboard')} className="inline-flex items-center gap-1.5 sm:gap-2 rounded-xl sm:rounded-full bg-emerald-600 px-3.5 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-white transition hover:bg-emerald-700 shadow-sm">
+                                    <span className="hidden xs:inline">Dashboard</span>
+                                    <ArrowRight className="size-3.5 sm:size-4" />
                                 </Link>
                             ) : (
-                                <Link href={route('login')} className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700 shadow-sm">
-                                    Login <ArrowRight className="size-4" />
+                                <Link href={route('login')} className="inline-flex items-center gap-1.5 sm:gap-2 rounded-xl sm:rounded-full bg-emerald-600 px-3.5 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-white transition hover:bg-emerald-700 shadow-sm">
+                                    <span>Login</span>
+                                    <ArrowRight className="size-3.5 sm:size-4" />
                                 </Link>
                             )}
                         </div>
@@ -139,12 +146,12 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
 
                 <main className="pb-20">
                     {/* BANNER TOKO (CARD LEBAR) */}
-                    <section className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 lg:px-8">
-                        <Link href={route('umkm.umkmPage')} className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-emerald-600 mb-6 transition">
+                    <section className="mx-auto max-w-7xl px-3.5 pt-6 sm:px-6 sm:pt-8 lg:px-8">
+                        <Link href={route('umkm.umkmPage')} className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-500 hover:text-emerald-600 mb-4 sm:mb-6 transition">
                             <ChevronLeft className="size-4" /> Kembali ke Daftar UMKM
                         </Link>
 
-                        <div className="relative overflow-hidden rounded-[2rem] bg-slate-900 shadow-xl shadow-slate-200 min-h-[320px] flex flex-col justify-end">
+                        <div className="relative overflow-hidden rounded-[1.75rem] sm:rounded-[2rem] bg-slate-900 shadow-xl shadow-slate-200 min-h-[300px] sm:min-h-[340px] flex flex-col justify-end">
                             {umkm.foto_toko ? (
                                 <img
                                     src={`/${umkm.foto_toko}`}
@@ -157,43 +164,43 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
 
                             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/60 to-transparent" />
 
-                            <div className="relative z-10 p-8 sm:p-12 flex flex-col sm:flex-row sm:items-end justify-between gap-6">
-                                <div className="flex items-end gap-6">
-                                    <div className="hidden sm:flex size-24 shrink-0 items-center justify-center rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-white shadow-lg overflow-hidden">
+                            <div className="relative z-10 p-5 sm:p-10 lg:p-12 flex flex-col sm:flex-row sm:items-end justify-between gap-6">
+                                <div className="flex flex-col sm:flex-row sm:items-end gap-4 sm:gap-6">
+                                    <div className="flex size-16 sm:size-24 shrink-0 items-center justify-center rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-white shadow-lg overflow-hidden">
                                         {umkm.foto_toko ? (
                                             <img src={`/${umkm.foto_toko}`} alt={umkm.name} className="h-full w-full object-cover" />
                                         ) : (
-                                            <Store className="size-10" />
+                                            <Store className="size-8 sm:size-10" />
                                         )}
                                     </div>
-                                    <div>
-                                        <div className="flex items-center gap-3 mb-3">
-                                            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/20 backdrop-blur-md px-3 py-1 text-xs font-bold text-emerald-300 border border-emerald-500/30">
+                                    <div className="min-w-0">
+                                        <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+                                            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/20 backdrop-blur-md px-3 py-1 text-[11px] sm:text-xs font-bold text-emerald-300 border border-emerald-500/30">
                                                 Mitra Aktif Desa
                                             </span>
-                                            <span className="text-sm font-medium text-slate-300">
+                                            <span className="text-xs sm:text-sm font-medium text-slate-300">
                                                 @{umkm.username}
                                             </span>
                                         </div>
-                                        <h1 className="text-3xl sm:text-4xl font-extrabold text-white mb-2">
+                                        <h1 className="text-2xl sm:text-4xl font-extrabold text-white mb-2 break-words">
                                             {umkm.name}
                                         </h1>
-                                        <p className="max-w-2xl text-sm sm:text-base text-slate-300 leading-relaxed">
+                                        <p className="max-w-2xl text-xs sm:text-base text-slate-300 leading-relaxed line-clamp-3 sm:line-clamp-none">
                                             {umkm.deskripsi_toko || "Toko ini adalah mitra resmi UMKM Desa Mandalamekar yang menyediakan berbagai produk lokal unggulan berkualitas."}
                                         </p>
                                     </div>
                                 </div>
 
-                                <div className="shrink-0">
+                                <div className="shrink-0 w-full sm:w-auto">
                                     <a
                                         href={`https://maps.google.com/?q=${encodeURIComponent((umkm.alamat_toko || 'Desa Mandalamekar') + ', Mandalamekar, Bandung')}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="flex items-center gap-2 text-sm font-medium text-white/90 bg-white/10 backdrop-blur-md px-4 py-2.5 rounded-xl border border-white/10 hover:bg-white/20 transition cursor-pointer"
+                                        className="inline-flex w-full sm:w-auto items-center justify-center gap-2 text-xs sm:text-sm font-medium text-white/90 bg-white/10 backdrop-blur-md px-4 py-2.5 rounded-xl border border-white/10 hover:bg-white/20 transition cursor-pointer"
                                         title="Buka di Google Maps"
                                     >
                                         <MapPin className="size-4 text-emerald-400 shrink-0" />
-                                        <span className="truncate max-w-[200px]">{umkm.alamat_toko || 'Desa Mandalamekar'}</span>
+                                        <span className="truncate max-w-[240px] sm:max-w-[200px]">{umkm.alamat_toko || 'Desa Mandalamekar'}</span>
                                     </a>
                                 </div>
                             </div>
@@ -304,24 +311,24 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
                     <div className="fixed inset-0 z-50 overflow-hidden">
                         <div onClick={() => setIsCartOpen(false)} className="absolute inset-0 bg-slate-900/40 backdrop-blur-xs transition-opacity" />
 
-                        <div className="absolute inset-y-0 right-0 flex max-w-full pl-10">
-                            <div className="w-screen max-w-md transform bg-white shadow-2xl transition-all duration-300 flex flex-col h-full border-l border-slate-100 rounded-l-[2rem]">
+                        <div className="absolute inset-y-0 right-0 flex max-w-full pl-3 sm:pl-10">
+                            <div className="w-screen max-w-md transform bg-white shadow-2xl transition-all duration-300 flex flex-col h-full border-l border-slate-100 rounded-l-[1.5rem] sm:rounded-l-[2rem]">
 
-                                <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 rounded-tl-[2rem]">
+                                <div className="px-5 sm:px-6 py-4 sm:py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 rounded-tl-[1.5rem] sm:rounded-tl-[2rem]">
                                     <div className="flex items-center gap-2">
                                         <ShoppingBag className="size-5 text-emerald-600" />
-                                        <h2 className="text-lg font-bold text-slate-900">Keranjang Belanja ({totalItems})</h2>
+                                        <h2 className="text-base sm:text-lg font-bold text-slate-900">Keranjang Belanja ({totalItems})</h2>
                                     </div>
                                     <button onClick={() => setIsCartOpen(false)} className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition cursor-pointer">
                                         <X className="size-5" />
                                     </button>
                                 </div>
 
-                                <div className="flex-1 overflow-y-auto p-6 space-y-4">
+                                <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3 sm:space-y-4">
                                     {cartItems.length > 0 ? (
                                         cartItems.map((item) => (
-                                            <div key={item.id} className="flex gap-4 items-center border border-slate-100 p-3 rounded-2xl bg-white shadow-xs">
-                                                <div className="size-16 rounded-xl bg-slate-100 overflow-hidden shrink-0 flex items-center justify-center text-slate-300">
+                                            <div key={item.id} className="flex gap-3 sm:gap-4 items-center border border-slate-100 p-3 rounded-2xl bg-white shadow-xs">
+                                                <div className="size-14 sm:size-16 rounded-xl bg-slate-100 overflow-hidden shrink-0 flex items-center justify-center text-slate-300">
                                                     {item.foto ? (
                                                         <img src={`/${item.foto}`} alt={item.nama_produk} className="w-full h-full object-cover" />
                                                     ) : (
@@ -329,12 +336,12 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
                                                     )}
                                                 </div>
                                                 <div className="flex-1 min-w-0">
-                                                    <h4 className="font-bold text-slate-900 text-sm truncate">{item.nama_produk}</h4>
-                                                    <p className="text-xs text-slate-400 font-medium mb-1.5">{item.kategori}</p>
-                                                    <p className="text-sm font-extrabold text-emerald-600">Rp {(item.harga * item.quantity).toLocaleString('id-ID')}</p>
+                                                    <h4 className="font-bold text-slate-900 text-xs sm:text-sm truncate">{item.nama_produk}</h4>
+                                                    <p className="text-[11px] text-slate-400 font-medium mb-1">{item.kategori}</p>
+                                                    <p className="text-xs sm:text-sm font-extrabold text-emerald-600">Rp {(item.harga * item.quantity).toLocaleString('id-ID')}</p>
                                                 </div>
 
-                                                <div className="flex flex-col items-center gap-1">
+                                                <div className="flex flex-col items-center gap-1 shrink-0">
                                                     <div className="flex items-center border border-slate-200 rounded-lg p-0.5 bg-slate-50 shadow-inner">
                                                         <button
                                                             onClick={() => {
@@ -348,7 +355,7 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
                                                         >
                                                             <Minus className="size-3" />
                                                         </button>
-                                                        <span className="px-2 text-xs font-bold text-slate-800">{item.quantity}</span>
+                                                        <span className="px-1.5 text-xs font-bold text-slate-800">{item.quantity}</span>
                                                         <button onClick={() => updateQuantity(item.id, 1)} className="p-1 hover:text-emerald-600 transition cursor-pointer"><Plus className="size-3" /></button>
                                                     </div>
                                                     <button onClick={() => removeFromCart(item.id)} className="text-slate-400 hover:text-rose-500 p-1 transition cursor-pointer" title="Hapus"><Trash2 className="size-3.5" /></button>
@@ -363,10 +370,10 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
                                     )}
                                 </div>
 
-                                <div className="border-t border-slate-100 p-6 bg-slate-50/50 rounded-bl-[2rem] space-y-4">
+                                <div className="border-t border-slate-100 p-4 sm:p-6 bg-slate-50/50 rounded-bl-[1.5rem] sm:rounded-bl-[2rem] space-y-3 sm:space-y-4">
                                     <div className="flex items-center justify-between text-slate-900">
-                                        <span className="text-sm font-semibold text-slate-500">Total Pembayaran:</span>
-                                        <span className="text-xl font-black text-emerald-700">Rp {totalPrice.toLocaleString('id-ID')}</span>
+                                        <span className="text-xs sm:text-sm font-semibold text-slate-500">Total Pembayaran:</span>
+                                        <span className="text-lg sm:text-xl font-black text-emerald-700">Rp {totalPrice.toLocaleString('id-ID')}</span>
                                     </div>
 
                                     {cartItems.length > 0 ? (
@@ -375,7 +382,7 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             onClick={handleWhatsappClick}
-                                            className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3.5 text-sm font-bold text-white shadow-lg shadow-emerald-600/20 hover:bg-emerald-700 transition text-center cursor-pointer"
+                                            className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3 text-xs sm:text-sm font-bold text-white shadow-lg shadow-emerald-600/20 hover:bg-emerald-700 transition text-center cursor-pointer"
                                         >
                                             <span>Lanjutkan ke WhatsApp</span>
                                             <ArrowRight className="size-4" />
@@ -383,7 +390,7 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
                                     ) : (
                                         <button
                                             disabled
-                                            className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-slate-200 py-3.5 text-sm font-bold text-slate-400 transition cursor-not-allowed"
+                                            className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-slate-200 py-3 text-xs sm:text-sm font-bold text-slate-400 transition cursor-not-allowed"
                                         >
                                             <span>Lanjutkan ke WhatsApp</span>
                                             <ArrowRight className="size-4" />
@@ -400,37 +407,52 @@ export default function DetailUmkm({ umkm, products = [] }: { umkm: UmkmUser, pr
                 {totalItems > 0 && !isCartOpen && (
                     <button
                         onClick={() => setIsCartOpen(true)}
-                        className="fixed bottom-6 right-6 z-40 flex items-center gap-2 rounded-full bg-emerald-600 px-5 py-4 text-white shadow-xl shadow-emerald-600/30 hover:bg-emerald-700 hover:scale-105 transition-all duration-300 animate-bounce cursor-pointer"
+                        className="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-40 flex items-center gap-2 rounded-full bg-emerald-600 px-4 py-3 sm:px-5 sm:py-4 text-white shadow-xl shadow-emerald-600/30 hover:bg-emerald-700 hover:scale-105 transition-all duration-300 animate-bounce cursor-pointer"
                     >
-                        <ShoppingBag className="size-5" />
-                        <span className="text-sm font-bold">Keranjang ({totalItems})</span>
+                        <ShoppingBag className="size-4.5 sm:size-5" />
+                        <span className="text-xs sm:text-sm font-bold">Keranjang ({totalItems})</span>
                     </button>
                 )}
 
                 {/* FOOTER PUBLIK */}
                 <footer className="bg-emerald-950 text-emerald-100 border-t border-emerald-900">
-                    <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-4 lg:px-8">
+                    <div className="mx-auto grid max-w-7xl gap-8 sm:gap-10 px-4 py-10 sm:py-12 sm:px-6 lg:grid-cols-4 lg:px-8">
                         <div>
                             <div className="flex items-center gap-3">
-                                <div className="flex size-10 items-center justify-center rounded-2xl bg-emerald-600 text-white"><Sprout className="size-5" /></div>
-                                <p className="font-semibold text-white">UMKM Mandalamekar</p>
+                                <div className="flex size-10 items-center justify-center rounded-2xl bg-emerald-600 text-white shrink-0"><Sprout className="size-5" /></div>
+                                <div>
+                                    <p className="font-semibold text-white">UMKM Mandalamekar</p>
+                                    <p className="text-xs text-emerald-200/70">Portal produk lokal desa</p>
+                                </div>
                             </div>
-                            <p className="mt-4 max-w-xs text-sm leading-6 text-emerald-200/80">Dukung produk lokal, majukan ekonomi desa.</p>
+                            <p className="mt-4 max-w-xs text-xs sm:text-sm leading-6 text-emerald-200/80">Dukung produk lokal, majukan ekonomi desa bersama mitra UMKM terpercaya.</p>
                         </div>
                         <div>
-                            <p className="font-semibold text-white">Kontak</p>
-                            <ul className="mt-4 space-y-3 text-sm text-emerald-200/80">
-                                <li className="flex items-start gap-2"><MapPin className="mt-0.5 size-4" /> <span>Desa Mandalamekar, Kab. Bandung</span></li>
-                                <li className="flex items-center gap-2"><Phone className="size-4" /> <span>0812-3456-7890</span></li>
+                            <p className="font-semibold text-white text-sm sm:text-base">Navigasi</p>
+                            <ul className="mt-3 sm:mt-4 space-y-2 text-xs sm:text-sm text-emerald-200/80">
+                                <li><Link href={route('home')} className="hover:text-white transition">Beranda</Link></li>
+                                <li><Link href={route('umkm.umkmPage')} className="hover:text-white transition">Daftar UMKM</Link></li>
+                                <li><Link href={route('produk')} className="hover:text-white transition">Katalog Produk</Link></li>
+                                <li><Link href={route('tentangdesa')} className="hover:text-white transition">Tentang Desa</Link></li>
                             </ul>
                         </div>
                         <div>
-                            <p className="font-semibold text-white">Ikuti Kami</p>
-                            <div className="mt-4 flex gap-3">
+                            <p className="font-semibold text-white text-sm sm:text-base">Kontak Desa</p>
+                            <ul className="mt-3 sm:mt-4 space-y-2.5 sm:space-y-3 text-xs sm:text-sm text-emerald-200/80">
+                                <li className="flex items-start gap-2"><MapPin className="mt-0.5 size-4 shrink-0 text-emerald-400" /> <span>Desa Mandalamekar, Kec. Cimenyan, Kab. Bandung</span></li>
+                                <li className="flex items-center gap-2"><Phone className="size-4 shrink-0 text-emerald-400" /> <span>0812-3456-7890</span></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <p className="font-semibold text-white text-sm sm:text-base">Ikuti Kami</p>
+                            <div className="mt-3 sm:mt-4 flex gap-3">
                                 <a href="#" className="flex size-9 items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition"><Facebook className="size-4" /></a>
                                 <a href="#" className="flex size-9 items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition"><Instagram className="size-4" /></a>
                             </div>
                         </div>
+                    </div>
+                    <div className="border-t border-white/10 py-4 text-center text-xs text-emerald-200/60 px-4">
+                        © 2026 UMKM Desa Mandalamekar Kecamatan Cimenyan Kabupaten Bandung. Universitas Yarsi.
                     </div>
                 </footer>
             </div>

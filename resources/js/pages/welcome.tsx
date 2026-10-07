@@ -63,8 +63,8 @@ export default function Welcome() {
                     <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
 
                         {/* KIRI HEADER: LOGO DESA & JUDUL */}
-                        <Link href="/" className="flex items-center gap-3">
-                            <div className="flex size-11 items-center justify-center overflow-hidden rounded-2xl bg-white p-1 shadow-md border border-slate-100 shrink-0">
+                        <Link href="/" className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                            <div className="flex size-10 sm:size-11 items-center justify-center overflow-hidden rounded-2xl bg-white p-1 shadow-md border border-slate-100 shrink-0">
                                 <img
                                     src="/images/Logo DesaMandalamekar.png"
                                     alt="Logo Desa Mandalamekar"
@@ -72,9 +72,11 @@ export default function Welcome() {
                                     className="size-full object-contain drop-shadow-xs"
                                 />
                             </div>
-                            <div>
-                                <p className="text-sm font-semibold text-emerald-700">UMKM</p>
-                                <p className="text-sm font-bold tracking-tight text-slate-900">Desa Mandalamekar, Kabupaten Bandung</p>
+                            <div className="min-w-0">
+                                <p className="text-xs sm:text-sm font-semibold text-emerald-700">UMKM</p>
+                                <p className="text-xs sm:text-sm font-bold tracking-tight text-slate-900 truncate">
+                                    <span className="hidden sm:inline">Desa Mandalamekar, </span>Kab. Bandung
+                                </p>
                             </div>
                         </Link>
 
@@ -92,15 +94,15 @@ export default function Welcome() {
                         </nav>
 
                         {/* KANAN HEADER: TOMBOL LOGIN & DASHBOARD DINAMIS */}
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
                             <PublicMobileNav activeRouteName="home" />
                             {/* TOMBOL LOGIN MURNI - MEMAKAI TAG <a> AGAR FULL REFRESH */}
                             <a
                                 href={route('login')}
-                                className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-700"
+                                className="inline-flex items-center gap-1.5 sm:gap-2 rounded-xl bg-emerald-600 px-3.5 sm:px-5 py-2 sm:py-2.5 text-xs font-semibold text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-700"
                             >
                                 <span>Login</span>
-                                <ArrowRight className="size-4" />
+                                <ArrowRight className="size-3.5 sm:size-4" />
                             </a>
                         </div>
                     </div>
@@ -210,7 +212,7 @@ export default function Welcome() {
                                 </div>
                             </div>
 
-                            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                            <div className="mt-8 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                                 {topCategories.length > 0 ? (
                                     topCategories.map((category) => {
                                         const Icon = getCategoryIcon(category.label);
@@ -218,13 +220,13 @@ export default function Welcome() {
                                             <Link
                                                 key={category.label}
                                                 href={route('produk')}
-                                                className="flex flex-col items-center gap-3 rounded-[1.5rem] border border-slate-200 bg-slate-50 px-4 py-6 text-center transition hover:-translate-y-1 hover:bg-emerald-50 hover:border-emerald-200 group"
+                                                className="flex flex-col items-center gap-2.5 sm:gap-3 rounded-[1.25rem] sm:rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4 sm:py-6 text-center transition hover:-translate-y-1 hover:bg-emerald-50 hover:border-emerald-200 group"
                                             >
-                                                <div className="flex size-14 items-center justify-center rounded-2xl bg-white text-emerald-600 shadow-sm group-hover:scale-110 transition-transform">
-                                                    <Icon className="size-6" />
+                                                <div className="flex size-12 sm:size-14 items-center justify-center rounded-2xl bg-white text-emerald-600 shadow-sm group-hover:scale-110 transition-transform">
+                                                    <Icon className="size-5 sm:size-6" />
                                                 </div>
-                                                <p className="text-sm font-semibold text-slate-700 group-hover:text-emerald-700">
-                                                    {category.label} <span className="text-xs text-slate-400 font-normal">({category.count})</span>
+                                                <p className="text-xs sm:text-sm font-semibold text-slate-700 group-hover:text-emerald-700">
+                                                    {category.label} <span className="block sm:inline text-[11px] sm:text-xs text-slate-400 font-normal">({category.count})</span>
                                                 </p>
                                             </Link>
                                         );
@@ -240,12 +242,12 @@ export default function Welcome() {
 
                     {/* PRODUK TERBARU */}
                     <section id="produk" className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
-                        <div className="mb-8 flex items-end justify-between gap-4">
+                        <div className="mb-6 sm:mb-8 flex items-end justify-between gap-4">
                             <div>
-                                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-600">Produk Terbaru</p>
-                                <h2 className="mt-2 text-3xl font-bold tracking-tight">Pilihan segar dari pelaku UMKM desa</h2>
+                                <p className="text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] text-emerald-600">Produk Terbaru</p>
+                                <h2 className="mt-1 sm:mt-2 text-2xl sm:text-3xl font-bold tracking-tight">Pilihan segar dari pelaku UMKM desa</h2>
                             </div>
-                            <Link href={route('produk')} className="hidden text-sm font-semibold text-emerald-700 hover:text-emerald-800 sm:inline-flex">
+                            <Link href={route('produk')} className="inline-flex text-xs sm:text-sm font-semibold text-emerald-700 hover:text-emerald-800 shrink-0">
                                 Lihat Semua
                             </Link>
                         </div>

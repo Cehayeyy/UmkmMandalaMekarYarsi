@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, Trees, HeartHandshake, Eye, Target, Sprout, ArrowRight, Landmark } from 'lucide-react';
+import { ShieldCheck, Trees, HeartHandshake, Eye, Target, Sprout, ArrowRight, Landmark, MapPin, Phone, Facebook, Instagram, MessageCircle } from 'lucide-react';
 import { Link, Head } from '@inertiajs/react';
 import { PublicMobileNav } from '@/components/PublicMobileNav';
 
@@ -11,9 +11,9 @@ export default function TentangDesa() {
             {/* NAVBAR / HEADER PUBLIK DENGAN LOGO DESA */}
             <header className="sticky top-0 z-50 border-b border-white/80 bg-white/80 backdrop-blur-xl transition-all">
                 <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-                    {/* LOGO DESA DI HEADER (UKURAN FONT DISAMAKAN DENGAN HALAMAN LAIN) */}
-                    <Link href={route('home')} className="flex items-center gap-3">
-                        <div className="flex size-11 items-center justify-center overflow-hidden rounded-2xl bg-white p-1 shadow-md border border-slate-100 shrink-0">
+                    {/* LOGO DESA DI HEADER */}
+                    <Link href={route('home')} className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                        <div className="flex size-10 sm:size-11 items-center justify-center overflow-hidden rounded-2xl bg-white p-1 shadow-md border border-slate-100 shrink-0">
                             <img
                                 src="/images/Logo DesaMandalamekar.png"
                                 alt="Logo Desa Mandalamekar"
@@ -21,9 +21,11 @@ export default function TentangDesa() {
                                 className="size-full object-contain drop-shadow-xs"
                             />
                         </div>
-                        <div>
-                            <p className="text-sm font-semibold text-emerald-700">UMKM</p>
-                            <p className="text-sm font-bold tracking-tight text-slate-900">Desa Mandalamekar, Kabupaten Bandung</p>
+                        <div className="min-w-0">
+                            <p className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-emerald-700">UMKM</p>
+                            <p className="text-xs sm:text-sm font-bold tracking-tight text-slate-900 truncate">
+                                <span className="hidden sm:inline">Desa Mandalamekar, </span>Kab. Bandung
+                            </p>
                         </div>
                     </Link>
 
@@ -45,14 +47,14 @@ export default function TentangDesa() {
                         </Link>
                     </nav>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 sm:gap-3 shrink-0">
                         <PublicMobileNav activeRouteName="tentangdesa" />
                         <Link
                             href={route('login')}
-                            className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-700"
+                            className="inline-flex items-center gap-1.5 sm:gap-2 rounded-xl bg-emerald-600 px-3.5 py-2 sm:px-5 sm:py-2.5 text-xs font-semibold text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-700"
                         >
                             <span>Login</span>
-                            <ArrowRight className="size-4" />
+                            <ArrowRight className="size-3.5 sm:size-4" />
                         </Link>
                     </div>
                 </div>
@@ -249,9 +251,62 @@ export default function TentangDesa() {
                             </a>
                         </div>
                     </div>
-
                 </div>
             </section>
+
+            {/* FOOTER PEKAT */}
+            <footer className="bg-emerald-950 text-emerald-100">
+                <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-4 lg:px-8">
+                    <div>
+                        <div className="flex items-center gap-3">
+                            <div className="flex size-10 items-center justify-center overflow-hidden rounded-2xl bg-white p-1 border border-slate-200 shadow-xs shrink-0">
+                                <img
+                                    src="/images/Logo DesaMandalamekar.png"
+                                    alt="Logo Desa Mandalamekar"
+                                    style={{ imageRendering: '-webkit-optimize-contrast' }}
+                                    className="size-full object-contain"
+                                />
+                            </div>
+                            <p className="font-semibold text-white">UMKM Desa Mandalamekar</p>
+                        </div>
+                        <p className="mt-4 max-w-xs text-sm leading-6 text-emerald-200/80">Dukung produk lokal, majukan ekonomi desa.</p>
+                    </div>
+                    <div>
+                        <p className="font-semibold text-white">Menu</p>
+                        <ul className="mt-4 space-y-2 text-sm text-emerald-200/80">
+                            <li><Link href={route('home')} className="hover:text-white transition">Beranda</Link></li>
+                            <li><Link href={route('umkm.umkmPage')} className="hover:text-white transition">UMKM</Link></li>
+                            <li><Link href={route('produk')} className="hover:text-white transition">Produk</Link></li>
+                            <li><Link href={route('tentangdesa')} className="hover:text-white transition">Tentang Desa</Link></li>
+                            <li><Link href={route('kontak')} className="hover:text-white transition">Kontak</Link></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <p className="font-semibold text-white">Kontak</p>
+                        <ul className="mt-4 space-y-3 text-sm text-emerald-200/80">
+                            <li className="flex items-start gap-2">
+                                <MapPin className="mt-0.5 size-4 shrink-0 text-emerald-400" />
+                                <span>Desa Mandalamekar, <span className="whitespace-nowrap">Kec. Cimenyan, Kab. Bandung</span></span>
+                            </li>
+                            <li className="flex items-center gap-2">
+                                <Phone className="size-4 text-emerald-400" />
+                                <span>0812-3456-7890</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <p className="font-semibold text-white">Ikuti Kami</p>
+                        <div className="mt-4 flex gap-3">
+                            <a href="#" className="flex size-9 items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition"><Facebook className="size-4" /></a>
+                            <a href="#" className="flex size-9 items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition"><Instagram className="size-4" /></a>
+                            <a href="#" className="flex size-9 items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition"><MessageCircle className="size-4" /></a>
+                        </div>
+                    </div>
+                </div>
+                <div className="border-t border-white/5 py-4 text-center text-xs text-emerald-200/60 px-4">
+                    © 2026 UMKM Desa Mandalamekar <span className="whitespace-nowrap">Kecamatan Cimenyan</span> <span className="whitespace-nowrap">Kabupaten Bandung</span>. Universitas Yarsi.
+                </div>
+            </footer>
         </div>
     );
 }

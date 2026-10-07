@@ -49,8 +49,8 @@ export default function Kontak() {
             {/* HEADER / NAVBAR DENGAN LOGO DESA (FONT DISAMAKAN) */}
             <header className="sticky top-0 z-50 border-b border-white/80 bg-white/80 backdrop-blur-xl transition-all">
                 <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-                    <Link href={route('home')} className="flex items-center gap-3">
-                        <div className="flex size-11 items-center justify-center overflow-hidden rounded-2xl bg-white p-1 shadow-md border border-slate-100 shrink-0">
+                    <Link href={route('home')} className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                        <div className="flex size-10 sm:size-11 items-center justify-center overflow-hidden rounded-2xl bg-white p-1 shadow-md border border-slate-100 shrink-0">
                             <img
                                 src="/images/Logo DesaMandalamekar.png"
                                 alt="Logo Desa Mandalamekar"
@@ -58,9 +58,11 @@ export default function Kontak() {
                                 className="size-full object-contain drop-shadow-xs"
                             />
                         </div>
-                        <div>
-                            <p className="text-sm font-semibold text-emerald-700">UMKM</p>
-                            <p className="text-sm font-bold tracking-tight text-slate-900">Desa Mandalamekar, Kabupaten Bandung</p>
+                        <div className="min-w-0">
+                            <p className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-emerald-700">UMKM</p>
+                            <p className="text-xs sm:text-sm font-bold tracking-tight text-slate-900 truncate">
+                                <span className="hidden sm:inline">Desa Mandalamekar, </span>Kab. Bandung
+                            </p>
                         </div>
                     </Link>
 
@@ -72,14 +74,14 @@ export default function Kontak() {
                         <Link href={route('kontak')} className="text-sm font-semibold text-emerald-600">Kontak</Link>
                     </nav>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 sm:gap-3 shrink-0">
                         <PublicMobileNav activeRouteName="kontak" />
                         <Link
                             href={route('login')}
-                            className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-700"
+                            className="inline-flex items-center gap-1.5 sm:gap-2 rounded-xl bg-emerald-600 px-3.5 py-2 sm:px-5 sm:py-2.5 text-xs font-semibold text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-700"
                         >
                             <span>Login</span>
-                            <ArrowRight className="size-4" />
+                            <ArrowRight className="size-3.5 sm:size-4" />
                         </Link>
                     </div>
                 </div>
@@ -181,7 +183,7 @@ export default function Kontak() {
 
                         {/* KANAN: FORMULIR KIRIM PESAN */}
                         <div className="lg:col-span-7">
-                            <div className="rounded-[2rem] border border-slate-100 bg-white p-6 shadow-xl shadow-slate-200/40 sm:p-8">
+                            <div className="rounded-[2rem] border border-slate-100 bg-white p-5 shadow-xl shadow-slate-200/40 sm:p-8">
                                 <h3 className="text-xl font-bold text-slate-900 mb-2">Kirim Pesan</h3>
                                 {formSubmitted ? (
                                     <div className="flex flex-col items-center justify-center py-12 text-center animate-pulse">

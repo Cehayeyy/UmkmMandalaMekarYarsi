@@ -346,7 +346,7 @@ export default function DaftarProdukSaya({ produkList = [] }: Readonly<{ produkL
                                 {errors.nama_produk && <p className="text-xs text-rose-500 mt-1">{errors.nama_produk}</p>}
                             </div>
 
-                            <div className="grid grid-cols-2 gap-3">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                                 {/* 🛠️ KATEGORI DINAMIS */}
                                 <div>
                                     <label htmlFor="edit-kategori" className="block text-xs font-bold uppercase text-slate-500 mb-1">Kategori</label>

@@ -10,8 +10,8 @@ interface AuthLayoutProps {
 
 export default function AuthSimpleLayout({ children, title, description }: AuthLayoutProps) {
     return (
-        <div className="flex min-h-screen flex-col items-center justify-center bg-[radial-gradient(circle_at_top,_rgba(16,185,129,0.15)_0,_rgba(255,255,255,0)_40%),linear-gradient(180deg,#f8fbf8_0%,#ffffff_100%)] p-6 md:p-10">
-            <div className="w-full max-w-md rounded-[2rem] border border-slate-200/60 bg-white/80 p-8 shadow-2xl shadow-slate-200/50 backdrop-blur-xl sm:p-10">
+        <div className="flex min-h-screen flex-col items-center justify-center bg-[radial-gradient(circle_at_top,_rgba(16,185,129,0.15)_0,_rgba(255,255,255,0)_40%),linear-gradient(180deg,#f8fbf8_0%,#ffffff_100%)] px-4 py-16 sm:p-6 md:p-10">
+            <div className="w-full max-w-md rounded-[2rem] border border-slate-200/60 bg-white/80 p-5 sm:p-8 md:p-10 shadow-2xl shadow-slate-200/50 backdrop-blur-xl">
                 <div className="flex flex-col gap-6">
                     <div className="flex flex-col items-center gap-4">
                         <Link href="/" className="flex flex-col items-center gap-2 transition hover:scale-105">

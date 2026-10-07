@@ -290,7 +290,7 @@ export default function Produk({ products, notifications = [] }: { products?: Pa
                                     {isNotificationOpen && (
                                         <>
                                             <div className="fixed inset-0 z-10" onClick={() => setIsNotificationOpen(false)} />
-                                            <div className="absolute right-0 z-20 mt-3 w-[300px] sm:w-80 lg:w-96 overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-xl shadow-slate-200/70 origin-top-right animate-fade-in">
+                                            <div className="absolute right-0 z-20 mt-3 w-[calc(100vw-2rem)] sm:w-80 lg:w-96 max-w-sm overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-xl shadow-slate-200/70 origin-top-right animate-fade-in">
                                                 <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50/80 px-4 py-3">
                                                     <h3 className="font-bold text-slate-800 text-sm">Notifikasi</h3>
                                                     {unreadCount > 0 && (
@@ -343,7 +343,7 @@ export default function Produk({ products, notifications = [] }: { products?: Pa
                                         <div className="flex size-9 lg:size-10 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 shrink-0"><Shield className="size-4 lg:size-5" /></div>
                                         <div className="text-left hidden md:block">
                                             <p className="text-sm font-semibold text-slate-900">{auth.user?.name ?? 'Super Admin'}</p>
-                                            <p className="text-xs text-slate-500 uppercase">{auth.user?.role ?? 'Admin Desa'}</p>
+                                            <p className="text-xs text-slate-500 uppercase">{String(auth.user?.role || 'Admin Desa')}</p>
                                         </div>
                                         <ChevronDown className={`size-4 text-slate-400 transition-transform ${isProfileOpen ? 'rotate-180' : ''}`} />
                                     </button>

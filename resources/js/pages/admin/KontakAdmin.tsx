@@ -30,7 +30,7 @@ export default function KontakAdmin({ pesanMasuk = [] }: PageProps) {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 text-slate-900 font-sans p-6">
+        <div className="min-h-screen bg-slate-50 text-slate-900 font-sans p-4 sm:p-6 lg:p-8">
             <Head title="Pesan Masuk - Admin Desa" />
 
             <div className="max-w-7xl mx-auto">
@@ -52,7 +52,7 @@ export default function KontakAdmin({ pesanMasuk = [] }: PageProps) {
                     {pesanMasuk.length > 0 ? (
                         <div className="divide-y divide-slate-100">
                             {pesanMasuk.map((item) => (
-                                <div key={item.id} className="p-6 hover:bg-slate-50/50 transition">
+                                <div key={item.id} className="p-4 sm:p-6 hover:bg-slate-50/50 transition">
                                     <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
                                         <div className="flex-1">
                                             <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
@@ -75,7 +75,7 @@ export default function KontakAdmin({ pesanMasuk = [] }: PageProps) {
                                                 </div>
                                             </div>
 
-                                            <div className="mt-4 text-slate-700 leading-relaxed text-sm bg-white p-5 border border-slate-100 rounded-xl whitespace-pre-wrap shadow-sm">
+                                            <div className="mt-4 text-slate-700 leading-relaxed text-sm bg-white p-3.5 sm:p-5 border border-slate-100 rounded-xl whitespace-pre-wrap shadow-sm">
                                                 {item.pesan}
                                             </div>
                                         </div>

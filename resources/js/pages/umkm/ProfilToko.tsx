@@ -141,7 +141,7 @@ export default function ProfilToko({ user }: { user: UserData }) {
                     </header>
 
                     <main className="min-w-0 w-full max-w-4xl p-4 sm:p-6 lg:p-8">
-                        <div className="rounded-[1.75rem] border border-slate-200 bg-white p-8 shadow-sm shadow-slate-200/60">
+                        <div className="rounded-[1.75rem] border border-slate-200 bg-white p-5 sm:p-8 shadow-sm shadow-slate-200/60">
 
                             <div className="flex items-center gap-4 mb-8 pb-6 border-b border-slate-100">
                                 <div className="flex size-16 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
