@@ -106,15 +106,9 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
                         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
                             <PublicMobileNav activeRouteName="umkm.umkmPage" />
                             {/* TOMBOL LOGIN MURNI - MEMAKAI TAG <a> AGAR FULL REFRESH */}
-<<<<<<< HEAD
                             <a href={route('login')} className="inline-flex items-center gap-1.5 sm:gap-2 rounded-xl bg-emerald-600 px-3.5 py-2 sm:px-5 sm:py-2.5 text-xs font-semibold text-white shadow-lg transition hover:bg-emerald-700">
                                 <span>Login</span> 
                                 <ArrowRight className="size-3.5 sm:size-4" />
-=======
-                            <a href={route('login')} className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg transition hover:bg-emerald-700">
-                                <span>Login</span>
-                                <ArrowRight className="size-4" />
->>>>>>> 8cdcf3d741ea4a094c61cf82c04af99fb2bb27f5
                             </a>
                         </div>
                     </div>
