@@ -106,9 +106,15 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
                         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
                             <PublicMobileNav activeRouteName="umkm.umkmPage" />
                             {/* TOMBOL LOGIN MURNI - MEMAKAI TAG <a> AGAR FULL REFRESH */}
+<<<<<<< HEAD
                             <a href={route('login')} className="inline-flex items-center gap-1.5 sm:gap-2 rounded-xl bg-emerald-600 px-3.5 py-2 sm:px-5 sm:py-2.5 text-xs font-semibold text-white shadow-lg transition hover:bg-emerald-700">
                                 <span>Login</span> 
                                 <ArrowRight className="size-3.5 sm:size-4" />
+=======
+                            <a href={route('login')} className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg transition hover:bg-emerald-700">
+                                <span>Login</span>
+                                <ArrowRight className="size-4" />
+>>>>>>> 8cdcf3d741ea4a094c61cf82c04af99fb2bb27f5
                             </a>
                         </div>
                     </div>
@@ -131,9 +137,9 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
                             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.15),transparent_40%)]" />
 
                             {/* BADGE LOGO */}
-                            <div className="absolute top-6 left-6 z-10 hidden sm:inline-flex items-center gap-4 rounded-full border border-white/30 bg-slate-950/60 px-6 py-3 backdrop-blur-md shadow-2xl">
-                                <div className="flex items-center gap-3">
-                                    <div className="size-12 sm:size-14 overflow-hidden rounded-full bg-white p-1.5 shrink-0 shadow-md ring-2 ring-white/20">
+                            <div className="absolute bottom-8 left-8 z-10 hidden sm:inline-flex items-center gap-5 rounded-full border border-white/30 bg-slate-950/60 px-7 py-4 backdrop-blur-md shadow-2xl">
+                                <div className="flex items-center gap-4">
+                                    <div className="size-16 sm:size-[4.5rem] overflow-hidden rounded-full bg-white p-2 shrink-0 shadow-md ring-2 ring-white/20">
                                         <img
                                             src="/images/Logo DesaMandalamekar.png"
                                             alt="Logo Desa"
@@ -141,16 +147,16 @@ export default function UmkmIndex({ umkmList = [] }: { umkmList?: UmkmUser[] }) 
                                             className="size-full object-contain"
                                         />
                                     </div>
-                                    <div className="size-12 sm:size-14 overflow-hidden rounded-full bg-white p-1.5 shrink-0 shadow-md ring-2 ring-white/20">
+                                    <div className="size-16 sm:size-[4.5rem] overflow-hidden rounded-full bg-white p-2 shrink-0 shadow-md ring-2 ring-white/20">
                                         <img
-                                            src="/images/logo-universitas-yarsi.png"
+                                            src="/images/Logo Universitas_YARSI.jpg"
                                             alt="Logo Yarsi"
                                             style={{ imageRendering: '-webkit-optimize-contrast' }}
                                             className="size-full object-contain"
                                         />
                                     </div>
                                 </div>
-                                <span className="text-xs sm:text-sm font-bold tracking-wide text-emerald-200 border-l border-white/20 pl-4">
+                                <span className="whitespace-nowrap text-sm sm:text-base font-bold tracking-wide text-emerald-200 border-l border-white/20 pl-5">
                                     Desa Mandalamekar & Universitas Yarsi
                                 </span>
                             </div>
